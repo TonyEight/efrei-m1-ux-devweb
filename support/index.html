@@ -1,0 +1,3811 @@
+﻿<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Support de cours Développement Web — EFREI M1 UX Design 2025/2026. HTML, CSS, JavaScript, outils et bonnes pratiques pour designers UX.">
+<title>Développement Web — EFREI M1 UX 2026</title>
+<!-- Préconnexion aux CDN pour accélérer le chargement des polices et de highlight.js -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<style>
+/* ══════════════════════════════════
+   DESIGN TOKENS — EFREI
+   ══════════════════════════════════ */
+:root {
+  --efrei-navy:       #002B5C;
+  --efrei-navy-dark:  #001e42;
+  --efrei-blue:       #0056b3;
+  --efrei-sky:        #e8f0fe;
+  --efrei-gold:       #c5a45a;
+  --sidebar-w:        320px;
+  --topbar-h:         64px; /* hauteur de la topbar — mise à jour via media query sur mobile */
+}
+
+[data-theme="light"] {
+  --bg:               #ffffff;
+  --bg-sidebar:       #f8f9fb;
+  --bg-code:          #1e1e2e;
+  --text:             #1a1d21;
+  --text-muted:       #6c757d;
+  --text-heading:     var(--efrei-navy);
+  --accent:           var(--efrei-navy);
+  --accent-link:      var(--efrei-blue);
+  --accent-bg:        var(--efrei-sky);
+  --border:           #e2e8f0;
+  --border-strong:    #c8d3e0;
+  --topbar-bg:        var(--efrei-navy);
+  --topbar-text:      #ffffff;
+  --code-inline-bg:   #eef2f7;
+  --code-inline-fg:   #00367a;
+  --code-inline-br:   #ccd8e8;
+  --table-head-bg:    var(--efrei-navy);
+  --table-head-fg:    #ffffff;
+  --table-stripe:     #f5f7fa;
+  --warn-bg:          #fff8e1;
+  --warn-br:          #f5a623;
+  --tip-bg:           #e8f5e9;
+  --tip-br:           #4caf50;
+  --shadow:           0 1px 4px rgba(0,43,92,.08), 0 4px 12px rgba(0,43,92,.06);
+  --team-bg:          #f0f4fa;
+  --team-border:      #d0dced;
+  --team-init-bg:     var(--efrei-navy);
+  --team-init-fg:     #ffffff;
+}
+
+[data-theme="dark"] {
+  --bg:               #0d1117;
+  --bg-sidebar:       #0d1117;
+  --bg-code:          #0d1117;
+  --text:             #c9d1d9;
+  --text-muted:       #8b949e;
+  --text-heading:     #58a6ff;
+  --accent:           #58a6ff;
+  --accent-link:      #58a6ff;
+  --accent-bg:        #161b22;
+  --border:           #21262d;
+  --border-strong:    #30363d;
+  --topbar-bg:        #161b22;
+  --topbar-text:      #c9d1d9;
+  --code-inline-bg:   #1c2128;
+  --code-inline-fg:   #79c0ff;
+  --code-inline-br:   #30363d;
+  --table-head-bg:    #21262d;
+  --table-head-fg:    #c9d1d9;
+  --table-stripe:     #161b22;
+  --warn-bg:          #2a2000;
+  --warn-br:          #f5a623;
+  --tip-bg:           #0d2818;
+  --tip-br:           #4caf50;
+  --shadow:           0 1px 4px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.25);
+  --team-bg:          #161b22;
+  --team-border:      #30363d;
+  --team-init-bg:     #30363d;
+  --team-init-fg:     #c9d1d9;
+}
+
+/* ── Reset ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+/* overflow-x:hidden sur html+body : empêche tout débordement horizontal
+   de forcer le navigateur mobile à zoomer dézoomé au chargement */
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 16px);overflow-x:hidden}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--text);background:var(--bg);line-height:1.75;font-size:16px;transition:background .3s,color .3s;overflow-x:hidden;max-width:100vw}
+
+/* ══════════════════════════════════
+   TOP BAR
+   ══════════════════════════════════ */
+/* Topbar : flex-wrap permet la 2e ligne sur mobile */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:var(--topbar-bg);color:var(--topbar-text);display:flex;flex-wrap:wrap;align-items:center;align-content:flex-start;padding:0 28px;z-index:1000;box-shadow:var(--shadow)}
+.topbar-brand{display:flex;align-items:center;gap:16px;flex:1;min-width:0;height:64px}
+.topbar-logo{height:30px;filter:brightness(0) invert(1);opacity:.95}
+[data-theme="dark"] .topbar-logo{opacity:.8}
+.topbar-sep{width:1px;height:28px;background:rgba(255,255,255,.2)}
+.topbar-text{display:flex;flex-direction:column;line-height:1.25;min-width:0;overflow:hidden}
+.topbar-title{font-weight:700;font-size:.97rem;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-sub{font-size:.75rem;opacity:.6}
+/* Ligne 1 droite : boutons d'action (search exclue) */
+.topbar-actions{display:flex;gap:8px;align-items:center;height:64px}
+/* Ligne de recherche : pleine largeur sur mobile, inline sur desktop */
+.topbar-search{display:flex;align-items:center;padding:0 0 0 12px;height:64px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:6px;font-size:.82rem;font-weight:500;text-decoration:none;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-ghost{background:rgba(255,255,255,.1);color:var(--topbar-text)}
+.btn-ghost:hover{background:rgba(255,255,255,.22)}
+.btn-sq{padding:8px 10px;font-size:1.1rem}
+.btn-menu{display:none}
+
+/* ══════════════════════════════════
+   SIDEBAR  — fix ciblé sur les <li>
+   ══════════════════════════════════ */
+.sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--bg-sidebar);border-right:1px solid var(--border);overflow-y:auto;padding:20px 0 40px;z-index:900;transition:transform .3s ease,background .3s}
+.sidebar-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);padding:0 24px 12px}
+
+/* Tous les <ul> dans la sidebar */
+.sidebar ul{list-style:none}
+
+/* Tous les <li> : pas de padding propre — géré par les <a> enfants */
+.sidebar li{padding:0}
+
+/* ── Niveau 1 : titre du document (on le masque) ── */
+.toc > ul > li > a{
+  display:none;
+}
+
+/* ── Niveau 2 : sections H2 ── */
+.toc > ul > li > ul > li{
+  margin-bottom:1px;
+}
+.toc > ul > li > ul > li > a{
+  display:block;
+  padding:9px 20px 9px 24px;
+  font-size:.85rem;
+  font-weight:600;
+  color:var(--text);
+  text-decoration:none;
+  border-left:3px solid transparent;
+  transition:all .15s;
+  line-height:1.4;
+}
+
+/* ── Niveau 3 : sous-sections H3 ── */
+.toc > ul > li > ul > li > ul > li > a{
+  display:block;
+  padding:5px 20px 5px 40px;
+  font-size:.79rem;
+  font-weight:400;
+  color:var(--text-muted);
+  text-decoration:none;
+  border-left:3px solid transparent;
+  transition:all .15s;
+  line-height:1.4;
+}
+
+/* ── États hover / actif ── */
+.sidebar a:hover,
+.sidebar a.active{
+  color:var(--accent);
+  background:var(--accent-bg);
+  border-left-color:var(--accent);
+}
+.sidebar a.active{font-weight:600}
+
+/* ══════════════════════════════════
+   CONTENU PRINCIPAL
+   ══════════════════════════════════ */
+.content{margin-left:var(--sidebar-w);margin-top:var(--topbar-h);padding:48px 56px 100px;max-width:960px;transition:margin .3s}
+.content h1{font-size:2.2rem;font-weight:700;margin-bottom:8px;letter-spacing:-.025em;color:var(--text-heading);line-height:1.2}
+.content h2{font-size:1.6rem;font-weight:700;margin:60px 0 18px;padding-bottom:10px;border-bottom:2px solid var(--border-strong);letter-spacing:-.015em;color:var(--text-heading)}
+.content h3{font-size:1.15rem;font-weight:600;margin:36px 0 12px;color:var(--text-heading)}
+.content h4{font-size:1rem;font-weight:600;margin:24px 0 8px;color:var(--text-heading)}
+.content p{margin-bottom:14px}
+.content a{color:var(--accent-link);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;transition:opacity .15s}
+.content a:hover{opacity:.75}
+.content ul,.content ol{margin:0 0 14px 26px}
+.content li{margin-bottom:5px}
+.content hr{border:none;border-top:2px solid var(--border);margin:52px 0}
+.content strong{font-weight:600}
+
+/* ── Code ── */
+.content code{font-family:'JetBrains Mono','Fira Code',monospace;font-size:.88em}
+.content p code,.content li code,.content td code{background:var(--code-inline-bg);color:var(--code-inline-fg);padding:2px 6px;border-radius:4px;font-size:.84em;border:1px solid var(--code-inline-br)}
+/* Position relative sur pre pour ancrer le bouton de copie */
+.content pre{position:relative;background:var(--bg-code);border-radius:8px;padding:20px 24px;margin:14px 0 22px;overflow-x:auto;border:1px solid var(--border);box-shadow:var(--shadow)}
+.content pre code{background:none!important;padding:0;border:none!important;color:#e2e8f0;font-size:.86rem;line-height:1.65}
+
+/* ── Bouton copie (injecté par JS sur les vrais blocs de code uniquement) ── */
+.copy-btn{
+  position:absolute;top:10px;right:10px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.7);border-radius:5px;
+  padding:4px 10px;font-size:.72rem;font-family:inherit;cursor:pointer;
+  transition:all .2s;line-height:1.5;white-space:nowrap
+}
+.copy-btn:hover{background:rgba(255,255,255,.2);color:#fff}
+.copy-btn.copied{background:var(--tip-br);border-color:var(--tip-br);color:#fff}
+
+/* Images responsives : ne peuvent pas dépasser leur conteneur */
+.content img{max-width:100%;height:auto}
+
+/* ── Tables ── */
+/* Le wrapper gère le scroll horizontal et les marges ;
+   la table reprend un display:table normal pour un rendu fluide */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0 24px;border-radius:8px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.content table{width:100%;border-collapse:collapse;font-size:.9rem;border-radius:8px;overflow:hidden;border:none;box-shadow:none;margin:0;display:table}
+.content th{background:var(--table-head-bg);color:var(--table-head-fg);padding:10px 14px;text-align:left;font-weight:600;font-size:.84rem;white-space:nowrap}
+.content td{padding:10px 14px;border-bottom:1px solid var(--border)}
+.content tr:nth-child(even) td{background:var(--table-stripe)}
+/* Sur mobile : cellules plus compactes pour gagner de la place */
+@media(max-width:640px){
+  .content th,.content td{padding:8px 10px;font-size:.82rem}
+}
+
+/* ── Blockquotes ── */
+.content blockquote{border-left:4px solid var(--accent);background:var(--accent-bg);padding:14px 18px;margin:14px 0 22px;border-radius:0 8px 8px 0}
+.content blockquote.warning{border-left-color:var(--warn-br);background:var(--warn-bg)}
+.content blockquote.tip{border-left-color:var(--tip-br);background:var(--tip-bg)}
+.content blockquote p:last-child{margin-bottom:0}
+
+/* ══════════════════════════════════
+   TEAM CARDS — intervenants
+   ══════════════════════════════════ */
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0 32px}
+.team-section{/* groupe de cartes intervenants */}
+.team-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:10px}
+.team-cards{display:flex;flex-direction:column;gap:8px}
+.team-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--team-border);background:var(--team-bg);border-radius:8px;text-decoration:none;color:var(--text);transition:all .2s}
+.team-card:hover{border-color:var(--accent);box-shadow:var(--shadow);opacity:1}
+.team-initials{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--team-init-bg);color:var(--team-init-fg);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;letter-spacing:.03em}
+.team-info{flex:1;display:flex;flex-direction:column;line-height:1.3}
+.team-info strong{font-size:.88rem;color:var(--text)}
+.team-info span{font-size:.78rem;color:var(--text-muted);margin-top:2px}
+.team-linkedin{flex-shrink:0;font-size:.72rem;font-weight:700;background:#0077b5;color:#fff;width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center}
+@media(max-width:640px){.team-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════
+   PROGRESS BAR
+   ══════════════════════════════════ */
+.progress-bar{position:fixed;top:var(--topbar-h);left:0;right:0;height:3px;background:transparent;z-index:999}
+.progress-fill{height:100%;background:var(--efrei-gold);width:0%;transition:width .1s}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════ */
+@media(max-width:1100px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:var(--shadow)}
+  .content{margin-left:0;padding:36px 24px 80px}
+  .btn-menu{display:inline-flex}
+  /* Label thème masqué dès que la sidebar disparaît — icône seule suffit */
+  #themeLabel{display:none}
+  /* Search légèrement réduite pour laisser de la place au .pdf et au menu */
+  .search-wrap input{width:160px}
+  .search-wrap input:focus{width:190px}
+}
+@media(max-width:640px){
+  /* Topbar en 2 lignes : ligne 1 = identité + boutons, ligne 2 = recherche */
+  :root{--topbar-h:108px}
+  .topbar{padding:0}
+  .topbar-brand{padding:0 12px 0 16px}
+  .topbar-actions{padding:0 16px 0 0}
+  /* Ligne 2 : search pleine largeur avec séparateur subtil */
+  .topbar-search{
+    order:3;width:100%;height:44px;padding:0 16px;
+    border-top:1px solid rgba(255,255,255,.12)
+  }
+  .search-wrap{width:100%}
+  .search-wrap input{width:100%}
+  .search-wrap input:focus{width:100%}
+  .topbar-sub{display:none}
+  .content{padding:28px 16px 60px}
+  .content h1{font-size:1.7rem}
+  .content h2{font-size:1.3rem}
+}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:899}
+.overlay.on{display:block}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px}
+
+/* ══════════════════════════════════
+   SEARCH
+   ══════════════════════════════════ */
+.search-wrap{display:flex;align-items:center;gap:6px}
+.search-wrap input{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:6px 12px;color:var(--topbar-text);font-size:.82rem;font-family:inherit;width:200px;outline:none;transition:all .2s}
+.search-wrap input::placeholder{color:rgba(255,255,255,.45)}
+.search-wrap input:focus{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.4);width:240px}
+#searchCount{font-size:.75rem;color:rgba(255,255,255,.6);white-space:nowrap;min-width:3ch;text-align:right}
+mark{background:#f5a623;color:#000;border-radius:2px;padding:0 1px}
+mark.current{background:#ff6b35;outline:2px solid #ff6b35}
+@media print{
+  .topbar,.sidebar,.progress-bar,.overlay{display:none!important}
+  .content{margin:0;padding:20px;max-width:100%}
+  .content pre{white-space:pre-wrap}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-brand">
+    <img src="https://www.efrei.fr/wp-content/uploads/2025/10/Efrei-logo-couleur.svg" alt="EFREI" class="topbar-logo">
+    <div class="topbar-sep"></div>
+    <div class="topbar-text">
+      <span class="topbar-title">Développement Web</span>
+      <span class="topbar-sub">M1 UX Design — 2025/2026</span>
+    </div>
+  </div>
+  <div class="topbar-search">
+    <div class="search-wrap">
+      <input type="search" id="searchInput" placeholder="Rechercher…" aria-label="Rechercher dans la page">
+      <span id="searchCount"></span>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <a class="btn btn-ghost" id="pdfBtn" href="EFREI_M1_UX_Développement_Web_2026.pdf" download>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      .pdf
+    </a>
+    <button class="btn btn-ghost" id="themeToggle" aria-label="Basculer le thème">
+      <span id="themeIcon">☾</span>
+      <span id="themeLabel">Mode sombre</span>
+    </button>
+    <button class="btn btn-ghost btn-sq btn-menu" id="menuBtn" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="overlay" id="overlay"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-label">Sommaire</div>
+  <div class="toc">
+<ul>
+<li><a href="#efrei-m1-ux-design">EFREI - M1 UX Design</a><ul>
+<li><a href="#developpement-web-support-de-cours-2026">Développement Web - Support de cours 2026</a></li>
+<li><a href="#sommaire">Sommaire</a></li>
+<li><a href="#1-le-web-et-internet">1. Le Web et Internet</a><ul>
+<li><a href="#11-internet-cest-quoi-exactement">1.1 Internet : c'est quoi exactement ?</a></li>
+<li><a href="#12-http-et-les-requetes">1.2 HTTP et les requêtes</a></li>
+<li><a href="#13-le-modele-client-serveur">1.3 Le modèle Client / Serveur</a></li>
+<li><a href="#14-lhebergement-web">1.4 L'hébergement web</a></li>
+<li><a href="#15-open-source-vs-proprietaire">1.5 Open Source vs Propriétaire</a></li>
+</ul>
+</li>
+<li><a href="#2-les-3-domaines-du-web">2. Les 3 Domaines du Web</a><ul>
+<li><a href="#21-vue-densemble">2.1 Vue d'ensemble</a></li>
+<li><a href="#22-le-front-end">2.2 Le Front-end</a></li>
+<li><a href="#23-le-back-end">2.3 Le Back-end</a></li>
+<li><a href="#24-linfrastructure">2.4 L'Infrastructure</a></li>
+</ul>
+</li>
+<li><a href="#3-les-langages-du-web">3. Les Langages du Web</a><ul>
+<li><a href="#31-html-css-et-javascript-les-trois-piliers-du-front-end">3.1 HTML, CSS et JavaScript : les trois piliers du front-end</a></li>
+<li><a href="#32-html-un-langage-de-balisage">3.2 HTML - Un langage de balisage</a></li>
+<li><a href="#33-css-les-feuilles-de-style">3.3 CSS - Les feuilles de style</a></li>
+<li><a href="#34-javascript-linteractivite">3.4 JavaScript - L'interactivité</a></li>
+</ul>
+</li>
+<li><a href="#4-vos-outils-vs-code-et-les-navigateurs">4. Vos outils : VS Code et les navigateurs</a><ul>
+<li><a href="#41-vs-code-installation-et-configuration">4.1 VS Code - Installation et configuration</a></li>
+<li><a href="#42-tester-dans-les-navigateurs-chrome-safari-brave">4.2 Tester dans les navigateurs - Chrome, Safari, Brave</a></li>
+</ul>
+</li>
+<li><a href="#5-html-structure-et-semantique">5. HTML - Structure et Sémantique</a><ul>
+<li><a href="#51-structure-dune-page-html">5.1 Structure d'une page HTML</a></li>
+<li><a href="#52-la-semantique-html-pourquoi-les-balises-ont-un-sens">5.2 La sémantique HTML : pourquoi les balises ont un sens</a></li>
+<li><a href="#53-la-responsivite">5.3 La responsivité</a></li>
+<li><a href="#54-organisation-des-fichiers-structure-dun-projet-web">5.4 Organisation des fichiers : structure d'un projet web</a></li>
+<li><a href="#55-les-liens-la-balise-a">5.5 Les liens : la balise &lt;a&gt;</a></li>
+<li><a href="#56-les-pieges-des-espaces-et-caracteres-en-html">5.6 Les pièges des espaces et caractères en HTML</a></li>
+<li><a href="#57-les-images-en-htmlcss">5.7 Les images en HTML/CSS</a></li>
+</ul>
+</li>
+<li><a href="#6-css-style-et-mise-en-page">6. CSS - Style et Mise en page</a><ul>
+<li><a href="#61-le-box-model-la-fondation-de-tout">6.1 Le Box Model : la fondation de tout</a></li>
+<li><a href="#62-display-block-inline-inline-block">6.2 Display - Block, Inline, Inline-Block</a></li>
+<li><a href="#63-alignement-placer-les-elements">6.3 Alignement - placer les éléments</a></li>
+<li><a href="#64-les-selecteurs-css">6.4 Les sélecteurs CSS</a></li>
+<li><a href="#65-variables-css-custom-properties">6.5 Variables CSS (Custom Properties)</a></li>
+<li><a href="#66-transitions-et-animations">6.6 Transitions et Animations</a></li>
+<li><a href="#67-bonnes-pratiques-structurer-son-code-css">6.7 Bonnes pratiques : structurer son code CSS</a></li>
+<li><a href="#68-exemple-complet-une-page-portfolio-css">6.8 Exemple complet : une page portfolio CSS</a></li>
+</ul>
+</li>
+<li><a href="#7-le-futur-vibe-coding-et-vibe-design">7. Le futur : Vibe Coding et Vibe Design</a><ul>
+<li><a href="#71-lemergence-du-vibe-coding">7.1 L'émergence du Vibe Coding</a></li>
+<li><a href="#72-les-outils-de-vibe-coding-en-2026">7.2 Les outils de Vibe Coding en 2026</a></li>
+<li><a href="#73-le-vibe-design-lia-appliquee-au-design-dinterface">7.3 Le Vibe Design - l'IA appliquée au design d'interface</a></li>
+<li><a href="#74-concretement-quest-ce-que-ca-change-pour-vous">7.4 Concrètement, qu'est-ce que ça change pour vous ?</a></li>
+<li><a href="#75-se-preparer-les-competences-qui-comptent-demain">7.5 Se préparer : les compétences qui comptent demain</a></li>
+</ul>
+</li>
+<li><a href="#8-exercice-pratique-votre-cv-en-htmlcss">8. Exercice pratique - Votre CV en HTML/CSS</a><ul>
+<li><a href="#81-le-resultat-attendu">8.1 Le résultat attendu</a></li>
+<li><a href="#82-etape-1-preparer-le-projet">8.2 Étape 1 - Préparer le projet</a></li>
+<li><a href="#83-etape-2-le-squelette-html">8.3 Étape 2 - Le squelette HTML</a></li>
+<li><a href="#84-etape-3-le-css-de-base">8.4 Étape 3 - Le CSS de base</a></li>
+<li><a href="#85-etape-4-tester-et-ajuster">8.5 Étape 4 - Tester et ajuster</a></li>
+<li><a href="#86-pour-aller-plus-loin">8.6 Pour aller plus loin</a></li>
+</ul>
+</li>
+<li><a href="#9-auditer-un-site-web-loeil-du-designer">9. Auditer un site web - L'oeil du designer</a><ul>
+<li><a href="#91-linspection-rapide-5-minutes-pour-comprendre-la-structure">9.1 L'inspection rapide - 5 minutes pour comprendre la structure</a></li>
+<li><a href="#92-le-test-mobile-simuler-et-observer">9.2 Le test mobile - simuler et observer</a></li>
+<li><a href="#93-la-checklist-accessibilite-rapide">9.3 La checklist accessibilité rapide</a></li>
+<li><a href="#94-ce-que-ca-vous-apporte-en-tant-que-designer">9.4 Ce que ça vous apporte en tant que designer</a></li>
+</ul>
+</li>
+<li><a href="#10-faciliter-le-travail-de-vos-developpeurs">10. Faciliter le travail de vos développeurs</a><ul>
+<li><a href="#101-nommer-les-choses-de-facon-coherente">10.1 Nommer les choses de façon cohérente</a></li>
+<li><a href="#102-specifier-tous-les-etats-dun-composant">10.2 Spécifier tous les états d'un composant</a></li>
+<li><a href="#103-penser-responsive-des-la-maquette">10.3 Penser responsive dès la maquette</a></li>
+<li><a href="#104-exporter-proprement-les-assets">10.4 Exporter proprement les assets</a></li>
+<li><a href="#105-fournir-les-alt-texts-dans-vos-specs">10.5 Fournir les alt texts dans vos specs</a></li>
+<li><a href="#106-communiquer-en-utilisant-le-bon-vocabulaire">10.6 Communiquer en utilisant le bon vocabulaire</a></li>
+</ul>
+</li>
+<li><a href="#bibliographie-et-ressources">Bibliographie et Ressources</a><ul>
+<li><a href="#documentation-de-reference">Documentation de référence</a></li>
+<li><a href="#apprendre-html-et-css">Apprendre HTML et CSS</a></li>
+<li><a href="#accessibilite">Accessibilité</a></li>
+<li><a href="#assets-et-outils-gratuits">Assets et outils gratuits</a></li>
+<li><a href="#outils-vibe-coding-et-vibe-design">Outils Vibe Coding et Vibe Design</a></li>
+</ul>
+</li>
+<li><a href="#recapitulatif-ce-que-vous-devez-retenir">Récapitulatif - Ce que vous devez retenir</a><ul>
+<li><a href="#en-tant-que-designer-ux-apres-ce-cours-vous-savez">En tant que designer UX, après ce cours, vous savez</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+
+</nav>
+
+<main class="content">
+<h1 id="efrei-m1-ux-design">EFREI - M1 UX Design</h1>
+<h2 id="developpement-web-support-de-cours-2026">Développement Web - Support de cours 2026</h2>
+<div class="team-grid">
+  <div class="team-section">
+    <h4 class="team-label">Intervenants</h4>
+    <div class="team-cards">
+      <a class="team-card" href="https://www.linkedin.com/in/llegendart-expert-passionné/" target="_blank" rel="noopener">
+        <span class="team-initials">LL</span>
+        <span class="team-info">
+          <strong>Ludovic LEGENDART</strong>
+          <span>CTO / Consultant Expert Digital</span>
+        </span>
+        <span class="team-linkedin">in</span>
+      </a>
+      <a class="team-card" href="https://www.linkedin.com/in/fabio-rocco/" target="_blank" rel="noopener">
+        <span class="team-initials">FR</span>
+        <span class="team-info">
+          <strong>Fabio ROCCO</strong>
+          <span>Consultant Digital</span>
+        </span>
+        <span class="team-linkedin">in</span>
+      </a>
+    </div>
+  </div>
+  <div class="team-section">
+    <h4 class="team-label">Guests</h4>
+    <div class="team-cards">
+      <a class="team-card" href="https://www.linkedin.com/in/bastien-simon-b32b85173/" target="_blank" rel="noopener">
+        <span class="team-initials">BS</span>
+        <span class="team-info">
+          <strong>Bastien SIMON</strong>
+          <span>Consultant UX</span>
+        </span>
+        <span class="team-linkedin">in</span>
+      </a>
+      <a class="team-card" href="https://www.linkedin.com/in/elise-montaut/" target="_blank" rel="noopener">
+        <span class="team-initials">EM</span>
+        <span class="team-info">
+          <strong>Élise MONTAUT</strong>
+          <span>Consultante UX</span>
+        </span>
+        <span class="team-linkedin">in</span>
+      </a>
+    </div>
+  </div>
+</div>
+<hr />
+<blockquote>
+<p><strong>À qui s'adresse ce document ?</strong>
+À des designers UX - pas à des développeurs. L'objectif n'est pas que vous écriviez du code tous les jours, mais que vous compreniez <strong>comment fonctionne le Web</strong>, que vous puissiez <strong>lire et interpréter du HTML/CSS</strong>, et que vous deveniez les <strong>meilleurs partenaires possibles des équipes de développement</strong>.</p>
+</blockquote>
+<hr />
+<h2 id="sommaire">Sommaire</h2>
+<ol>
+<li><a href="#1-le-web-et-internet">Le Web et Internet</a></li>
+<li><a href="#2-les-3-domaines-du-web">Les 3 Domaines du Web</a></li>
+<li><a href="#3-les-langages-du-web">Les Langages du Web</a></li>
+<li><a href="#4-vos-outils-vs-code-et-les-navigateurs">Vos outils : VS Code et les navigateurs</a></li>
+<li><a href="#5-html-structure-et-semantique">HTML - Structure et Sémantique</a></li>
+<li><a href="#6-css-style-et-mise-en-page">CSS - Style et Mise en page</a></li>
+<li><a href="#7-le-futur-vibe-coding-et-vibe-design">Le futur : Vibe Coding et Vibe Design</a></li>
+<li><a href="#8-exercice-pratique-votre-cv-en-htmlcss">Exercice pratique - Votre CV en HTML/CSS</a></li>
+<li><a href="#9-auditer-un-site-web-loeil-du-designer">Auditer un site web - L'oeil du designer</a></li>
+<li><a href="#10-faciliter-le-travail-de-vos-developpeurs">Faciliter le travail de vos développeurs</a></li>
+<li><a href="#bibliographie-et-ressources">Bibliographie et Ressources</a></li>
+<li><a href="#recapitulatif-ce-que-vous-devez-retenir">Récapitulatif</a></li>
+</ol>
+<hr />
+<h2 id="1-le-web-et-internet">1. Le Web et Internet</h2>
+<h3 id="11-internet-cest-quoi-exactement">1.1 Internet : c'est quoi exactement ?</h3>
+<p>Internet et le Web sont deux choses différentes - et la confusion entre les deux est l'une des plus répandues dans le digital, y compris chez des professionnels.</p>
+<p><strong>Internet</strong> est l'<strong>infrastructure réseau mondiale</strong> : un ensemble de milliards d'appareils connectés entre eux via des câbles, des fibres optiques et des ondes. C'est le "réseau des réseaux".</p>
+<p><strong>Le Web</strong> est un <strong>service qui fonctionne <em>sur</em> Internet</strong> - tout comme l'email, le streaming audio ou la VoIP sont d'autres services qui utilisent la même infrastructure.</p>
+<blockquote>
+<p><strong>Analogie</strong> : Internet = le réseau routier mondial. Le Web = les voitures qui y circulent. L'email = les camions de livraison. Ce sont tous des usages du même réseau.</p>
+</blockquote>
+<!-- IMAGE PLACEHOLDER : undraw.co - "undraw_connected_world" ou "undraw_internet" -->
+
+<h4 id="comment-les-donnees-circulent-tcpip">Comment les données circulent : TCP/IP</h4>
+<p>Quand vous chargez une page web, vos données ne voyagent pas d'un seul bloc. Elles sont découpées en <strong>paquets</strong>, envoyées par des chemins potentiellement différents, et réassemblées à l'arrivée. C'est le protocole <strong>TCP/IP</strong> qui orchestre tout ça.</p>
+<p>Pour faire simple : <strong>IP</strong> attribue une adresse unique à chaque appareil connecté (comme un numéro de rue), et <strong>TCP</strong> s'assure que tous les paquets arrivent dans le bon ordre, sans en perdre en route.</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Quand un utilisateur se plaint que "le site rame", le problème est souvent réseau (paquets perdus, serveur lent) avant d'être visuel. Les DevTools → onglet Network vous montrent exactement où le temps se perd. C'est un réflexe à adopter avant de blâmer le design ou le code.</p>
+</blockquote>
+<h4 id="ladresse-ip-et-le-dns">L'adresse IP et le DNS</h4>
+<p>Les humains retiennent des noms (<code>efrei.fr</code>), les machines ont besoin d'adresses IP (<code>185.42.117.11</code>). Le <strong>DNS (Domain Name System)</strong> fait la traduction - c'est l'annuaire d'Internet.</p>
+<p>Quand vous tapez <code>figma.com</code> dans votre navigateur :
+1. Votre machine consulte un serveur DNS
+2. Le DNS répond avec l'adresse IP de Figma
+3. Votre navigateur contacte ce serveur</p>
+<hr />
+<h3 id="12-http-et-les-requetes">1.2 HTTP et les requêtes</h3>
+<h4 id="le-protocole-http-https">Le protocole HTTP / HTTPS</h4>
+<p>Chaque fois que votre navigateur charge une page, une image ou un fichier CSS, il envoie une <strong>requête HTTP</strong> à un serveur. Le serveur répond avec les données demandées.</p>
+<p><strong>HTTPS</strong> = HTTP + chiffrement (via TLS). Le cadenas dans la barre d'adresse. Indispensable pour tout site qui manipule des données personnelles ou des paiements. Depuis 2018, Google pénalise les sites en HTTP dans son référencement.</p>
+<h4 id="les-methodes-http-les-verbes-du-web">Les méthodes HTTP (les "verbes" du web)</h4>
+<p>Chaque échange entre votre navigateur et un serveur utilise un "verbe" qui décrit l'intention. Les deux principaux à connaître :</p>
+<ul>
+<li><strong><code>GET</code></strong> : "je veux voir quelque chose" - charger une page, afficher une image, consulter un profil</li>
+<li><strong><code>POST</code></strong> : "je veux envoyer quelque chose" - soumettre un formulaire, créer un compte, publier un commentaire</li>
+</ul>
+<p>Il en existe d'autres (<code>PUT</code> pour modifier, <code>DELETE</code> pour supprimer), mais en tant que designer, <code>GET</code> et <code>POST</code> couvrent 90% des cas que vous rencontrerez.</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Quand vous concevez un formulaire, vous dessinez en réalité un <code>POST</code>. Quand vous affichez une liste de produits, c'est un <code>GET</code>. Quand vous ajoutez un bouton "Supprimer", ça déclenche un <code>DELETE</code>. La question de design pertinente : "est-ce qu'on demande confirmation à l'utilisateur avant une action destructive ?"</p>
+</blockquote>
+<h4 id="les-codes-de-reponse-http">Les codes de réponse HTTP</h4>
+<p>Le serveur répond toujours avec un <strong>code de statut</strong>. Ils sont groupés par catégorie :</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Catégorie</th>
+<th>Exemples courants</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>2xx</code></td>
+<td>Succès</td>
+<td><code>200 OK</code>, <code>201 Created</code></td>
+</tr>
+<tr>
+<td><code>3xx</code></td>
+<td>Redirection</td>
+<td><code>301 Moved Permanently</code>, <code>302 Found</code></td>
+</tr>
+<tr>
+<td><code>4xx</code></td>
+<td>Erreur client</td>
+<td><code>404 Not Found</code>, <code>403 Forbidden</code>, <code>401 Unauthorized</code></td>
+</tr>
+<tr>
+<td><code>5xx</code></td>
+<td>Erreur serveur</td>
+<td><code>500 Internal Server Error</code>, <code>503 Service Unavailable</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Pour un designer</strong> : un bouton qui ne répond pas, une image cassée, une page blanche - ouvrez les <strong>DevTools</strong> (F12) → onglet <strong>Network</strong>. Vous y verrez chaque requête et son code de réponse. C'est souvent là que le problème se trouve.</p>
+</blockquote>
+<hr />
+<h3 id="13-le-modele-client-serveur">1.3 Le modèle Client / Serveur</h3>
+<p>Tout échange web repose sur ce modèle fondamental.</p>
+<pre><code>[NAVIGATEUR / CLIENT]                    [SERVEUR]
+        |                                    |
+        |--- Requête GET /index.html ------&gt; |
+        |                                    |--- lit le fichier
+        |&lt;-- Réponse 200 OK + HTML --------- |
+        |                                    |
+        |--- Requête GET /style.css -------&gt; |
+        |&lt;-- Réponse 200 OK + CSS ---------- |
+        |                                    |
+        |--- Requête GET /logo.png --------&gt; |
+        |&lt;-- Réponse 200 OK + image -------- |
+</code></pre>
+<p>Pour afficher une seule page, le navigateur peut envoyer <strong>des dizaines de requêtes</strong> : pour le HTML, chaque fichier CSS, chaque image, chaque police, chaque fichier JavaScript. C'est pourquoi la performance web est un enjeu majeur - chaque requête coûte du temps.</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Quand vous concevez une page avec 20 images haute résolution, un carrousel complexe et 5 polices différentes, posez-vous cette question : "Combien de requêtes HTTP cette page va-t-elle générer ?" Un bon designer pense à la performance dès la phase de maquette - pas après le développement.</p>
+</blockquote>
+<!-- IMAGE PLACEHOLDER : undraw.co - "undraw_server" -->
+
+<p><strong>Ce que ça implique pour le design :</strong><br />
+- Une page avec beaucoup d'images non optimisées sera lente - l'utilisateur attend, et c'est une mauvaise expérience<br />
+- Un formulaire qui vérifie les données côté serveur (et non dans le navigateur) donnera un retour plus lent à l'utilisateur<br />
+- Les états de chargement ("loading states") ne sont pas décoratifs - ils représentent un temps réseau réel que l'utilisateur perçoit</p>
+<h4 id="les-navigateurs-et-moteurs-de-rendu">Les navigateurs et moteurs de rendu</h4>
+<img src="browser-schema.png" width="100%" alt="Schéma du fonctionnement d'un navigateur" loading="lazy" decoding="async">
+<p>Votre HTML/CSS n'est pas interprété de la même façon par tous les navigateurs. Chaque navigateur utilise un <strong>moteur de rendu</strong> différent :</p>
+<table>
+<thead>
+<tr>
+<th>Moteur</th>
+<th>Navigateurs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Blink</strong></td>
+<td>Chrome, Edge, Opera, Brave, Arc</td>
+</tr>
+<tr>
+<td><strong>WebKit</strong></td>
+<td>Safari (iOS et macOS)</td>
+</tr>
+<tr>
+<td><strong>Gecko</strong></td>
+<td>Firefox</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Conséquence pratique</strong> : une animation CSS, un dégradé ou une propriété récente peut fonctionner dans Chrome et pas dans Safari. L'outil <strong><a href="https://caniuse.com">caniuse.com</a></strong> permet de vérifier la compatibilité de n'importe quelle propriété CSS ou API JavaScript.</p>
+</blockquote>
+<hr />
+<h3 id="14-lhebergement-web">1.4 L'hébergement web</h3>
+<p>Pour qu'un site soit accessible en ligne, il faut qu'il soit <strong>hébergé</strong> - stocké sur un serveur connecté en permanence à Internet. Sans hébergement, votre site n'existe que sur votre ordinateur.</p>
+<p>En pratique, il existe des solutions simples et gratuites pour héberger un site vitrine ou un portfolio (comme <strong>GitHub Pages</strong>, <strong>Netlify</strong> ou <strong>Vercel</strong>), et des solutions plus complexes et payantes pour des applications qui gèrent des données utilisateur (comptes, paiements, etc.).</p>
+<blockquote>
+<p><strong>Ce qu'il faut retenir</strong> : l'hébergement est un coût et une contrainte technique. Quand votre développeur dit "ça nécessite un serveur", ça veut dire que la feature a un coût d'infrastructure en plus du coût de développement. Un site vitrine statique (HTML/CSS) coûte quasiment rien à héberger. Une application avec comptes utilisateurs, base de données et envoi d'emails coûte nettement plus.</p>
+</blockquote>
+<hr />
+<h3 id="15-open-source-vs-proprietaire">1.5 Open Source vs Propriétaire</h3>
+<p>Deux grandes approches coexistent dans le monde du logiciel - et donc du web.</p>
+<p><strong>Open Source</strong> : le code source est public, accessible, modifiable et redistribuable. La communauté contribue collectivement à son amélioration.</p>
+<p>Exemples : Linux, Firefox, VS Code, WordPress, React, Figma (partiellement)</p>
+<p><strong>Propriétaire</strong> : le code est détenu par une entreprise. L'accès est soumis à licence. L'entreprise contrôle l'évolution du produit.</p>
+<p>Exemples : macOS, Sketch, Adobe Photoshop, Salesforce</p>
+<p><strong>Ce que ça change pour vous :</strong><br />
+- La quasi-totalité des outils web (React, Vue, Angular, Tailwind, Node.js...) est open source<br />
+- Une startup choisira souvent des outils open source pour réduire les coûts<br />
+- Un grand groupe préférera parfois des solutions propriétaires pour le support et la garantie contractuelle<br />
+- En tant que designer, comprendre ce choix vous aide à anticiper les contraintes de l'équipe</p>
+<hr />
+<h2 id="2-les-3-domaines-du-web">2. Les 3 Domaines du Web</h2>
+<p>Quand on parle de "développement web", on parle en réalité de trois métiers très différents qui travaillent ensemble.</p>
+<!-- IMAGE PLACEHOLDER : undraw.co - "undraw_team_work" ou "undraw_collaboration" -->
+
+<h3 id="21-vue-densemble">2.1 Vue d'ensemble</h3>
+<p>Au sommet se trouve <strong>L'UTILISATEUR</strong> — celui qui voit et interagit avec le produit final.</p>
+<p><strong>FRONT-END</strong> — <em>HTML · CSS · JavaScript · Frameworks</em><br />
+Ce que l'utilisateur voit, touche et ressent. Le front-end reçoit les demandes de l'utilisateur et communique avec le back-end via des requêtes API.</p>
+<p><strong>BACK-END</strong> — <em>Python · PHP · Node.js · Java · Ruby…</em><br />
+Logique métier, données, authentification, calculs. Le back-end traite les requêtes du front-end et s'appuie sur l'infrastructure pour stocker et récupérer les données.</p>
+<p><strong>INFRASTRUCTURE</strong> — <em>Serveurs · Cloud · DevOps · BDD</em><br />
+Les fondations qui font tourner tout ça.</p>
+<img src="couches-schema.png" width="100%" alt="Schéma des 3 domaines" loading="lazy" decoding="async">
+<blockquote class="warning"><p>⚠️ <strong>Attention aux confusions :</strong><br />
+- Front-end ≠ Front-office (le front-office est le service client d'une entreprise)<br />
+- Back-end ≠ Back-office (le back-office est la gestion interne d'une entreprise)</p>
+</blockquote>
+<hr />
+<h3 id="22-le-front-end">2.2 Le Front-end</h3>
+<p>Le front-end, c'est <strong>tout ce que l'utilisateur voit et avec quoi il interagit</strong> dans son navigateur.</p>
+<p><strong>Responsabilités :</strong><br />
+- Intégrer les maquettes (passer de Figma au code)<br />
+- Gérer l'affichage sur différents devices (responsive)<br />
+- Implémenter les interactions (animations, transitions, formulaires)<br />
+- Optimiser les performances visuelles<br />
+- Garantir l'accessibilité</p>
+<p><strong>Technologies :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Langage</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTML</td>
+<td>Structure et contenu</td>
+</tr>
+<tr>
+<td>CSS</td>
+<td>Apparence et mise en page</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td>Interactivité et dynamisme</td>
+</tr>
+</tbody>
+</table>
+<p>Aujourd'hui, la plupart des projets utilisent en plus des <strong>frameworks</strong> : React, Vue, Angular, Svelte… Ces outils accélèrent le développement front-end en proposant des composants réutilisables.</p>
+<p><strong>Ce que le designer UX doit comprendre :</strong><br />
+- Chaque élément de votre maquette sera "intégré" en HTML/CSS<br />
+- Une animation que vous concevez doit être "faisable" en CSS ou JavaScript<br />
+- Les composants Figma correspondent idéalement à des composants front-end réutilisables<br />
+- L'accessibilité (contraste, navigation clavier, ARIA labels) se gère principalement au niveau front-end</p>
+<blockquote>
+<p><strong>Pour aller plus loin</strong> : le guide MDN sur l'accessibilité web est un excellent point de départ → <a href="https://developer.mozilla.org/fr/docs/Learn/Accessibility">MDN - Accessibilité</a></p>
+</blockquote>
+<hr />
+<h3 id="23-le-back-end">2.3 Le Back-end</h3>
+<p>Le back-end est <strong>invisible pour l'utilisateur</strong>, mais indispensable pour tout ce qui nécessite des données, de la logique ou de l'authentification.</p>
+<p><strong>Responsabilités :</strong><br />
+- Gérer les bases de données (stocker, récupérer, modifier des données)<br />
+- Authentifier les utilisateurs (connexion, sessions, tokens)<br />
+- Implémenter la logique métier (calculs, règles, workflows)<br />
+- Exposer des APIs que le front-end consomme<br />
+- Sécuriser les accès et les données</p>
+<p><strong>Technologies courantes :</strong><br />
+- <strong>Python</strong> (Django, FastAPI) - très populaire, lisible, dominant en data/IA<br />
+- <strong>PHP</strong> (Laravel, Symfony) - historiquement dominant, encore très présent (WordPress)<br />
+- <strong>Node.js / JavaScript</strong> - même langage côté front et back, écosystème riche<br />
+- <strong>Java</strong> - robuste, utilisé dans les grandes entreprises<br />
+- <strong>Ruby</strong> (Ruby on Rails) - populaire dans les startups (Twitter en est né)<br />
+- <strong>Go, Rust</strong> - langages modernes, performants, pour les systèmes critiques</p>
+<p><strong>Ce que le designer UX doit comprendre :</strong><br />
+- Si une feature nécessite de "se souvenir" de l'utilisateur ou de ses préférences → back-end requis<br />
+- Un formulaire de contact → back-end pour envoyer l'email<br />
+- Un panier e-commerce → back-end pour stocker les produits<br />
+- Les temps de chargement dépendent souvent de la vitesse du back-end à répondre<br />
+- Quand un dev dit "c'est compliqué côté back", ça signifie souvent une logique métier complexe ou des contraintes de base de données</p>
+<blockquote>
+<p><strong>Tip UX</strong> : La prochaine fois qu'une feature vous semble "simple côté design" mais que votre développeur la qualifie de complexe, posez cette question : "Est-ce que la complexité est côté front (affichage, interactions) ou côté back (logique, données) ?" La réponse change radicalement la manière dont vous pouvez aider : simplifier l'affichage (front) relève de votre expertise. Simplifier la logique (back) demande de repenser le besoin métier ensemble.</p>
+</blockquote>
+<hr />
+<h3 id="24-linfrastructure">2.4 L'Infrastructure</h3>
+<p>L'infrastructure est la <strong>fondation invisible</strong> qui fait tourner le tout : serveurs, réseau, bases de données, sécurité, déploiement.</p>
+<p><strong>Avant le Cloud :</strong>
+Les entreprises possédaient leurs propres serveurs physiques. Coûteux à acheter, maintenir, mettre à l'échelle. Un pic de trafic → le site tombait.</p>
+<p><strong>Avec le Cloud (AWS, GCP, Azure, Vercel...) :</strong>
+On loue de la capacité à la demande. Pas de matériel à gérer. La capacité s'adapte automatiquement au trafic. Une startup peut démarrer pour quelques euros par mois et scaler à des millions d'utilisateurs sans changer d'infrastructure.</p>
+<p><strong>DevOps :</strong>
+C'est la discipline qui fait le lien entre le développement (Dev) et la mise en ligne (Ops, pour "opérations"). Concrètement, les DevOps s'occupent de mettre le code en production, de surveiller que tout tourne bien, et de gérer les mises à jour automatiques.</p>
+<p><strong>Ce que le designer UX doit comprendre :</strong><br />
+- Les environnements (dev, staging, production) expliquent pourquoi il peut y avoir des différences entre "ce que vous avez vu en recette" et "ce qui est en ligne"<br />
+- Un déploiement n'est pas instantané - il y a des étapes de validation<br />
+- La disponibilité (uptime) est une contrainte réelle : 99,9% de disponibilité = 8h de downtime par an</p>
+<hr />
+<h2 id="3-les-langages-du-web">3. Les Langages du Web</h2>
+<h3 id="31-html-css-et-javascript-les-trois-piliers-du-front-end">3.1 HTML, CSS et JavaScript : les trois piliers du front-end</h3>
+<p>Le front-end repose sur trois langages complémentaires, chacun avec un rôle précis.</p>
+<pre><code>Votre page web = une maison
+
+HTML → La structure (murs, pièces, portes)
+CSS  → La décoration (couleurs, meubles, lumières)
+JS   → L'électricité (lumières qui s'allument, portes qui s'ouvrent)
+</code></pre>
+<p>Ces trois langages sont <strong>universels</strong> et <strong>interprétés directement par le navigateur</strong> - aucune installation, aucun logiciel supplémentaire. Tout appareil connecté peut lire du HTML/CSS/JS.</p>
+<hr />
+<h3 id="32-html-un-langage-de-balisage">3.2 HTML - Un langage de balisage</h3>
+<p>HTML signifie <strong>HyperText Markup Language</strong>. Ce n'est pas un langage de programmation - il ne calcule rien. C'est un <strong>langage de description</strong> : il dit au navigateur <em>ce qu'est</em> le contenu, pas <em>comment il doit avoir l'air</em>.</p>
+<p><strong>La logique des balises :</strong></p>
+<pre><code class="language-html">&lt;balise attribut=&quot;valeur&quot;&gt;Contenu&lt;/balise&gt;
+</code></pre>
+<p>Une balise ouvrante <code>&lt;p&gt;</code>, du contenu, une balise fermante <code>&lt;/p&gt;</code>. Simple. Certaines balises sont "auto-fermantes" : <code>&lt;img&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;br&gt;</code>.</p>
+<p><strong>Ce que ça donne dans le navigateur sans CSS :</strong></p>
+<pre><code class="language-html">&lt;h1&gt;Mon portfolio&lt;/h1&gt;
+&lt;p&gt;Je suis designer UX chez GREEN Conseil.&lt;/p&gt;
+&lt;a href=&quot;https://efrei.fr&quot;&gt;Voir le site EFREI&lt;/a&gt;
+</code></pre>
+<p>Résultat : texte brut, hiérarchisé. Le navigateur applique ses styles par défaut (h1 en gros, lien en bleu souligné). C'est le HTML pur - fonctionnel mais sans esthétique.</p>
+<p><strong>Ce que vous, designer, devez retenir :</strong><br />
+- Chaque balise HTML a un <strong>sens sémantique</strong> : <code>&lt;h1&gt;</code> n'est pas juste "du texte gros", c'est <em>le titre principal de la page</em><br />
+- Ce sens est utilisé par les moteurs de recherche (SEO) et les lecteurs d'écran (accessibilité)<br />
+- Utiliser les balises à mauvais escient (mettre du texte en <code>&lt;h1&gt;</code> juste pour la taille, par exemple) a des conséquences concrètes sur le référencement et l'accessibilité</p>
+<blockquote>
+<p><strong>Référence</strong> : la liste complète des balises HTML avec leur usage est disponible sur <a href="https://developer.mozilla.org/fr/docs/Web/HTML/Element">MDN - Référence des éléments HTML</a>.</p>
+</blockquote>
+<hr />
+<h3 id="33-css-les-feuilles-de-style">3.3 CSS - Les feuilles de style</h3>
+<p>CSS signifie <strong>Cascading Style Sheets</strong> (Feuilles de Style en Cascade). Il contrôle <strong>l'apparence</strong> du HTML : couleurs, typographie, espacement, mise en page, animations.</p>
+<p><strong>La logique de base :</strong></p>
+<pre><code class="language-css">sélecteur {
+  propriété: valeur;
+}
+</code></pre>
+<p><strong>La "Cascade" - pourquoi ce mot compte :</strong></p>
+<p>Le "C" de CSS signifie <strong>Cascade</strong>. Imaginez une cascade d'eau : l'eau coule du haut vers le bas, et chaque niveau peut modifier le flux. En CSS, c'est pareil : les styles "descendent" dans la hiérarchie HTML, et <strong>plusieurs règles peuvent s'appliquer au même élément en même temps</strong>.</p>
+<p>Quand deux règles se contredisent (l'une dit "rouge", l'autre dit "bleu"), le navigateur doit trancher. Il utilise un système de <strong>spécificité</strong> - un ordre de priorité :</p>
+<pre><code>id (#mon-id) &gt; class (.ma-classe) &gt; balise (p)
+</code></pre>
+<p>Concrètement : un style appliqué via <code>#mon-id</code> l'emporte toujours sur <code>.ma-classe</code>, qui l'emporte sur <code>p</code>. C'est pour ça que dans les DevTools, vous verrez parfois des styles <strong>barrés</strong> - ils ont été "perdants" dans cette hiérarchie.</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Quand vous inspectez un site et que vous voyez qu'un style "ne s'applique pas" (barré dans les DevTools), ce n'est pas un bug - c'est la cascade en action. Cette mécanique explique aussi pourquoi un développeur peut avoir du mal à "juste changer la couleur de ce bouton" : il faut d'abord comprendre quelle règle CSS a la priorité.</p>
+<p><strong>Référence</strong> : <a href="https://developer.mozilla.org/fr/docs/Web/CSS/Cascade">MDN - La cascade CSS</a> explique les règles de priorité en détail.</p>
+</blockquote>
+<p><strong>Ce que vous, designer, devez retenir :</strong><br />
+- Votre maquette Figma est une "promesse" - le CSS est la réalisation<br />
+- Figma n'a pas de contraintes ; CSS en a (compatibilité navigateur, performance, cascade)<br />
+- Les DevTools vous permettent de voir et modifier le CSS de n'importe quelle page en temps réel - c'est votre meilleur outil d'exploration</p>
+<hr />
+<h3 id="34-javascript-linteractivite">3.4 JavaScript - L'interactivité</h3>
+<p>JavaScript (à ne pas confondre avec Java - ce sont deux langages totalement différents) est le <strong>seul langage de programmation natif du navigateur</strong>.</p>
+<p>Là où HTML décrit et CSS stylise, JavaScript <strong>agit</strong> : il peut lire et modifier le contenu de la page, réagir aux interactions utilisateur, charger des données depuis un serveur, créer des animations complexes.</p>
+<p><strong>Ce que JS permet :</strong><br />
+- Un menu burger qui s'ouvre au clic<br />
+- Un formulaire qui valide les données avant d'envoyer<br />
+- Un carousel d'images automatique<br />
+- Des données qui se mettent à jour sans recharger la page (comme un feed Instagram)<br />
+- Des cartes interactives (Google Maps)<br />
+- Des notifications en temps réel</p>
+<p><strong>Ce que vous, designer, devez retenir :</strong><br />
+- Une animation qui "répond" à l'utilisateur (ex: glisser-déposer, drag et drop) → JavaScript<br />
+- Un composant "stateful" (qui garde en mémoire un état : panier, étapes de formulaire) → JavaScript<br />
+- La performance JavaScript est un enjeu critique : un JS trop lourd ralentit la page<br />
+- Quand un dev dit "il faut du JS pour ça", c'est souvent une feature plus complexe à maintenir</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Pour savoir rapidement si une interaction nécessite JavaScript, posez-vous cette question : "Est-ce que le comportement change en fonction d'une action de l'utilisateur <strong>après</strong> le chargement de la page ?" Si oui → JavaScript. Les menus déroulants au clic, les filtres dynamiques, les formulaires multi-étapes, les notifications - tout ce qui "réagit" à l'utilisateur en temps réel nécessite du JS. En revanche, un effet au survol (<code>:hover</code>), une animation au chargement, ou un changement de couleur sont purement CSS.</p>
+</blockquote>
+<hr />
+<h2 id="4-vos-outils-vs-code-et-les-navigateurs">4. Vos outils : VS Code et les navigateurs</h2>
+<p>Avant de lire du code ou d'en écrire, il faut configurer son environnement. Cette section couvre les outils utilisés en cours.</p>
+<h3 id="41-vs-code-installation-et-configuration">4.1 VS Code - Installation et configuration</h3>
+<p><strong>Visual Studio Code</strong> est l'éditeur de code le plus utilisé au monde. Gratuit, open source (Microsoft), disponible sur macOS, Windows et Linux.</p>
+<!-- IMAGE PLACEHOLDER : undraw.co - "undraw_code_inspection" -->
+
+<h4 id="installation">Installation</h4>
+<p><strong>macOS :</strong>
+1. Aller sur <a href="https://code.visualstudio.com">code.visualstudio.com</a>
+2. Cliquer sur <strong>"Download for Mac"</strong> → télécharge un <code>.zip</code>
+3. Double-cliquer sur le <code>.zip</code> → glisser <strong>Visual Studio Code.app</strong> dans le dossier <strong>Applications</strong>
+4. Ouvrir VS Code → ouvrir la palette de commandes <code>⌘ + Shift + P</code> → taper <code>shell command</code> → cliquer <strong>"Install 'code' command in PATH"</strong></p>
+<blockquote>
+<p>Ce dernier point permet de taper <code>code .</code> dans le Terminal pour ouvrir n'importe quel dossier dans VS Code directement.</p>
+</blockquote>
+<p><strong>Windows :</strong>
+1. Aller sur <a href="https://code.visualstudio.com">code.visualstudio.com</a>
+2. Cliquer sur <strong>"Download for Windows"</strong> → télécharge un <code>.exe</code>
+3. Lancer l'installateur, <strong>cocher impérativement</strong> :<br />
+   - "Ajouter à PATH"<br />
+   - "Ajouter l'action 'Ouvrir avec Code' au menu contextuel"
+4. Redémarrer si demandé</p>
+<h4 id="extensions-indispensables">Extensions indispensables</h4>
+<p>Installez ces extensions (icône puzzle dans la barre latérale, ou <code>⌘/Ctrl + Shift + X</code>) :</p>
+<table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Live Server</strong> (Ritwick Dey)</td>
+<td>Lance un serveur local, recharge le navigateur automatiquement à chaque sauvegarde - <strong>absolument indispensable</strong></td>
+</tr>
+<tr>
+<td><strong>Prettier</strong></td>
+<td>Formate automatiquement votre code HTML/CSS à la sauvegarde - élimine les problèmes d'indentation</td>
+</tr>
+<tr>
+<td><strong>Auto Rename Tag</strong></td>
+<td>Renomme la balise fermante automatiquement quand vous modifiez la balise ouvrante</td>
+</tr>
+<tr>
+<td><strong>CSS Peek</strong></td>
+<td>Survol d'une classe HTML → affiche immédiatement la règle CSS correspondante</td>
+</tr>
+<tr>
+<td><strong>French Language Pack</strong></td>
+<td>Interface en français</td>
+</tr>
+</tbody>
+</table>
+<h4 id="workflow-de-base">Workflow de base</h4>
+<pre><code>1. Ouvrir son dossier de projet dans VS Code
+   → Fichier → Ouvrir le dossier  (ou glisser le dossier sur l'icône VS Code)
+   ⚠️ Toujours ouvrir le DOSSIER, pas juste le fichier HTML
+
+2. Créer ses fichiers HTML/CSS depuis l'explorateur latéral (icône dossier)
+
+3. Dans un fichier .html : clic droit → &quot;Open with Live Server&quot;
+   → Ouvre automatiquement http://localhost:5500 dans Chrome
+   → La page se rafraîchit à chaque sauvegarde (⌘/Ctrl + S)
+
+4. Écrire du code → sauvegarder → voir le résultat en temps réel
+</code></pre>
+<h4 id="le-snippet-html5-automatique-emmet">Le snippet HTML5 automatique (Emmet)</h4>
+<p>Dans un fichier <code>.html</code> vide, tapez simplement <code>!</code> puis appuyez sur <code>Tab</code> :</p>
+<pre><code class="language-html">&lt;!-- VS Code génère automatiquement tout ce squelette --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>Pensez à changer <code>lang="en"</code> en <code>lang="fr"</code> pour un site en français.</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Même si vous n'écrivez pas de code au quotidien, savoir utiliser VS Code vous donne un super-pouvoir : vous pouvez <strong>ouvrir n'importe quel projet de vos développeurs</strong> pour comprendre comment il est structuré, lire les noms de fichiers et de classes CSS, et comparer avec votre maquette Figma. C'est un outil de compréhension, pas juste de production.</p>
+</blockquote>
+<h4 id="raccourcis-essentiels">Raccourcis essentiels</h4>
+<table>
+<thead>
+<tr>
+<th>Raccourci macOS</th>
+<th>Raccourci Windows</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>⌘ + S</code></td>
+<td><code>Ctrl + S</code></td>
+<td>Sauvegarder</td>
+</tr>
+<tr>
+<td><code>⌘ + Z</code></td>
+<td><code>Ctrl + Z</code></td>
+<td>Annuler</td>
+</tr>
+<tr>
+<td><code>⌘ + Shift + Z</code></td>
+<td><code>Ctrl + Y</code></td>
+<td>Rétablir</td>
+</tr>
+<tr>
+<td><code>⌘ + /</code></td>
+<td><code>Ctrl + /</code></td>
+<td>Commenter/décommenter</td>
+</tr>
+<tr>
+<td><code>⌘ + D</code></td>
+<td><code>Ctrl + D</code></td>
+<td>Sélectionner la prochaine occurrence</td>
+</tr>
+<tr>
+<td><code>Alt + ↑/↓</code></td>
+<td><code>Alt + ↑/↓</code></td>
+<td>Déplacer la ligne</td>
+</tr>
+<tr>
+<td><code>⌘ + P</code></td>
+<td><code>Ctrl + P</code></td>
+<td>Ouvrir rapidement un fichier</td>
+</tr>
+<tr>
+<td><code>⌘ + Shift + P</code></td>
+<td><code>Ctrl + Shift + P</code></td>
+<td>Palette de commandes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="42-tester-dans-les-navigateurs-chrome-safari-brave">4.2 Tester dans les navigateurs - Chrome, Safari, Brave</h3>
+<p>C'est <strong>l'étape la plus oubliée et la plus importante</strong> : toujours tester dans plusieurs navigateurs. Ce qui fonctionne dans Chrome ne fonctionne pas forcément dans Safari - et beaucoup d'entre vous l'ont découvert à leurs dépens en cours.</p>
+<h4 id="le-probleme-safari-ce-que-vous-avez-vecu-en-cours">Le problème Safari - ce que vous avez vécu en cours</h4>
+<p>Safari utilise le moteur <strong>WebKit</strong>, tandis que Chrome, Brave, Arc et Edge utilisent <strong>Blink</strong>. Firefox utilise <strong>Gecko</strong>. Ces moteurs n'interprètent pas les CSS de la même façon et n'implémentent pas les nouvelles fonctionnalités au même rythme.</p>
+<p><strong>Safari est régulièrement en retard</strong> sur certaines fonctionnalités. Ce n'est pas un bug de votre code - c'est une incompatibilité navigateur.</p>
+<p>Concrètement, qu'est-ce que ça veut dire pour vous ? Que si vous codez et testez uniquement dans Chrome, vous risquez d'avoir des surprises en ouvrant votre page dans Safari. Un dégradé qui ne s'affiche pas, un défilement qui ne se fait pas en douceur, un formulaire qui n'a pas le même rendu - ce ne sont pas des bugs dans votre code, ce sont des différences entre navigateurs.</p>
+<p><strong>Que faire quand ça arrive ?</strong> Le réflexe à adopter est d'aller sur <strong><a href="https://caniuse.com">caniuse.com</a></strong> : tapez le nom de la propriété CSS qui pose problème, et le site vous dit exactement quels navigateurs la supportent et depuis quelle version. Parfois, la solution est simplement d'écrire la propriété deux fois (une version "préfixée" pour Safari, une version standard). Votre développeur saura quoi faire - l'important est que <strong>vous sachiez que le problème vient du navigateur, pas du code</strong>.</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Quand vous livrez un travail ou que vous montrez un prototype, précisez toujours dans quel navigateur vous l'avez testé. "Testé dans Chrome et Safari" est une information précieuse pour votre équipe. Si quelque chose ne fonctionne que dans Chrome, mieux vaut le savoir tôt.</p>
+</blockquote>
+<h4 id="activer-les-devtools-dans-safari-etape-souvent-manquee">Activer les DevTools dans Safari (étape souvent manquée)</h4>
+<p>Par défaut, Safari cache ses outils de développement. Pour les activer :</p>
+<p><strong>Sur Mac :</strong>
+1. Safari → <strong>Réglages</strong> (ou Préférences) → onglet <strong>Avancé</strong>
+2. Cocher <strong>"Afficher les fonctionnalités pour les développeurs Web"</strong> (ou "Afficher le menu Développement")
+3. Le menu <strong>Développement</strong> apparaît dans la barre de menus
+4. Raccourci : <code>⌘ + Option + I</code></p>
+<h4 id="ouvrir-les-devtools">Ouvrir les DevTools</h4>
+<table>
+<thead>
+<tr>
+<th>Navigateur</th>
+<th>Raccourci macOS</th>
+<th>Raccourci Windows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chrome</strong></td>
+<td><code>⌘ + Option + I</code></td>
+<td><code>F12</code></td>
+</tr>
+<tr>
+<td><strong>Safari</strong></td>
+<td><code>⌘ + Option + I</code></td>
+<td>(macOS uniquement)</td>
+</tr>
+<tr>
+<td><strong>Brave</strong></td>
+<td><code>⌘ + Option + I</code></td>
+<td><code>F12</code></td>
+</tr>
+<tr>
+<td><strong>Firefox</strong></td>
+<td><code>⌘ + Option + I</code></td>
+<td><code>F12</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="ce-quon-consulte-dans-les-devtools">Ce qu'on consulte dans les DevTools</h4>
+<p><strong>Onglet Elements (Chrome) / Inspecteur (Firefox/Safari) :</strong><br />
+- Voir le HTML réel de la page (pas juste votre fichier source - le HTML après JavaScript)<br />
+- Cliquer sur un élément pour voir <strong>toutes</strong> les règles CSS qui s'y appliquent, et lesquelles sont annulées par d'autres<br />
+- Voir le <strong>Box Model</strong> interactif (padding, border, margin visualisés)<br />
+- Modifier le CSS en direct pour tester (temporaire, non sauvegardé)</p>
+<p><strong>Onglet Network :</strong><br />
+- Voir toutes les requêtes HTTP émises lors du chargement<br />
+- Détecter les <strong>404</strong> → un fichier n'est pas trouvé → souvent un problème de chemin relatif<br />
+- Repérer les ressources lentes à charger</p>
+<p><strong>Mode responsive (Chrome/Brave) :</strong><br />
+- Icône tablette/mobile en haut à gauche des DevTools<br />
+- Simuler n'importe quelle taille d'écran sans vrai smartphone<br />
+- Tester vos media queries</p>
+<h4 id="protocole-de-test-recommande">Protocole de test recommandé</h4>
+<pre><code>Avant de partager ou de livrer un travail :
+
+✅ 1. Chrome ou Brave : votre navigateur principal de développement
+✅ 2. Safari : crucial si vous (ou vos utilisateurs) êtes sur Mac/iPhone
+✅ 3. Mode responsive dans les DevTools :
+      - 375px  → iPhone SE / iPhone 14
+      - 768px  → iPad / tablette
+      - 1440px → Desktop standard
+
+Si ça marche dans Chrome mais pas dans Safari :
+   → Consulter caniuse.com pour la propriété CSS en question
+   → Signaler le problème à votre développeur avec le nom de la propriété
+   → Chercher ensemble une propriété alternative compatible
+</code></pre>
+<hr />
+<h2 id="5-html-structure-et-semantique">5. HTML - Structure et Sémantique</h2>
+<h3 id="51-structure-dune-page-html">5.1 Structure d'une page HTML</h3>
+<p>Voici le squelette minimal de toute page web valide, avec chaque élément expliqué :</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;!-- Déclare que ce document est en HTML5 (standard actuel) --&gt;
+
+&lt;html lang=&quot;fr&quot;&gt;
+&lt;!-- Balise racine. L'attribut lang=&quot;fr&quot; indique la langue --&gt;
+&lt;!-- Utilisé par les lecteurs d'écran et les traducteurs automatiques --&gt;
+
+  &lt;head&gt;
+  &lt;!-- Zone de métadonnées : INVISIBLE pour l'utilisateur --&gt;
+  &lt;!-- Mais lu par les navigateurs, moteurs de recherche, réseaux sociaux --&gt;
+
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;!-- Encodage des caractères : permet d'afficher les accents (é, à, ü...) --&gt;
+    &lt;!-- Toujours mettre en premier --&gt;
+
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;!-- CRUCIAL pour le responsive : adapte la page à la largeur du device --&gt;
+    &lt;!-- Sans ça, un mobile afficherait la version desktop zoomée dézoomée --&gt;
+
+    &lt;title&gt;Mon portfolio - Ludovic LEGENDART&lt;/title&gt;
+    &lt;!-- Texte affiché dans l'onglet du navigateur --&gt;
+    &lt;!-- Aussi utilisé par Google pour l'affichage dans les résultats de recherche --&gt;
+
+    &lt;meta name=&quot;description&quot; content=&quot;Portfolio UX Design de Ludovic LEGENDART&quot;&gt;
+    &lt;!-- Description pour les moteurs de recherche (160 caractères max) --&gt;
+    &lt;!-- Apparaît sous le titre dans Google --&gt;
+
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;css/style.css&quot;&gt;
+    &lt;!-- Lien vers le fichier CSS externe --&gt;
+    &lt;!-- rel=&quot;stylesheet&quot; indique le type de relation --&gt;
+    &lt;!-- href indique le chemin vers le fichier --&gt;
+
+    &lt;!-- ⚠️ Tout le CSS doit être déclaré ici, dans le &lt;head&gt; :
+         soit via &lt;link&gt; vers un fichier externe (recommandé),
+         soit via une balise &lt;style&gt; pour du CSS embarqué.
+         Ne mettez JAMAIS de &lt;style&gt; dans le &lt;body&gt; :
+         c'est du HTML invalide et ça peut provoquer un &quot;flash&quot;
+         de contenu non stylisé au chargement. --&gt;
+
+  &lt;/head&gt;
+
+  &lt;body&gt;
+  &lt;!-- Tout le contenu VISIBLE de la page est ici --&gt;
+
+    &lt;header&gt;
+    &lt;!-- En-tête du site : logo, navigation principale --&gt;
+    &lt;!-- Apparaît généralement en haut de toutes les pages --&gt;
+
+      &lt;a href=&quot;index.html&quot;&gt;
+        &lt;img src=&quot;images/logo.svg&quot; alt=&quot;Logo - retour à l'accueil&quot;&gt;
+        &lt;!-- alt=&quot;&quot; est OBLIGATOIRE pour l'accessibilité --&gt;
+        &lt;!-- Les lecteurs d'écran lisent ce texte à la place de l'image --&gt;
+      &lt;/a&gt;
+
+      &lt;nav&gt;
+      &lt;!-- Balise dédiée à la navigation principale --&gt;
+        &lt;a href=&quot;index.html&quot;&gt;Accueil&lt;/a&gt;
+        &lt;a href=&quot;projets.html&quot;&gt;Projets&lt;/a&gt;
+        &lt;a href=&quot;#contact&quot;&gt;Contact&lt;/a&gt;
+        &lt;!-- href=&quot;#contact&quot; : ancre vers l'élément ayant id=&quot;contact&quot; sur la même page --&gt;
+      &lt;/nav&gt;
+
+    &lt;/header&gt;
+
+    &lt;main&gt;
+    &lt;!-- Contenu principal et UNIQUE de la page --&gt;
+    &lt;!-- Il ne peut y avoir qu'un seul &lt;main&gt; par page --&gt;
+
+      &lt;section id=&quot;hero&quot;&gt;
+      &lt;!-- Section = groupe thématique de contenu --&gt;
+      &lt;!-- L'attribut id permet de cibler cet élément en CSS ou en ancre (#hero) --&gt;
+
+        &lt;h1&gt;Je conçois des expériences numériques&lt;/h1&gt;
+        &lt;!-- h1 = titre principal de la page. UN SEUL par page (SEO) --&gt;
+
+        &lt;p&gt;Designer UX centré sur l'utilisateur, basée à Paris.&lt;/p&gt;
+        &lt;!-- p = paragraphe. Le conteneur de texte standard --&gt;
+
+        &lt;a href=&quot;projets.html&quot; class=&quot;btn-principal&quot;&gt;
+          Voir mes projets
+        &lt;/a&gt;
+        &lt;!-- class=&quot;btn-principal&quot; : permet de cibler cet élément en CSS --&gt;
+        &lt;!-- Plusieurs éléments peuvent avoir la même classe --&gt;
+
+      &lt;/section&gt;
+
+      &lt;section id=&quot;projets&quot;&gt;
+        &lt;h2&gt;Projets récents&lt;/h2&gt;
+        &lt;!-- h2 = sous-titre de section. Respectez la hiérarchie : h1 → h2 → h3 --&gt;
+
+        &lt;article class=&quot;carte-projet&quot;&gt;
+        &lt;!-- article = contenu autonome et complet en lui-même --&gt;
+        &lt;!-- Peut être extrait de la page et rester compréhensible --&gt;
+
+          &lt;img
+            src=&quot;images/projet-refonte-app.jpg&quot;
+            alt=&quot;Écran d'accueil de l'application bancaire redesignée&quot;
+          &gt;
+          &lt;!-- L'attribut alt décrit l'image pour les non-voyants --&gt;
+          &lt;!-- ET pour Google Images (SEO) --&gt;
+
+          &lt;h3&gt;Refonte application bancaire&lt;/h3&gt;
+          &lt;p&gt;Amélioration du parcours de paiement mobile. Réduction des abandons de 34%.&lt;/p&gt;
+
+          &lt;a href=&quot;projet-banque.html&quot;&gt;Voir le cas d'étude →&lt;/a&gt;
+
+        &lt;/article&gt;
+
+        &lt;article class=&quot;carte-projet&quot;&gt;
+          &lt;img src=&quot;images/projet-saas.jpg&quot; alt=&quot;Dashboard de l'outil SaaS redesigné&quot;&gt;
+          &lt;h3&gt;Redesign dashboard SaaS&lt;/h3&gt;
+          &lt;p&gt;Simplification de l'interface pour un outil de gestion de projets.&lt;/p&gt;
+          &lt;a href=&quot;projet-saas.html&quot;&gt;Voir le cas d'étude →&lt;/a&gt;
+        &lt;/article&gt;
+
+      &lt;/section&gt;
+
+      &lt;aside&gt;
+      &lt;!-- Contenu secondaire, lié mais pas central (sidebar, encart, citation) --&gt;
+        &lt;p&gt;&quot;Le meilleur design est celui qu'on ne remarque pas.&quot;&lt;/p&gt;
+      &lt;/aside&gt;
+
+    &lt;/main&gt;
+
+    &lt;footer id=&quot;contact&quot;&gt;
+    &lt;!-- Pied de page : infos de contact, liens légaux, réseaux sociaux --&gt;
+    &lt;!-- L'id=&quot;contact&quot; est ciblé par le lien #contact dans la nav --&gt;
+
+      &lt;p&gt;llegendart@efrei.fr&lt;/p&gt;
+      &lt;a href=&quot;https://linkedin.com/in/...&quot; target=&quot;_blank&quot;&gt;LinkedIn&lt;/a&gt;
+      &lt;!-- target=&quot;_blank&quot; : ouvre dans un nouvel onglet --&gt;
+      &lt;p&gt;© 2026 - Ludovic LEGENDART&lt;/p&gt;
+
+    &lt;/footer&gt;
+
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<hr />
+<h3 id="52-la-semantique-html-pourquoi-les-balises-ont-un-sens">5.2 La sémantique HTML : pourquoi les balises ont un sens</h3>
+<p><strong>Balises sémantiques vs non-sémantiques :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Balise</th>
+<th>Sémantique ?</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;header&gt;</code></td>
+<td>✅ Oui</td>
+<td>En-tête de page ou de section</td>
+</tr>
+<tr>
+<td><code>&lt;nav&gt;</code></td>
+<td>✅ Oui</td>
+<td>Navigation principale</td>
+</tr>
+<tr>
+<td><code>&lt;main&gt;</code></td>
+<td>✅ Oui</td>
+<td>Contenu principal (unique par page)</td>
+</tr>
+<tr>
+<td><code>&lt;section&gt;</code></td>
+<td>✅ Oui</td>
+<td>Groupe thématique de contenu</td>
+</tr>
+<tr>
+<td><code>&lt;article&gt;</code></td>
+<td>✅ Oui</td>
+<td>Contenu autonome (article, carte projet)</td>
+</tr>
+<tr>
+<td><code>&lt;aside&gt;</code></td>
+<td>✅ Oui</td>
+<td>Contenu secondaire (sidebar, encart)</td>
+</tr>
+<tr>
+<td><code>&lt;footer&gt;</code></td>
+<td>✅ Oui</td>
+<td>Pied de page</td>
+</tr>
+<tr>
+<td><code>&lt;h1&gt;</code> à <code>&lt;h6&gt;</code></td>
+<td>✅ Oui</td>
+<td>Hiérarchie de titres</td>
+</tr>
+<tr>
+<td><code>&lt;p&gt;</code></td>
+<td>✅ Oui</td>
+<td>Paragraphe de texte</td>
+</tr>
+<tr>
+<td><code>&lt;div&gt;</code></td>
+<td>❌ Non</td>
+<td>Conteneur générique, sans sens</td>
+</tr>
+<tr>
+<td><code>&lt;span&gt;</code></td>
+<td>❌ Non</td>
+<td>Conteneur inline générique</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pourquoi ça compte :</strong></p>
+<pre><code class="language-html">&lt;!-- ❌ Code non sémantique (fonctionnel, mais problématique) --&gt;
+&lt;div class=&quot;big-text&quot;&gt;Bienvenue sur mon portfolio&lt;/div&gt;
+&lt;div class=&quot;nav-container&quot;&gt;
+  &lt;div class=&quot;nav-item&quot;&gt;Accueil&lt;/div&gt;
+  &lt;div class=&quot;nav-item&quot;&gt;Projets&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- ✅ Code sémantique (même rendu visuel, bien meilleur pour les machines) --&gt;
+&lt;h1&gt;Bienvenue sur mon portfolio&lt;/h1&gt;
+&lt;nav&gt;
+  &lt;a href=&quot;index.html&quot;&gt;Accueil&lt;/a&gt;
+  &lt;a href=&quot;projets.html&quot;&gt;Projets&lt;/a&gt;
+&lt;/nav&gt;
+</code></pre>
+<p><strong>Les deux codes peuvent sembler identiques visuellement</strong>, mais pour un moteur de recherche ou un lecteur d'écran :<br />
+- Dans le premier cas : trois boîtes de texte génériques, aucun sens<br />
+- Dans le second cas : un titre principal, une navigation - structure claire</p>
+<p><strong>Impact SEO :</strong> Google comprend mieux votre page et la référence mieux.
+<strong>Impact accessibilité :</strong> Un utilisateur naviguant au clavier ou avec un lecteur d'écran (NVDA, VoiceOver) dépend de cette structure pour naviguer.</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Lors de vos audits UX, testez la sémantique d'un site en une seconde : dans les DevTools, désactivez le CSS (Elements → panneau Styles → décochez <code>&lt;style&gt;</code> en haut). Si la page reste compréhensible et navigable sans CSS, sa structure HTML est solide. Si tout devient un amas illisible, la sémantique a été négligée.</p>
+</blockquote>
+<hr />
+<h3 id="53-la-responsivite">5.3 La responsivité</h3>
+<p>Un site responsive s'adapte automatiquement à la taille de l'écran. Ce n'est pas optionnel en 2026 : plus de 60% du trafic web mondial vient des mobiles.</p>
+<!-- IMAGE PLACEHOLDER : undraw.co - "undraw_responsive" ou "undraw_mobile_user" -->
+
+<h4 id="les-breakpoints">Les breakpoints</h4>
+<p>Les <strong>breakpoints</strong> (ou points de rupture) sont les largeurs d'écran à partir desquelles la mise en page change.</p>
+<p>Breakpoints courants :</p>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Largeur</th>
+<th>Device</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mobile</td>
+<td>&lt; 768px</td>
+<td>Smartphones</td>
+</tr>
+<tr>
+<td>Tablet</td>
+<td>768px – 1024px</td>
+<td>Tablettes</td>
+</tr>
+<tr>
+<td>Desktop</td>
+<td>&gt; 1024px</td>
+<td>Ordinateurs</td>
+</tr>
+<tr>
+<td>Wide</td>
+<td>&gt; 1440px</td>
+<td>Grands écrans</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Pour un designer</strong> : quand vous créez des frames dans Figma, ces largeurs correspondent à des standards réels. Un frame à 375px = iPhone 14. Un frame à 1440px = desktop standard.</p>
+</blockquote>
+<h4 id="les-media-queries-css">Les media queries CSS</h4>
+<p>Le CSS permet de définir des règles qui ne s'appliquent qu'à certaines tailles d'écran. Le principe est simple : vous écrivez vos styles "de base" (pour mobile), puis vous ajoutez des blocs <code>@media</code> qui ne se déclenchent qu'à partir d'une certaine largeur.</p>
+<pre><code class="language-css">/* Styles de base : s'appliquent sur tous les écrans (mobile d'abord) */
+.carte-projet {
+  width: 100%;           /* la carte prend toute la largeur */
+  margin-bottom: 1rem;
+}
+
+/* A partir de 768px (tablette), on change la largeur */
+@media (min-width: 768px) {
+  .carte-projet {
+    width: 48%;          /* 2 cartes par ligne */
+  }
+}
+
+/* A partir de 1024px (desktop), encore un changement */
+@media (min-width: 1024px) {
+  .carte-projet {
+    width: 31%;          /* 3 cartes par ligne */
+  }
+}
+</code></pre>
+<p>La syntaxe <code>@media (min-width: 768px)</code> signifie : "les styles à l'intérieur ne s'appliquent que si l'écran fait 768px de large ou plus". Le navigateur évalue cette condition en temps réel - si vous redimensionnez la fenêtre, les styles changent instantanément.</p>
+<p><strong>L'approche "Mobile First"</strong> : on écrit d'abord le CSS pour mobile (le plus contraint), puis on ajoute des règles pour les écrans plus grands avec <code>min-width</code>. C'est la bonne pratique actuelle - le mobile est la priorité.</p>
+<p>Pourquoi "mobile first" et pas l'inverse ? Parce qu'un écran mobile est le contexte le plus difficile : peu de place, connexion parfois lente, interactions au doigt. Si votre design fonctionne bien sur mobile, l'adapter au desktop est une question d'espace en plus - c'est facile. En revanche, réduire un design desktop complexe pour le faire rentrer sur mobile est souvent douloureux : il faut couper, empiler, réorganiser. Commencer par le plus contraint, c'est s'épargner des refactorisations coûteuses.</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Quand vous concevez dans Figma, commencez par la frame 375px (mobile), puis étendez à 1440px (desktop). C'est exactement ce que feront vos développeurs avec les media queries. Si vous livrez uniquement le desktop, le développeur devra "inventer" la version mobile - et le résultat sera rarement celui que vous auriez voulu.</p>
+<p><strong>Référence</strong> : <a href="https://developer.mozilla.org/fr/docs/Learn/CSS/CSS_layout/Media_queries">MDN - Les media queries pour les débutants</a> - guide pas-à-pas avec exemples interactifs.</p>
+</blockquote>
+<hr />
+<h3 id="54-organisation-des-fichiers-structure-dun-projet-web">5.4 Organisation des fichiers : structure d'un projet web</h3>
+<p>Un projet web est organisé en dossiers. Voici la structure standard :</p>
+<pre><code>mon-portfolio/
+│
+├── index.html          ← Page d'accueil (TOUJOURS à la racine)
+├── projets.html        ← Page projets
+├── projet-banque.html  ← Page d'un projet spécifique
+│
+├── css/
+│   └── style.css       ← Toutes les règles CSS du site
+│
+├── js/
+│   └── main.js         ← Scripts JavaScript
+│
+└── images/
+    ├── logo.svg
+    ├── projet-banque.jpg
+    └── projet-saas.jpg
+</code></pre>
+<p><strong>La page d'accueil s'appelle toujours <code>index.html</code></strong> - c'est une convention universelle. Quand vous tapez <code>monsite.com</code>, le serveur cherche automatiquement <code>index.html</code> à la racine.</p>
+<h4 id="chemins-relatifs-vs-absolus">Chemins relatifs vs absolus</h4>
+<p>Comprendre les chemins est essentiel - la grande majorité des problèmes du type "mon image ne s'affiche pas" ou "mon CSS ne se charge pas" viennent d'une erreur de chemin.</p>
+<h5 id="la-structure-comme-un-arbre-de-repertoires">La structure comme un arbre de répertoires</h5>
+<p>Imaginez votre projet comme un arbre de dossiers :</p>
+<pre><code>mon-portfolio/               ← RACINE du projet
+│
+├── index.html               ← Page d'accueil (à la racine)
+├── projets.html             ← Page projets
+│
+├── pages/
+│   └── projet-banque.html  ← Page détail (dans un sous-dossier)
+│
+├── css/
+│   └── style.css
+│
+└── images/
+    ├── logo.svg
+    └── projet-banque.jpg
+</code></pre>
+<h5 id="le-chemin-relatif-a-partir-dici">Le chemin relatif : "à partir d'ici"</h5>
+<p>Un chemin relatif est calculé <strong>depuis l'emplacement du fichier actuel</strong>. Il ne contient ni <code>http://</code> ni <code>/</code> au début.</p>
+<p><strong>Depuis <code>index.html</code> (à la racine) :</strong></p>
+<pre><code class="language-html">&lt;img src=&quot;images/logo.svg&quot; alt=&quot;Logo&quot;&gt;
+&lt;!-- &quot;Depuis ma position (racine), descends dans images/, puis prends logo.svg&quot; --&gt;
+
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/style.css&quot;&gt;
+&lt;!-- &quot;Depuis ma position (racine), descends dans css/, puis prends style.css&quot; --&gt;
+</code></pre>
+<p><strong>Depuis <code>pages/projet-banque.html</code> (dans un sous-dossier) :</strong></p>
+<pre><code class="language-html">&lt;!-- ❌ ERREUR fréquente : oublier de remonter d'un niveau --&gt;
+&lt;img src=&quot;images/logo.svg&quot; alt=&quot;Logo&quot;&gt;
+&lt;!-- Le navigateur cherche &quot;pages/images/logo.svg&quot; → n'existe pas ! --&gt;
+
+&lt;!-- ✅ CORRECT : on remonte d'un niveau avec &quot;..&quot; avant de descendre --&gt;
+&lt;img src=&quot;../images/logo.svg&quot; alt=&quot;Logo&quot;&gt;
+&lt;!-- &quot;..&quot; = &quot;remonter au dossier parent&quot; → on va à la racine, puis dans images/ --&gt;
+
+&lt;link rel=&quot;stylesheet&quot; href=&quot;../css/style.css&quot;&gt;
+&lt;!-- Pareil : on remonte à la racine, puis on descend dans css/ --&gt;
+</code></pre>
+<blockquote>
+<p><strong>Mémo <code>..</code></strong> : Deux points <code>..</code> signifient "revenir au dossier parent". C'est comme appuyer sur "Retour arrière" dans le Finder ou l'Explorateur Windows. On peut enchaîner : <code>../../</code> remonte de deux niveaux.</p>
+</blockquote>
+<h5 id="le-chemin-absolu-ladresse-complete">Le chemin absolu : l'adresse complète</h5>
+<p>Un chemin absolu est une URL complète. Il ne dépend pas de l'emplacement du fichier actuel.</p>
+<pre><code class="language-html">&lt;!-- URL absolue complète : pour des ressources externes uniquement --&gt;
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Inter&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;img src=&quot;https://images.unsplash.com/photo-xxx&quot; alt=&quot;Photo Unsplash&quot;&gt;
+
+&lt;!-- Chemin absolu depuis la racine du domaine (commence par /) --&gt;
+&lt;img src=&quot;/images/logo.svg&quot; alt=&quot;Logo&quot;&gt;
+&lt;!-- ⚠️ Fonctionne bien sur un vrai serveur, mais CASSE si vous ouvrez
+     le fichier directement depuis votre ordinateur (protocole file://) --&gt;
+</code></pre>
+<h5 id="une-erreur-frequente-ouvrir-le-fichier-directement-depuis-le-finder">⚠️ Une erreur fréquente : ouvrir le fichier directement depuis le Finder</h5>
+<p>Un réflexe courant est de double-cliquer sur son <code>index.html</code> pour l'ouvrir dans le navigateur. Le navigateur utilise alors le protocole <code>file://</code> au lieu de <code>http://</code>. Résultat :</p>
+<ul>
+<li>Les chemins absolus commençant par <code>/</code> ne fonctionnent plus</li>
+<li>Certaines polices et ressources externes sont bloquées</li>
+<li>Vous voyez votre page sans styles → panique 😱</li>
+</ul>
+<p><strong>La solution : toujours utiliser Live Server</strong> (voir section 4.1). Live Server simule un serveur HTTP réel - vos chemins fonctionnent exactement comme en production.</p>
+<blockquote>
+<p><strong>Règle d'or</strong> : utilisez des <strong>chemins relatifs</strong> pour vos propres fichiers. Ça garantit que votre site fonctionnera quel que soit l'endroit où vous le déposez. Et ouvrez toujours vos pages via Live Server, jamais directement depuis le Finder ou l'Explorateur.</p>
+</blockquote>
+<hr />
+<h3 id="55-les-liens-la-balise-a">5.5 Les liens : la balise <code>&lt;a&gt;</code></h3>
+<p>La balise <code>&lt;a&gt;</code> (ancre) est fondamentale - c'est elle qui crée tous les liens du web.</p>
+<pre><code class="language-html">&lt;!-- Lien interne : vers une autre page du même site --&gt;
+&lt;a href=&quot;projets.html&quot;&gt;Voir mes projets&lt;/a&gt;
+
+&lt;!-- Lien interne : vers une section de la même page --&gt;
+&lt;a href=&quot;#contact&quot;&gt;Aller au contact&lt;/a&gt;
+&lt;!-- L'élément cible doit avoir id=&quot;contact&quot; --&gt;
+
+&lt;!-- Lien externe : vers un autre site --&gt;
+&lt;a href=&quot;https://www.figma.com&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;
+  Figma
+&lt;/a&gt;
+&lt;!-- target=&quot;_blank&quot; : ouvre dans un nouvel onglet --&gt;
+&lt;!-- rel=&quot;noopener&quot; : sécurité (empêche la page liée d'accéder à votre page) --&gt;
+
+&lt;!-- Lien email --&gt;
+&lt;a href=&quot;mailto:llegendart@efrei.fr&quot;&gt;Écrire un email&lt;/a&gt;
+
+&lt;!-- Lien téléphone (sur mobile, déclenche l'appel) --&gt;
+&lt;a href=&quot;tel:+33600000000&quot;&gt;Appeler&lt;/a&gt;
+
+&lt;!-- Lien de téléchargement --&gt;
+&lt;a href=&quot;pdf/mon-cv.pdf&quot; download&gt;Télécharger mon CV (PDF)&lt;/a&gt;
+</code></pre>
+<blockquote>
+<p><strong>Tip UX</strong> : Le texte d'un lien (ce qu'on appelle le "link text") a un impact direct sur l'accessibilité et le SEO. "Cliquez ici" ou "En savoir plus" ne dit rien quand il est lu seul par un lecteur d'écran. Préférez des textes explicites : "Voir le cas d'étude Refonte bancaire" ou "Télécharger mon CV (PDF, 320 Ko)". Dans vos maquettes Figma, c'est votre responsabilité de rédiger ces textes correctement - le développeur ne devrait pas avoir à les inventer.</p>
+</blockquote>
+<hr />
+<h3 id="56-les-pieges-des-espaces-et-caracteres-en-html">5.6 Les pièges des espaces et caractères en HTML</h3>
+<p>Ce sujet peut surprendre au début, mais il explique pas mal de "bugs" rencontrés par les débutants en HTML.</p>
+<h4 id="le-navigateur-ignore-les-espaces-multiples">Le navigateur ignore les espaces multiples</h4>
+<p>En HTML, <strong>plusieurs espaces consécutifs sont toujours réduits à un seul</strong>. Peu importe combien vous en tapez dans votre éditeur.</p>
+<pre><code class="language-html">&lt;!-- Ce que vous écrivez dans le code --&gt;
+&lt;p&gt;Bonjour      tout       le       monde&lt;/p&gt;
+
+&lt;!-- Ce que le navigateur affiche --&gt;
+Bonjour tout le monde
+</code></pre>
+<p>La même règle s'applique aux retours à la ligne :</p>
+<pre><code class="language-html">&lt;!-- Ce que vous écrivez --&gt;
+&lt;p&gt;
+  Première ligne
+  Deuxième ligne
+  Troisième ligne
+&lt;/p&gt;
+
+&lt;!-- Ce que le navigateur affiche --&gt;
+Première ligne Deuxième ligne Troisième ligne
+</code></pre>
+<p>Tout est collé sur une seule ligne, les sauts de ligne devenant de simples espaces.</p>
+<h4 id="comment-forcer-un-espace-insecable-nbsp">Comment forcer un espace insécable : <code>&amp;nbsp;</code></h4>
+<p><code>&amp;nbsp;</code> (Non-Breaking Space) est une <strong>entité HTML</strong> qui représente un espace que le navigateur n'ignorera pas et sur lequel il ne coupera pas une ligne.</p>
+<pre><code class="language-html">&lt;!-- Forcer 3 espaces entre deux mots --&gt;
+&lt;p&gt;Prix&amp;nbsp;&amp;nbsp;&amp;nbsp;: 42 €&lt;/p&gt;
+
+&lt;!-- Empêcher une coupure de ligne entre deux mots --&gt;
+&lt;p&gt;Voir page&amp;nbsp;42&lt;/p&gt;
+&lt;!-- &quot;page&quot; et &quot;42&quot; resteront toujours sur la même ligne --&gt;
+</code></pre>
+<blockquote class="warning"><p>⚠️ <strong>Attention</strong> : utiliser <code>&amp;nbsp;</code> pour créer de l'espacement visuel est une mauvaise pratique. C'est le travail du CSS (<code>padding</code>, <code>margin</code>, <code>gap</code>). <code>&amp;nbsp;</code> est réservé aux cas sémantiques (unités de mesure, numéros de page, etc.).</p>
+</blockquote>
+<h4 id="les-entites-html-courantes">Les entités HTML courantes</h4>
+<p>Certains caractères ont un sens spécial en HTML (<code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>) et doivent être échappés pour être affichés comme du texte :</p>
+<table>
+<thead>
+<tr>
+<th>Caractère</th>
+<th>Entité HTML</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;</code></td>
+<td><code>&amp;lt;</code></td>
+<td>Afficher le signe "inférieur à" (sinon interprété comme balise)</td>
+</tr>
+<tr>
+<td><code>&gt;</code></td>
+<td><code>&amp;gt;</code></td>
+<td>Afficher le signe "supérieur à"</td>
+</tr>
+<tr>
+<td><code>&amp;</code></td>
+<td><code>&amp;amp;</code></td>
+<td>Afficher l'esperluette (sinon début d'entité)</td>
+</tr>
+<tr>
+<td><code>"</code></td>
+<td><code>&amp;quot;</code></td>
+<td>Guillemet double dans un attribut</td>
+</tr>
+<tr>
+<td>espace insécable</td>
+<td><code>&amp;nbsp;</code></td>
+<td>Espace non collapsible</td>
+</tr>
+<tr>
+<td><code>©</code></td>
+<td><code>&amp;copy;</code></td>
+<td>Symbole copyright</td>
+</tr>
+<tr>
+<td><code>→</code></td>
+<td><code>&amp;rarr;</code></td>
+<td>Flèche droite</td>
+</tr>
+<tr>
+<td><code>€</code></td>
+<td><code>&amp;euro;</code></td>
+<td>Symbole euro</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-html">&lt;!-- ❌ Problème : le navigateur interprète &lt; comme une balise et plante --&gt;
+&lt;p&gt;Si a &lt; b et b &gt; c alors...&lt;/p&gt;
+
+&lt;!-- ✅ Solution : échapper les caractères spéciaux --&gt;
+&lt;p&gt;Si a &amp;lt; b et b &amp;gt; c alors...&lt;/p&gt;
+</code></pre>
+<h4 id="forcer-un-retour-a-la-ligne-br">Forcer un retour à la ligne : <code>&lt;br&gt;</code></h4>
+<p>La balise <code>&lt;br&gt;</code> insère un saut de ligne. C'est une balise auto-fermante (pas de <code>&lt;/br&gt;</code>).</p>
+<pre><code class="language-html">&lt;p&gt;
+  Ludovic LEGENDART&lt;br&gt;
+  CTO - GREEN Conseil&lt;br&gt;
+  Paris, France
+&lt;/p&gt;
+</code></pre>
+<blockquote class="warning"><p>⚠️ <code>&lt;br&gt;</code> n'est pas fait pour créer de l'espacement vertical - utilisez <code>margin</code> ou <code>padding</code> en CSS pour ça. <code>&lt;br&gt;</code> est réservé aux cas où le retour à la ligne fait partie du contenu (adresses postales, vers de poésie, coordonnées).</p>
+</blockquote>
+<h4 id="preserver-le-formatage-pre">Préserver le formatage : <code>&lt;pre&gt;</code></h4>
+<p>La balise <code>&lt;pre&gt;</code> (preformatted text) est la seule qui respecte tous les espaces et retours à la ligne tels qu'ils ont été tapés.</p>
+<pre><code class="language-html">&lt;pre&gt;
+  Nom     : Ludovic
+  Rôle    : CTO
+  Email   : llegendart@efrei.fr
+&lt;/pre&gt;
+</code></pre>
+<p>C'est aussi la balise utilisée pour afficher du code dans une page web (souvent combinée avec <code>&lt;code&gt;</code>) :</p>
+<pre><code class="language-html">&lt;pre&gt;&lt;code&gt;
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+  }
+&lt;/code&gt;&lt;/pre&gt;
+</code></pre>
+<hr />
+<h3 id="57-les-images-en-htmlcss">5.7 Les images en HTML/CSS</h3>
+<p>Les images sont partout sur le web - et elles sont souvent mal utilisées : mauvais format, taille incorrecte, accessibilité oubliée, performance ignorée. Voici les bonnes pratiques 2026.</p>
+<h4 id="la-balise-img-et-ses-attributs-essentiels">La balise <code>&lt;img&gt;</code> et ses attributs essentiels</h4>
+<pre><code class="language-html">&lt;!-- Structure complète et correcte --&gt;
+&lt;img
+  src=&quot;images/projet-banque.jpg&quot;
+  alt=&quot;Capture d'écran de l'application bancaire redesignée&quot;
+  width=&quot;800&quot;
+  height=&quot;450&quot;
+  loading=&quot;lazy&quot;
+&gt;
+</code></pre>
+<p><strong>Décryptage attribut par attribut :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribut</th>
+<th style="text-align: center;">Obligatoire</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src</code></td>
+<td style="text-align: center;">✅ Oui</td>
+<td>Chemin vers l'image (relatif ou URL)</td>
+</tr>
+<tr>
+<td><code>alt</code></td>
+<td style="text-align: center;">✅ Oui</td>
+<td>Description textuelle - accessibilité + SEO</td>
+</tr>
+<tr>
+<td><code>width</code> / <code>height</code></td>
+<td style="text-align: center;">Recommandé</td>
+<td>Dimensions naturelles - évite le saut de mise en page au chargement</td>
+</tr>
+<tr>
+<td><code>loading="lazy"</code></td>
+<td style="text-align: center;">Recommandé</td>
+<td>L'image se charge seulement quand elle approche du viewport</td>
+</tr>
+</tbody>
+</table>
+<h4 id="lattribut-alt-bien-plus-quune-formalite">L'attribut <code>alt</code> : bien plus qu'une formalité</h4>
+<p><code>alt</code> est lu par les <strong>lecteurs d'écran</strong> (pour les personnes malvoyantes), indexé par <strong>Google</strong>, et s'affiche si l'image ne charge pas. C'est une responsabilité de contenu, pas juste une case à cocher.</p>
+<pre><code class="language-html">&lt;!-- ❌ Vide sans intention : inutile pour l'accessibilité --&gt;
+&lt;img src=&quot;equipe.jpg&quot; alt=&quot;&quot;&gt;
+
+&lt;!-- ❌ Générique : aucune valeur ajoutée --&gt;
+&lt;img src=&quot;equipe.jpg&quot; alt=&quot;image&quot;&gt;
+&lt;img src=&quot;equipe.jpg&quot; alt=&quot;photo&quot;&gt;
+
+&lt;!-- ✅ Descriptif et précis --&gt;
+&lt;img src=&quot;equipe.jpg&quot; alt=&quot;L'équipe de 5 designers du studio Figma Agency en réunion&quot;&gt;
+
+&lt;!-- ✅ Cas particulier : image purement décorative --&gt;
+&lt;!-- alt=&quot;&quot; intentionnel → le lecteur d'écran l'ignore complètement (bon comportement) --&gt;
+&lt;img src=&quot;motif-decoratif.svg&quot; alt=&quot;&quot; role=&quot;presentation&quot;&gt;
+</code></pre>
+<blockquote>
+<p><strong>En tant que designer</strong> : l'alt text est une décision éditoriale. Dans vos specs Figma, documentez les descriptions d'images pour vos développeurs - tout comme vous annotez les couleurs et les espacements. L'accessibilité se conçoit dès la phase design.</p>
+</blockquote>
+<h4 id="les-formats-dimage-sur-le-web">Les formats d'image sur le web</h4>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Usage idéal</th>
+<th style="text-align: center;">Transparence</th>
+<th style="text-align: center;">Animation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>JPEG / JPG</strong></td>
+<td>Photos, images complexes</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr>
+<td><strong>PNG</strong></td>
+<td>Logos, illustrations avec fond transparent</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr>
+<td><strong>SVG</strong></td>
+<td>Icônes, logos, illustrations vectorielles</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td><strong>WebP</strong></td>
+<td>Photos + transparence + meilleure compression</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td><strong>AVIF</strong></td>
+<td>Compression maximale (support 2024+)</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td><strong>GIF</strong></td>
+<td>Animations simples (remplacé par WebP/AVIF)</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Règle pratique 2026 :</strong><br />
+- Photos → <strong>WebP</strong> (avec JPEG en fallback pour anciens navigateurs)<br />
+- Icônes / logos → <strong>SVG</strong> (vectoriel, léger, infiniment scalable, éditables en CSS)<br />
+- Illustrations → <strong>SVG</strong> ou <strong>WebP</strong><br />
+- Évitez PNG pour les photos : trop lourd sans avantage</p>
+<pre><code class="language-html">&lt;!-- Technique moderne : proposer plusieurs formats, le navigateur choisit le meilleur --&gt;
+&lt;picture&gt;
+  &lt;source srcset=&quot;images/hero.avif&quot; type=&quot;image/avif&quot;&gt;
+  &lt;source srcset=&quot;images/hero.webp&quot; type=&quot;image/webp&quot;&gt;
+  &lt;img src=&quot;images/hero.jpg&quot; alt=&quot;Image principale du portfolio&quot; width=&quot;1200&quot; height=&quot;600&quot; loading=&quot;eager&quot;&gt;
+  &lt;!-- loading=&quot;eager&quot; sur le hero : on veut qu'elle charge en priorité --&gt;
+&lt;/picture&gt;
+</code></pre>
+<h4 id="object-fit-controler-comment-limage-remplit-son-conteneur"><code>object-fit</code> : contrôler comment l'image remplit son conteneur</h4>
+<p>Quand vous imposez des dimensions fixes à une image ou à son conteneur, l'image peut se déformer. La propriété CSS <code>object-fit</code> résout ça.</p>
+<pre><code class="language-css">/* Image dans une card à hauteur fixe */
+.card-image {
+  width: 100%;
+  height: 240px;           /* hauteur fixe imposée par le design */
+  object-fit: cover;       /* recadre sans déformer - comme background-size: cover */
+  object-position: center top; /* positionne le &quot;point focal&quot; : ici centré en haut */
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Valeur</th>
+<th>Comportement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fill</code></td>
+<td>Étire l'image pour remplir exactement (déformation possible - valeur par défaut)</td>
+</tr>
+<tr>
+<td><code>cover</code></td>
+<td>Recadre l'image pour remplir sans déformer ✅ (la référence)</td>
+</tr>
+<tr>
+<td><code>contain</code></td>
+<td>Affiche l'image entière, avec des bandes si le ratio diffère</td>
+</tr>
+<tr>
+<td><code>none</code></td>
+<td>Image à sa taille naturelle, peut déborder du conteneur</td>
+</tr>
+</tbody>
+</table>
+<h4 id="images-de-fond-css-background-image">Images de fond CSS (<code>background-image</code>)</h4>
+<p>Quand une image est <strong>purement décorative</strong> (texture, pattern, illustration d'ambiance), elle peut être déclarée en CSS :</p>
+<pre><code class="language-css">/* Image de fond simple */
+.hero {
+  background-image: url(&quot;../images/hero.jpg&quot;);
+  background-size: cover;        /* remplit le conteneur */
+  background-position: center;   /* centré */
+  background-repeat: no-repeat;  /* pas de répétition en mosaïque */
+  min-height: 500px;
+}
+
+/* Overlay semi-transparent par-dessus une image de fond */
+/* Technique : deux couches dans background-image */
+.hero-avec-overlay {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url(&quot;../images/hero.jpg&quot;);
+  background-size: cover;
+  /* Le gradient s'applique par-dessus l'image → texte lisible */
+}
+</code></pre>
+<blockquote>
+<p><strong>Règle de choix <code>&lt;img&gt;</code> vs <code>background-image</code></strong> : utilisez <code>&lt;img&gt;</code> si l'image a du <strong>sens</strong> (contenu, portfolio, illustration expliquant quelque chose). Utilisez <code>background-image</code> si l'image est <strong>décorative</strong> (elle n'apporte pas d'information supplémentaire si on la retire).</p>
+</blockquote>
+<h4 id="performance-les-images-premier-poste-de-poids">⚡ Performance : les images, premier poste de poids</h4>
+<p>Les images représentent en moyenne <strong>60 à 70 % du poids</strong> d'une page web. Quelques réflexes essentiels :</p>
+<ul>
+<li><strong>Redimensionner avant d'exporter</strong> : n'exportez jamais une photo de 5000 px de large si votre layout fait 800 px.</li>
+<li><strong>Compresser</strong> : utilisez <a href="https://squoosh.app">Squoosh.app</a> ou <a href="https://tinypng.com">TinyPNG</a> avant de mettre une image en ligne.</li>
+<li><strong>Lazy loading</strong> : ajoutez <code>loading="lazy"</code> sur toutes les images qui ne sont pas visibles immédiatement au chargement.</li>
+<li><strong>Précharger le hero</strong> : <code>&lt;link rel="preload" as="image" href="hero.webp"&gt;</code> dans le <code>&lt;head&gt;</code> pour la première image visible.</li>
+</ul>
+<blockquote>
+<p><strong>Ce que vous, designer, devez retenir</strong> : Quand vous exportez des assets depuis Figma, choisissez le bon format (SVG pour les icônes, WebP pour les photos), la bonne taille (exportez en 1x et 2x pour les écrans Retina), et renseignez les alt texts dans vos specs. Ces choix ont un impact direct sur les performances, le référencement et l'accessibilité de l'interface finale.</p>
+<p><strong>Tip UX</strong> : Faites le test suivant sur n'importe quel site : DevTools → onglet Network → rechargez la page → filtez par "Img". Regardez le poids total des images. Sur un site bien optimisé, chaque image fait moins de 200 Ko. Sur un site mal optimisé, une seule image peut peser 3 Mo - soit plus que le reste de la page. C'est un diagnostic que vous pouvez faire en 30 secondes et qui impressionnera vos développeurs en réunion.</p>
+</blockquote>
+<hr />
+<h2 id="6-css-style-et-mise-en-page">6. CSS - Style et Mise en page</h2>
+<h3 id="61-le-box-model-la-fondation-de-tout">6.1 Le Box Model : la fondation de tout</h3>
+<p><strong>Chaque élément HTML est une boîte</strong>. Et cette boîte est composée de 4 couches concentriques :</p>
+<img src="box-model.png" width="100%" alt="Schéma du Box Model" loading="lazy" decoding="async">
+<pre><code class="language-css">.carte-projet {
+  /* CONTENT : défini par le contenu ou explicitement */
+  width: 300px;
+  height: auto; /* s'adapte au contenu */
+
+  /* PADDING : espace INTÉRIEUR entre le contenu et la bordure */
+  padding: 24px;          /* 24px sur tous les côtés */
+  padding: 16px 24px;     /* 16px haut/bas, 24px gauche/droite */
+  padding-top: 16px;      /* seulement en haut */
+
+  /* BORDER : la bordure */
+  border: 1px solid #E0E0E0; /* épaisseur, style, couleur */
+  border-radius: 8px;        /* coins arrondis */
+
+  /* MARGIN : espace EXTÉRIEUR entre cet élément et ses voisins */
+  margin: 0 auto;    /* 0 en haut/bas, auto gauche/droite = centrage horizontal */
+  margin-bottom: 24px; /* espace en bas de chaque carte */
+}
+</code></pre>
+<h4 id="le-comportement-par-defaut-et-comment-le-corriger-box-sizing">Le comportement par défaut (et comment le corriger) : <code>box-sizing</code></h4>
+<p>Par défaut en CSS, <code>width: 300px</code> définit la largeur du <strong>contenu seul</strong>. Si vous ajoutez <code>padding: 24px</code>, la boîte fait en réalité 300 + 24 + 24 = <strong>348px de large</strong>. C'est un comportement qui surprend souvent.</p>
+<p>La solution, utilisée par tous les développeurs : <code>box-sizing: border-box</code>.</p>
+<pre><code class="language-css">/* On l'applique généralement à tout le document */
+* {
+  box-sizing: border-box;
+  /* Maintenant, width: 300px signifie 300px AU TOTAL, padding inclus */
+}
+</code></pre>
+<blockquote>
+<p><strong>Pour un designer</strong> : si un développeur vous demande si vos espacements sont "en padding ou en margin", c'est exactement cette distinction qu'il cherche à clarifier. Le padding est à l'intérieur (augmente la zone cliquable d'un bouton). La margin est à l'extérieur (espace entre les éléments).</p>
+<p><strong>Analogie concrète</strong> : imaginez une affiche dans un cadre. Le <strong>contenu</strong> c'est l'affiche elle-même. Le <strong>padding</strong> c'est le passe-partout (le carton blanc entre l'affiche et le cadre). La <strong>border</strong> c'est le cadre. Et la <strong>margin</strong> c'est la distance entre ce cadre et les cadres voisins sur le mur. Quand un développeur dit "je vais ajouter du padding", il élargit le passe-partout - le contenu recule, mais la zone cliquable (le cadre) s'agrandit.</p>
+<p><strong>Référence MDN</strong> : <a href="https://developer.mozilla.org/fr/docs/Learn/CSS/Building_blocks/The_box_model">Le modèle de boîte CSS</a> - avec des schémas interactifs pour manipuler chaque couche.</p>
+</blockquote>
+<hr />
+<h3 id="62-display-block-inline-inline-block">6.2 Display - Block, Inline, Inline-Block</h3>
+<p>La propriété <code>display</code> contrôle comment un élément <strong>occupe l'espace</strong> dans la page.</p>
+<pre><code class="language-css">/* BLOCK : l'élément prend toute la largeur, commence sur une nouvelle ligne */
+.bloc {
+  display: block;
+}
+/* Éléments block par défaut : div, p, h1-h6, section, article, header, footer, nav */
+
+/* INLINE : l'élément prend juste la place de son contenu, reste dans le flux du texte */
+.inline {
+  display: inline;
+}
+/* Éléments inline par défaut : span, a, strong, em, img */
+/* ⚠️ On NE PEUT PAS définir de width/height sur un élément inline */
+
+/* INLINE-BLOCK : reste dans le flux du texte, MAIS accepte width et height */
+.inline-block {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+}
+/* Utile pour : des icônes, des badges, des boutons alignés horizontalement */
+
+/* NONE : cache l'élément complètement (il n'occupe plus d'espace) */
+.cache {
+  display: none;
+}
+/* Utile pour : menus cachés, modales, éléments conditionnels */
+/* ≠ visibility: hidden (caché mais occupe toujours l'espace) */
+</code></pre>
+<p><strong>Exemple concret - un bouton :</strong></p>
+<pre><code class="language-css">/* Un &lt;a&gt; est inline par défaut : on ne peut pas lui donner de padding vertical */
+/* On le passe en inline-block pour pouvoir le styler comme un vrai bouton */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #0066CC;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none; /* supprime le soulignement */
+  font-weight: 600;
+}
+</code></pre>
+<p>Pourquoi <code>inline-block</code> et pas juste <code>inline</code> ? Parce qu'un lien <code>&lt;a&gt;</code> est <code>inline</code> par défaut. En <code>inline</code>, le navigateur ignore les propriétés <code>height</code>, <code>padding-top</code> et <code>padding-bottom</code>. Votre bouton aurait du padding horizontal mais pas vertical - il ressemblerait à un lien souligné avec un fond, pas à un vrai bouton. Le passage en <code>inline-block</code> dit au navigateur : "traite cet élément comme une boîte (block) mais laisse-le dans le flux du texte (inline)". C'est ce qui donne un bouton avec des dimensions contrôlables tout en restant aligné avec le texte environnant.</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Quand un développeur vous dit "cet élément est inline, je ne peux pas lui donner de hauteur", c'est exactement ce mécanisme. La solution est souvent un simple <code>display: inline-block</code>. Connaître cette distinction vous permet de diagnostiquer vous-même certains problèmes visuels dans les DevTools.</p>
+</blockquote>
+<h4 id="le-piege-classique-dinline-block-lespace-fantome">⚠️ Le piège classique d'<code>inline-block</code> : l'espace fantôme</h4>
+<p>C'est un comportement qui surprend souvent quand on débute en front-end, et qui illustre bien comment HTML et CSS interagissent parfois de façon inattendue.</p>
+<p><strong>Le problème :</strong> quand vous placez plusieurs éléments <code>display: inline-block</code> côte à côte dans le HTML, le navigateur interprète le <strong>saut de ligne dans le code</strong> comme un espace, et insère un espace visuel (~4px) entre les éléments. Même si vous ne lui avez rien demandé.</p>
+<pre><code class="language-html">&lt;!-- Ce code HTML --&gt;
+&lt;ul class=&quot;menu&quot;&gt;
+  &lt;li class=&quot;item&quot;&gt;Accueil&lt;/li&gt;
+  &lt;li class=&quot;item&quot;&gt;Projets&lt;/li&gt;
+  &lt;li class=&quot;item&quot;&gt;Contact&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<pre><code class="language-css">.item {
+  display: inline-block;
+  width: 33.33%; /* 3 éléments × 33.33% = 100%... en théorie */
+}
+</code></pre>
+<p><strong>Résultat :</strong> les trois éléments ne tiennent pas sur une ligne. Le navigateur ajoute ~4px entre chaque élément à cause du retour à la ligne dans le HTML. <code>3 × 33.33% + espaces fantômes = plus de 100%</code> → débordement.</p>
+<p><strong>Les solutions :</strong></p>
+<pre><code class="language-html">&lt;!-- Solution 1 : supprimer les espaces entre les balises dans le HTML --&gt;
+&lt;!-- (moche à lire, mais fonctionnel) --&gt;
+&lt;ul&gt;&lt;li class=&quot;item&quot;&gt;Accueil&lt;/li&gt;&lt;li class=&quot;item&quot;&gt;Projets&lt;/li&gt;&lt;li class=&quot;item&quot;&gt;Contact&lt;/li&gt;&lt;/ul&gt;
+
+&lt;!-- Solution 2 : commenter les espaces --&gt;
+&lt;ul&gt;
+  &lt;li class=&quot;item&quot;&gt;Accueil&lt;/li&gt;&lt;!--
+  --&gt;&lt;li class=&quot;item&quot;&gt;Projets&lt;/li&gt;&lt;!--
+  --&gt;&lt;li class=&quot;item&quot;&gt;Contact&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<pre><code class="language-css">/* Solution 3 (CSS) : font-size à 0 sur le parent, rétabli sur les enfants */
+.menu {
+  font-size: 0; /* supprime l'espace interprété */
+}
+.item {
+  display: inline-block;
+  font-size: 1rem; /* rétablit la taille normale */
+}
+</code></pre>
+<blockquote>
+<p>✅ <strong>En pratique</strong> : si vous voulez placer des éléments côte à côte, le plus simple reste d'utiliser <code>float</code> (voir section 6.3). Le piège de l'espace fantôme ne se pose tout simplement pas avec les floats. Si toutefois vous utilisez <code>inline-block</code>, la technique des commentaires HTML (Solution 2 ci-dessus) est la plus propre.</p>
+</blockquote>
+<p><strong>Tableau récapitulatif - quand utiliser quoi :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Solution recommandée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Un élément inline qui a besoin d'un padding/height</td>
+<td><code>display: inline-block</code></td>
+</tr>
+<tr>
+<td>Un bouton dans un texte</td>
+<td><code>display: inline-block</code></td>
+</tr>
+<tr>
+<td>Éléments côte à côte sans espace fantôme</td>
+<td><code>float: left</code> + <code>clear: both</code> (voir section 6.3)</td>
+</tr>
+<tr>
+<td>Masquer/afficher conditionnellement</td>
+<td><code>display: none</code> / <code>display: block</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="63-alignement-placer-les-elements">6.3 Alignement - placer les éléments</h3>
+<p>L'alignement est souvent la première question qu'on se pose en CSS : "Comment je mets ça à droite ?", "Comment j'aligne ce texte et cette icône ?", "Pourquoi mon bloc ne se centre pas ?". Ce chapitre reprend les techniques vues en cours pour y répondre.</p>
+<h4 id="aligner-du-texte-text-align">Aligner du texte - <code>text-align</code></h4>
+<p><code>text-align</code> agit sur le <strong>contenu inline</strong> à l'intérieur d'un bloc : texte, images, éléments <code>inline-block</code>.</p>
+<pre><code class="language-css">.titre-page {
+  text-align: center;   /* centre tout le contenu */
+}
+
+.prix {
+  text-align: right;    /* aligne à droite */
+}
+
+.paragraphe {
+  text-align: justify;  /* aligne les deux bords - comme dans un journal */
+}
+</code></pre>
+<blockquote>
+<p><code>text-align</code> s'applique au <strong>contenu</strong> du bloc, pas au bloc lui-même. Pour centrer le bloc, voir <code>margin: auto</code> ci-dessous.</p>
+</blockquote>
+<h4 id="centrer-un-bloc-horizontalement-margin-auto">Centrer un bloc horizontalement - <code>margin: auto</code></h4>
+<p>Pour centrer un <strong>élément block</strong> avec une largeur définie :</p>
+<pre><code class="language-css">.conteneur-page {
+  max-width: 900px;   /* on donne une largeur maximale */
+  margin: 0 auto;     /* top: 0, bottom: 0, left: auto, right: auto */
+                      /* &quot;auto&quot; = l'espace disponible est partagé à gauche et à droite */
+}
+
+/* Même principe avec une largeur en pourcentage */
+article {
+  width: 70%;
+  margin: 0 auto;
+}
+</code></pre>
+<blockquote>
+<p><code>margin: 0 auto</code> ne fonctionne pas pour un centrage <strong>vertical</strong> - uniquement horizontal.</p>
+</blockquote>
+<h4 id="mettre-des-elements-cote-a-cote-float">Mettre des éléments côte à côte - <code>float</code></h4>
+<p><code>float</code> permet de faire "flotter" un élément à gauche ou à droite, et les éléments suivants s'écoulent autour de lui.</p>
+<pre><code class="language-css">/* Image à gauche, texte qui s'enroule autour */
+.image-article {
+  float: left;
+  margin: 0 20px 16px 0;  /* espace entre l'image et le texte */
+  width: 280px;
+}
+
+/* Boutons côte à côte */
+.btn-annuler { float: left; }
+.btn-valider { float: right; }
+
+/* ⚠️ Règle obligatoire : toujours nettoyer les floats après */
+/* Sans ça, le parent &quot;s'effondre&quot; (hauteur = 0) */
+.clearfix::after {
+  content: &quot;&quot;;
+  display: block;
+  clear: both;
+}
+</code></pre>
+<blockquote class="warning"><p>⚠️ <strong>Attention à ne pas confondre deux usages de <code>overflow: hidden</code></strong> : l'utiliser sur un parent pour <strong>contenir des floats</strong> (ci-dessus) est une technique courante et légitime. En revanche, l'utiliser avec une <strong>hauteur fixe</strong> pour "couper" du contenu visible est une mauvaise pratique - du contenu réel disparaît et l'utilisateur n'y a plus accès. Exemple à éviter : <code>.conteneur { height: 300px; overflow: hidden; }</code> sur une zone de texte ou de cartes dont le contenu dépasse.</p>
+</blockquote>
+<p>Un pattern classique : <strong>logo à gauche, navigation à droite</strong> :</p>
+<pre><code class="language-html">&lt;header class=&quot;clearfix&quot;&gt;
+  &lt;div class=&quot;logo&quot;&gt;Mon Portfolio&lt;/div&gt;
+  &lt;nav class=&quot;navigation&quot;&gt;
+    &lt;a href=&quot;#&quot;&gt;Accueil&lt;/a&gt;
+    &lt;a href=&quot;#&quot;&gt;Projets&lt;/a&gt;
+    &lt;a href=&quot;#&quot;&gt;Contact&lt;/a&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+</code></pre>
+<pre><code class="language-css">header {
+  padding: 16px 32px;
+  border-bottom: 1px solid #E0E0E0;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 100;
+}
+
+/* Le parent contient les floats grâce à overflow: hidden */
+header { overflow: hidden; }
+
+.logo   { float: left; font-weight: 700; }
+.navigation { float: right; }
+
+.navigation a {
+  display: inline-block;
+  margin-left: 24px;
+  text-decoration: none;
+  color: #555;
+}
+</code></pre>
+<h4 id="aligner-verticalement-des-elements-inline-vertical-align">Aligner verticalement des éléments inline - <code>vertical-align</code></h4>
+<p><code>vertical-align</code> aligne des éléments <strong>inline ou inline-block</strong> les uns par rapport aux autres sur la même ligne de texte.</p>
+<pre><code class="language-css">/* Aligner une icône avec le texte à côté */
+.icone {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;  /* milieu de l'icône = milieu du texte */
+}
+
+/* Valeurs disponibles */
+/* vertical-align: top;       aligne en haut de la ligne */
+/* vertical-align: middle;    aligne au milieu ← la plus utile */
+/* vertical-align: bottom;    aligne en bas */
+/* vertical-align: baseline;  aligne sur la ligne de base du texte (défaut) */
+</code></pre>
+<blockquote>
+<p><code>vertical-align</code> aligne les éléments <strong>entre eux</strong> sur une ligne. Il ne centre pas un élément dans son conteneur bloc. Pour ça, voir la technique <code>line-height</code> ci-dessous.</p>
+</blockquote>
+<h4 id="centrer-verticalement-une-ligne-de-texte-line-height">Centrer verticalement une ligne de texte - <code>line-height</code></h4>
+<p>Pour centrer du texte verticalement dans un élément de hauteur fixe (bouton, barre de nav) :</p>
+<pre><code class="language-css">.btn {
+  display: inline-block;
+  height: 48px;
+  line-height: 48px;   /* line-height = height → texte centré verticalement */
+  padding: 0 24px;
+}
+
+.header-barre {
+  height: 64px;
+  line-height: 64px;
+}
+</code></pre>
+<blockquote>
+<p>Cette technique ne fonctionne que pour <strong>une seule ligne de texte</strong>. Si le texte revient à la ligne, l'effet est cassé.</p>
+</blockquote>
+<h4 id="occuper-lespace-restant-marges-et-calc">Occuper l'espace restant - marges et <code>calc()</code></h4>
+<p>Quand un élément à largeur fixe est à gauche (float), le reste de la largeur peut être utilisé par son voisin via une marge :</p>
+<pre><code class="language-css">/* Sidebar fixe de 240px + contenu qui prend le reste */
+.sidebar {
+  float: left;
+  width: 240px;
+}
+
+.contenu-principal {
+  margin-left: 260px;   /* 240px sidebar + 20px d'espace */
+  /* Le bloc s'étend naturellement sur le reste de la largeur */
+}
+
+/* Alternative avec calc() : calcule une largeur précise */
+.colonne-droite {
+  float: left;
+  width: calc(100% - 260px);  /* 100% du parent - largeur de la sidebar */
+}
+</code></pre>
+<h4 id="rendre-un-element-sticky-position-sticky">Rendre un élément sticky - <code>position: sticky</code></h4>
+<p>Un élément <code>sticky</code> suit le scroll normalement, puis "colle" au viewport dès qu'il atteint le seuil défini.</p>
+<pre><code class="language-css">/* Header qui reste en haut au scroll */
+header {
+  position: sticky;
+  top: 0;                           /* colle en haut */
+  background-color: white;
+  z-index: 100;                     /* au-dessus du contenu */
+  border-bottom: 1px solid #E0E0E0;
+}
+
+/* Sidebar qui colle pendant le scroll de la page */
+.sidebar {
+  position: sticky;
+  top: 24px;   /* laisse 24px d'espace avec le haut du viewport */
+}
+</code></pre>
+<blockquote>
+<p><strong>Pour que <code>sticky</code> fonctionne</strong> : le parent doit avoir une hauteur supérieure à l'élément sticky (il doit y avoir quelque chose à scroller), et <code>top</code> / <code>bottom</code> doit être défini.</p>
+</blockquote>
+<h4 id="position-absolute-positionner-un-element-dans-son-conteneur"><code>position: absolute</code> - positionner un élément dans son conteneur</h4>
+<p>Permet de placer un élément précisément dans son parent (badge, tooltip, icône de fermeture…) :</p>
+<pre><code class="language-css">/* Le parent doit être &quot;positionné&quot; pour servir de repère */
+.carte {
+  position: relative;   /* ← crée le contexte de positionnement */
+}
+
+/* Le badge se positionne par rapport à la carte */
+.badge-nouveau {
+  position: absolute;
+  top: 12px;
+  right: 12px;          /* coin haut-droit de la carte */
+  background: #FF3B30;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+</code></pre>
+<blockquote class="warning"><p>⚠️ Si aucun ancêtre n'a <code>position: relative/absolute/fixed</code>, l'élément se place par rapport à la <code>&lt;body&gt;</code> entière - ce n'est presque jamais ce qu'on veut.</p>
+</blockquote>
+<h4 id="z-index-qui-passe-devant"><code>z-index</code> - qui passe devant ?</h4>
+<p>Quand des éléments se superposent, <code>z-index</code> contrôle l'ordre. <strong>Il ne fonctionne qu'avec <code>position ≠ static</code>.</strong></p>
+<pre><code class="language-css">.carte {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-deroulant {
+  position: absolute;
+  z-index: 50;   /* au-dessus des cartes */
+}
+
+.header {
+  position: sticky;
+  z-index: 100;  /* au-dessus de tout le contenu */
+}
+</code></pre>
+<blockquote>
+<p><strong>Bonne pratique</strong> : définissez vos <code>z-index</code> dans des variables CSS pour éviter la "guerre des z-index" (où tout le monde met des valeurs de plus en plus grandes sans raison) :
+<code>css
+:root {
+  --z-contenu: 1;
+  --z-dropdown: 50;
+  --z-header: 100;
+  --z-modal: 1000;
+}</code></p>
+</blockquote>
+<h4 id="recapitulatif-quelle-technique-pour-quel-besoin">Récapitulatif - quelle technique pour quel besoin ?</h4>
+<table>
+<thead>
+<tr>
+<th>Besoin</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Centrer du texte</td>
+<td><code>text-align: center</code></td>
+</tr>
+<tr>
+<td>Aligner du texte à droite</td>
+<td><code>text-align: right</code></td>
+</tr>
+<tr>
+<td>Centrer un bloc horizontalement</td>
+<td><code>margin: 0 auto</code> (avec <code>width</code> ou <code>max-width</code> défini)</td>
+</tr>
+<tr>
+<td>Deux éléments côte à côte (logo + nav)</td>
+<td><code>float: left</code> / <code>float: right</code> + nettoyer avec <code>overflow: hidden</code> ou <code>.clearfix</code></td>
+</tr>
+<tr>
+<td>Aligner une icône avec son texte</td>
+<td><code>display: inline-block</code> + <code>vertical-align: middle</code> sur l'icône</td>
+</tr>
+<tr>
+<td>Centrer une ligne de texte verticalement</td>
+<td><code>height: Xpx; line-height: Xpx</code></td>
+</tr>
+<tr>
+<td>Contenu qui occupe l'espace restant</td>
+<td><code>margin-left: Xpx</code> après un float, ou <code>width: calc(100% - Xpx)</code></td>
+</tr>
+<tr>
+<td>Header/sidebar sticky au scroll</td>
+<td><code>position: sticky; top: 0</code></td>
+</tr>
+<tr>
+<td>Badge dans le coin d'une carte</td>
+<td><code>position: absolute</code> sur le badge + <code>position: relative</code> sur la carte</td>
+</tr>
+<tr>
+<td>Superposer deux éléments</td>
+<td><code>position: relative/absolute</code> + <code>z-index</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Ce que vous, designer, devez retenir</strong> : La plupart des interfaces que vous dessinez dans Figma ont une traduction directe en CSS classique. Un header avec logo à gauche et nav à droite = floats. Un titre centré = <code>text-align: center</code>. Un badge sur une card = <code>position: absolute</code>. Comprendre ces correspondances vous permet de discuter avec vos développeurs en sachant précisément ce qui est simple ou complexe à implémenter.</p>
+</blockquote>
+<hr />
+<h3 id="64-les-selecteurs-css">6.4 Les sélecteurs CSS</h3>
+<pre><code class="language-css">/* === SÉLECTEUR PAR BALISE === */
+/* Cible TOUS les éléments de ce type sur la page */
+p {
+  color: #333333;
+  line-height: 1.6;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+}
+
+/* === SÉLECTEUR PAR CLASSE (.nom-de-classe) === */
+/* Cible tous les éléments ayant class=&quot;nom-de-classe&quot; */
+/* ✅ Le plus utilisé en pratique - réutilisable et précis */
+.btn-principal {
+  background-color: #0066CC;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+}
+
+.carte-projet {
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* === SÉLECTEUR PAR ID (#identifiant) === */
+/* Cible UN SEUL élément unique (id doit être unique dans la page) */
+/* ⚠️ Très spécifique, difficile à surcharger - à utiliser avec parcimonie */
+#header-principal {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* === COMBINAISONS === */
+
+/* Descendant : tous les &lt;a&gt; à l'intérieur d'un &lt;nav&gt; */
+nav a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Enfant direct : uniquement les &lt;li&gt; directement enfants de &lt;ul&gt; */
+ul &gt; li {
+  padding: 8px 0;
+}
+
+/* === PSEUDO-CLASSES (états) === */
+
+/* Au survol */
+.btn-principal:hover {
+  background-color: #0052A3; /* bleu plus foncé */
+}
+
+/* Au clic (état actif) */
+.btn-principal:active {
+  transform: scale(0.98); /* légère compression */
+}
+
+/* Focus (navigation clavier / accessibilité) */
+.btn-principal:focus {
+  outline: 2px solid #0066CC;
+  outline-offset: 2px;
+}
+/* ⚠️ Ne jamais supprimer le focus sans le remplacer par une alternative visible */
+
+/* Premier enfant d'un groupe */
+.liste-items li:first-child {
+  border-top: none;
+}
+
+/* Dernier enfant */
+.liste-items li:last-child {
+  margin-bottom: 0;
+}
+
+/* Nth-child : cibler des éléments spécifiques */
+.tableau tr:nth-child(even) {
+  background-color: #F8F9FA; /* lignes alternées */
+}
+</code></pre>
+<p>La logique des sélecteurs peut sembler abstraite, mais elle est au coeur de toute interface CSS. Prenons un exemple concret : vous inspectez un bouton dans les DevTools et vous voyez que sa couleur de fond est barrée (overridden). Pourquoi ? Parce qu'un sélecteur plus spécifique s'applique. La règle de spécificité <code>id &gt; class &gt; balise</code> vous donne la clé : un style appliqué via <code>#mon-bouton</code> (ID) l'emporte toujours sur <code>.btn-principal</code> (classe), qui l'emporte sur <code>button</code> (balise).</p>
+<blockquote>
+<p><strong>Tip UX</strong> : En audit, quand vous voyez un style qui "ne s'applique pas" dans les DevTools (barré en rouge), c'est presque toujours un conflit de spécificité. Cliquez sur l'élément → regardez le panneau Styles → les règles sont listées par ordre de priorité. La première non-barrée est celle qui gagne.</p>
+<p><strong>Référence</strong> : <a href="https://developer.mozilla.org/fr/docs/Web/CSS/Specificity">MDN - Spécificité CSS</a> détaille les règles de calcul avec des exemples visuels.</p>
+</blockquote>
+<h4 id="le-mot-cle-important-le-passe-droit-a-eviter">Le mot-clé <code>!important</code> - le "passe-droit" à éviter</h4>
+<p>Il existe en CSS un mécanisme qui permet de forcer une règle à s'appliquer quoi qu'il arrive, en ajoutant <code>!important</code> après la valeur :</p>
+<pre><code class="language-css">/* ⚠️ Ce style gagne contre TOUT, quelle que soit la spécificité du sélecteur */
+.nav-bouton {
+  color: #080808 !important;
+}
+</code></pre>
+<p>En théorie, ça résout un conflit de spécificité en une seconde. En pratique, c'est presque toujours le symptôme d'un problème qu'on n'a pas voulu résoudre correctement. Une fois qu'un <code>!important</code> est en place, la seule façon de le surcharger est d'en mettre un autre - et le CSS devient vite ingérable.</p>
+<p><strong>Règle simple</strong> : si vous voyez du <code>!important</code> dans du code, c'est un signal d'alerte. Demandez-vous (ou demandez à votre développeur) quelle règle de spécificité crée le conflit - il y a presque toujours un meilleur moyen de le résoudre.</p>
+<hr />
+<h3 id="65-variables-css-custom-properties">6.5 Variables CSS (Custom Properties)</h3>
+<p>Les variables CSS permettent de <strong>centraliser les valeurs</strong> réutilisables. Changez une variable → tout le site se met à jour.</p>
+<pre><code class="language-css">/* On déclare les variables dans :root (s'applique à tout le document) */
+:root {
+  /* Couleurs */
+  --couleur-primaire: #0066CC;
+  --couleur-primaire-hover: #0052A3;
+  --couleur-texte: #1A1A1A;
+  --couleur-texte-secondaire: #6B7280;
+  --couleur-fond: #FFFFFF;
+  --couleur-fond-secondaire: #F8F9FA;
+  --couleur-bordure: #E5E7EB;
+
+  /* Typographie */
+  --police-principale: 'Inter', -apple-system, sans-serif;
+  --taille-base: 16px;
+  --taille-sm: 0.875rem; /* 14px */
+  --taille-lg: 1.125rem; /* 18px */
+  --taille-xl: 1.25rem;  /* 20px */
+
+  /* Espacements */
+  --espace-xs: 4px;
+  --espace-sm: 8px;
+  --espace-md: 16px;
+  --espace-lg: 24px;
+  --espace-xl: 32px;
+  --espace-2xl: 48px;
+
+  /* Bordures */
+  --rayon-sm: 4px;
+  --rayon-md: 8px;
+  --rayon-lg: 12px;
+  --rayon-full: 9999px; /* pilule */
+
+  /* Ombres */
+  --ombre-sm: 0 1px 3px rgba(0,0,0,0.12);
+  --ombre-md: 0 4px 12px rgba(0,0,0,0.10);
+}
+
+/* Utilisation des variables avec var() */
+.btn-principal {
+  background-color: var(--couleur-primaire);
+  color: var(--couleur-fond);
+  padding: var(--espace-sm) var(--espace-lg);
+  border-radius: var(--rayon-md);
+  font-family: var(--police-principale);
+  font-size: var(--taille-base);
+  box-shadow: var(--ombre-sm);
+}
+
+.btn-principal:hover {
+  background-color: var(--couleur-primaire-hover);
+  box-shadow: var(--ombre-md);
+}
+
+.carte-projet {
+  background: var(--couleur-fond);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-lg);
+  padding: var(--espace-lg);
+  box-shadow: var(--ombre-sm);
+}
+</code></pre>
+<blockquote>
+<p><strong>Le lien avec Figma</strong> : les <strong>Design Tokens</strong> dans Figma correspondent exactement aux variables CSS. <code>--couleur-primaire</code> dans le code = <code>color/primary</code> dans vos tokens Figma. Un designer qui nomme bien ses tokens aide le développeur à créer un système CSS cohérent - c'est le pont le plus direct entre design et code.</p>
+<p><strong>Tip UX</strong> : Quand vous commencez un nouveau projet, proposez à votre développeur un fichier de variables CSS qui correspond à vos tokens Figma. Vous pouvez le générer directement depuis Figma avec le plugin <strong>Design Tokens</strong> (par Lukas). C'est un geste simple qui fait gagner des heures à l'équipe et garantit la cohérence entre la maquette et le code.</p>
+</blockquote>
+<hr />
+<h3 id="66-transitions-et-animations">6.6 Transitions et Animations</h3>
+<pre><code class="language-css">/* TRANSITION : animer le changement entre deux états */
+.btn {
+  background-color: var(--couleur-primaire);
+  /* transition: propriété durée timing-function délai */
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn:hover {
+  background-color: var(--couleur-primaire-hover);
+  transform: translateY(-2px); /* légère élévation au survol */
+}
+
+/* Transition sur toutes les propriétés */
+.carte {
+  transition: all 0.3s ease;
+}
+.carte:hover {
+  box-shadow: var(--ombre-md);
+  transform: translateY(-4px);
+}
+
+/* ANIMATION : mouvement défini dans le temps avec @keyframes */
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-titre {
+  animation: apparition 0.6s ease-out forwards;
+}
+
+/* Animation de loading (spinner) */
+@keyframes rotation {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--couleur-bordure);
+  border-top-color: var(--couleur-primaire);
+  border-radius: 50%;
+  animation: rotation 0.8s linear infinite;
+}
+</code></pre>
+<blockquote>
+<p><strong>Tip UX</strong> : Une bonne règle pour les transitions : <strong>200 à 300ms pour les micro-interactions</strong> (hover, focus), <strong>300 à 500ms pour les changements de layout</strong> (apparition d'un panneau, ouverture d'un menu), et <strong>jamais au-delà de 1 seconde</strong> sauf pour un chargement. Si une animation dure plus d'une seconde sans feedback, l'utilisateur pensera que l'interface est cassée. Testez toujours vos animations à vitesse réelle, pas au ralenti dans Figma.</p>
+<p><strong>Référence</strong> : <a href="https://developer.mozilla.org/fr/docs/Web/CSS/CSS_transitions/Using_CSS_transitions">MDN - Utilisation des transitions CSS</a> - guide complet avec des exemples interactifs.</p>
+</blockquote>
+<hr />
+<h3 id="67-bonnes-pratiques-structurer-son-code-css">6.7 Bonnes pratiques : structurer son code CSS</h3>
+<p>Écrire du CSS qui fonctionne est une chose. Écrire du CSS <strong>organisé, lisible et cohérent</strong> en est une autre. Cette section présente les pratiques qui rendent un code maintenable dans la durée - et qui facilitent la collaboration entre designers et développeurs.</p>
+<h4 id="la-convention-de-nommage-bem">La convention de nommage BEM</h4>
+<p><strong>BEM</strong> (Block - Element - Modifier) est la convention de nommage la plus répandue dans les équipes professionnelles. Elle résout un problème fondamental : en CSS, tous les noms de classes sont globaux - sans convention, le code devient vite ingérable.</p>
+<p>Pourquoi est-ce que ça vous concerne en tant que designer ? Parce que BEM crée un <strong>langage commun entre Figma et le code</strong>. Si votre composant Figma s'appelle <code>Card / Image</code>, <code>Card / Title</code>, <code>Card / Link</code>, le développeur créera naturellement <code>.card__image</code>, <code>.card__title</code>, <code>.card__link</code>. Nommer vos calques et composants Figma de façon structurée, c'est accélérer l'intégration - et réduire les allers-retours.</p>
+<p><strong>La logique BEM :</strong></p>
+<pre><code>.block {}                /* Le composant autonome */
+.block__element {}       /* Une partie du composant (deux underscores) */
+.block--modifier {}      /* Une variante du composant (deux tirets) */
+</code></pre>
+<p><strong>Exemple concret - une carte de projet :</strong></p>
+<pre><code class="language-html">&lt;!-- HTML structuré en BEM --&gt;
+&lt;article class=&quot;carte&quot;&gt;
+  &lt;img class=&quot;carte__image&quot; src=&quot;projet.jpg&quot; alt=&quot;Projet&quot;&gt;
+  &lt;div class=&quot;carte__corps&quot;&gt;
+    &lt;h3 class=&quot;carte__titre&quot;&gt;Refonte app bancaire&lt;/h3&gt;
+    &lt;p class=&quot;carte__description&quot;&gt;Amélioration du parcours de paiement.&lt;/p&gt;
+    &lt;a class=&quot;carte__lien&quot; href=&quot;#&quot;&gt;Voir le cas →&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/article&gt;
+
+&lt;!-- Variante : carte mise en avant --&gt;
+&lt;article class=&quot;carte carte--vedette&quot;&gt;
+  &lt;img class=&quot;carte__image&quot; src=&quot;projet-hero.jpg&quot; alt=&quot;Projet principal&quot;&gt;
+  &lt;div class=&quot;carte__corps&quot;&gt;
+    &lt;span class=&quot;carte__badge&quot;&gt;Projet phare&lt;/span&gt;
+    &lt;h3 class=&quot;carte__titre&quot;&gt;Redesign plateforme SaaS&lt;/h3&gt;
+    &lt;p class=&quot;carte__description&quot;&gt;Simplification complète de l'UX.&lt;/p&gt;
+    &lt;a class=&quot;carte__lien carte__lien--principal&quot; href=&quot;#&quot;&gt;Voir le cas →&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/article&gt;
+</code></pre>
+<pre><code class="language-css">/* BLOCK : le composant autonome */
+.carte {
+  background: var(--couleur-fond);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-lg);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+/* ELEMENTS : les parties du composant */
+.carte__image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.carte__corps {
+  padding: var(--espace-lg);
+}
+
+.carte__titre {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--couleur-texte);
+}
+
+.carte__description {
+  font-size: var(--taille-sm);
+  color: var(--couleur-texte-secondaire);
+  line-height: 1.5;
+}
+
+.carte__lien {
+  color: var(--couleur-primaire);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: var(--taille-sm);
+  margin-top: auto; /* pousse le lien en bas de la carte */
+}
+
+.carte__badge {
+  display: inline-block;
+  background: var(--couleur-primaire);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--rayon-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* MODIFIERS : les variantes */
+.carte--vedette {
+  border-color: var(--couleur-primaire);
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.15);
+}
+
+.carte--vedette:hover {
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.3), var(--ombre-md);
+}
+
+.carte__lien--principal {
+  background: var(--couleur-primaire);
+  color: white;
+  padding: var(--espace-sm) var(--espace-md);
+  border-radius: var(--rayon-md);
+  text-align: center;
+}
+</code></pre>
+<p><strong>Pourquoi BEM est utile :</strong><br />
+- En lisant <code>.carte__titre</code>, vous savez immédiatement que c'est le titre du composant <code>carte</code><br />
+- Pas de conflit : <code>.carte__titre</code> ne s'applique qu'aux titres de cartes, pas à tous les <code>h3</code> de la page<br />
+- La relation HTML/CSS est explicite - un développeur reprenant votre projet comprend la structure immédiatement</p>
+<blockquote>
+<p><strong>Le lien avec Figma</strong> : vos composants Figma correspondent idéalement aux blocs BEM. <code>Carte / Image</code>, <code>Carte / Titre</code>, <code>Carte / Lien</code> dans Figma → <code>.carte__image</code>, <code>.carte__titre</code>, <code>.carte__lien</code> en CSS. Nommez vos composants et variantes Figma en cohérence avec BEM, et la transition vers le code sera limpide.</p>
+</blockquote>
+<hr />
+<h4 id="organisation-dun-fichier-css-professionnel">Organisation d'un fichier CSS professionnel</h4>
+<blockquote>
+<p><strong>Tip UX</strong> : Vous n'avez pas besoin de maîtriser BEM en tant que designer, mais comprendre sa logique vous permet de lire du code CSS avec aisance. Quand vous voyez <code>.carte__titre--actif</code> dans les DevTools, vous savez immédiatement : c'est le titre (element) d'une carte (block), dans sa variante active (modifier). Cette lisibilité est exactement ce qui fait la valeur de BEM.</p>
+</blockquote>
+<p>Un fichier CSS non organisé devient ingérable rapidement. Voici la structure standard en équipe :</p>
+<pre><code class="language-css">/* ===================================
+   1. RESET et BASE
+   Suppression des styles par défaut
+   =================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===================================
+   2. CUSTOM PROPERTIES (VARIABLES)
+   Centralisation des valeurs
+   =================================== */
+
+:root {
+  --couleur-primaire: #0066CC;
+  /* ... */
+}
+
+/* ===================================
+   3. TYPOGRAPHIE
+   Styles globaux du texte
+   =================================== */
+
+body { font-family: var(--police-principale); }
+h1, h2, h3, h4 { line-height: 1.2; }
+
+/* ===================================
+   4. LAYOUT
+   Structure de la page (header, main, footer)
+   =================================== */
+
+header { /* ... */ }
+main { /* ... */ }
+footer { /* ... */ }
+
+/* ===================================
+   5. COMPOSANTS
+   Éléments réutilisables (BEM)
+   =================================== */
+
+/* Boutons */
+.btn { /* ... */ }
+.btn--principal { /* ... */ }
+.btn--secondaire { /* ... */ }
+
+/* Cartes */
+.carte { /* ... */ }
+.carte__image { /* ... */ }
+
+/* Navigation */
+.nav { /* ... */ }
+
+/* ===================================
+   6. UTILITAIRES
+   Classes d'usage général
+   =================================== */
+
+.sr-only { /* accessible mais invisible visuellement */ }
+.text-center { text-align: center; }
+.mt-auto { margin-top: auto; }
+
+/* ===================================
+   7. RESPONSIVE (MEDIA QUERIES)
+   Adaptations par taille d'écran
+   =================================== */
+
+@media (max-width: 1024px) { /* ... */ }
+@media (max-width: 768px) { /* ... */ }
+</code></pre>
+<h4 id="les-conventions-de-nommage-de-fichiers">Les conventions de nommage de fichiers</h4>
+<pre><code>mon-portfolio/
+│
+├── index.html
+├── projets.html
+│
+├── css/
+│   ├── style.css          ← Fichier principal (ou &quot;main.css&quot;)
+│   │
+│   ├── reset.css          ← Reset des styles navigateur (optionnel)
+│   ├── variables.css      ← Custom properties centralisées
+│   ├── components.css     ← Composants réutilisables
+│   └── responsive.css     ← Media queries
+│
+├── images/
+│   ├── logo.svg                    ← Noms en minuscules, sans espaces
+│   ├── hero-background.jpg         ← Tirets pour séparer les mots (kebab-case)
+│   ├── projet-banque-thumbnail.jpg ← Descriptif et cohérent
+│   └── avatar-ludovic.jpg
+│
+└── fonts/                 ← Si vous hébergez vos propres polices
+    ├── inter-regular.woff2
+    └── inter-bold.woff2
+</code></pre>
+<p><strong>Règles de nommage universelles :</strong></p>
+<table>
+<thead>
+<tr>
+<th>❌ À éviter</th>
+<th>✅ À préférer</th>
+<th>Pourquoi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Mon Image.jpg</code></td>
+<td><code>mon-image.jpg</code></td>
+<td>Les espaces créent des problèmes dans les URLs</td>
+</tr>
+<tr>
+<td><code>IMG_4892.jpg</code></td>
+<td><code>projet-banque-hero.jpg</code></td>
+<td>Noms descriptifs = code lisible et SEO</td>
+</tr>
+<tr>
+<td><code>STYLE.CSS</code></td>
+<td><code>style.css</code></td>
+<td>Majuscules = risques sur certains serveurs Linux</td>
+</tr>
+<tr>
+<td><code>pageAccueil.html</code></td>
+<td><code>page-accueil.html</code></td>
+<td>kebab-case est le standard web</td>
+</tr>
+<tr>
+<td><code>style2.css</code>, <code>styleFinal.css</code></td>
+<td>Un seul <code>style.css</code> organisé</td>
+<td>Prolifération de fichiers = complexité inutile</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="68-exemple-complet-une-page-portfolio-css">6.8 Exemple complet : une page portfolio CSS</h3>
+<p>Voici le CSS complet pour styliser la page HTML de la section 5.1 :</p>
+<pre><code class="language-css">/* ===================================
+   RESET et BASE
+   =================================== */
+
+/* Supprime les marges par défaut des navigateurs */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--police-principale);
+  font-size: var(--taille-base);
+  color: var(--couleur-texte);
+  background-color: var(--couleur-fond);
+  line-height: 1.6;
+}
+
+/* Empêche les images de déborder de leur conteneur */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ===================================
+   HEADER et NAVIGATION
+   =================================== */
+
+header {
+  overflow: hidden;                      /* contient les floats internes */
+  padding: var(--espace-md) var(--espace-xl);
+  border-bottom: 1px solid var(--couleur-bordure);
+  /* Reste en haut lors du scroll */
+  position: sticky;
+  top: 0;
+  background-color: var(--couleur-fond);
+  z-index: 100;
+  line-height: 48px;                     /* hauteur de la barre = 48px */
+}
+
+/* Logo à gauche */
+.logo {
+  float: left;
+  font-weight: 700;
+  font-size: var(--taille-lg);
+}
+
+/* Navigation à droite */
+nav {
+  float: right;
+}
+
+nav a {
+  display: inline-block;
+  margin-left: var(--espace-lg);
+  text-decoration: none;
+  color: var(--couleur-texte-secondaire);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+nav a:hover {
+  color: var(--couleur-primaire);
+}
+
+/* ===================================
+   SECTION HERO
+   =================================== */
+
+#hero {
+  text-align: center;
+  padding: var(--espace-2xl) var(--espace-xl);
+  min-height: 60vh;
+}
+
+#hero h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  max-width: 700px;
+  margin: 0 auto var(--espace-lg);   /* centré + espace sous le titre */
+}
+
+#hero p {
+  font-size: var(--taille-lg);
+  color: var(--couleur-texte-secondaire);
+  max-width: 500px;
+  margin: 0 auto var(--espace-xl);   /* centré + espace avant le bouton */
+}
+
+/* Bouton principal */
+.btn-principal {
+  display: inline-block;
+  background-color: var(--couleur-primaire);
+  color: white;
+  padding: var(--espace-sm) var(--espace-xl);
+  border-radius: var(--rayon-md);
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-principal:hover {
+  background-color: var(--couleur-primaire-hover);
+  transform: translateY(-2px);
+}
+
+/* ===================================
+   SECTION PROJETS
+   =================================== */
+
+#projets {
+  padding: var(--espace-2xl) var(--espace-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;           /* contient les floats des cartes */
+}
+
+#projets h2 {
+  font-size: var(--taille-xl);
+  margin-bottom: var(--espace-xl);
+}
+
+/* Carte projet */
+.carte-projet {
+  float: left;
+  width: 31%;              /* 3 par ligne sur desktop */
+  margin: 0 1% var(--espace-xl);
+  background: var(--couleur-fond);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-lg);
+  overflow: hidden;        /* coupe l'image aux angles arrondis */
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.carte-projet:hover {
+  box-shadow: var(--ombre-md);
+  transform: translateY(-4px);
+}
+
+.carte-projet img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;       /* l'image couvre tout sans déformer */
+}
+
+.carte-projet h3 {
+  padding: var(--espace-md) var(--espace-md) var(--espace-sm);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.carte-projet p {
+  padding: 0 var(--espace-md);
+  color: var(--couleur-texte-secondaire);
+  font-size: var(--taille-sm);
+}
+
+.carte-projet a {
+  display: block;
+  padding: var(--espace-md);
+  color: var(--couleur-primaire);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: var(--taille-sm);
+}
+
+/* ===================================
+   FOOTER
+   =================================== */
+
+footer {
+  background-color: var(--couleur-fond-secondaire);
+  border-top: 1px solid var(--couleur-bordure);
+  padding: var(--espace-xl);
+  text-align: center;
+  color: var(--couleur-texte-secondaire);
+  font-size: var(--taille-sm);
+}
+
+footer a {
+  color: var(--couleur-primaire);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+/* Tablette : 2 cartes par ligne */
+@media (max-width: 1024px) {
+  .carte-projet {
+    width: 48%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  header {
+    text-align: center;
+    line-height: normal;
+    padding: var(--espace-md);
+  }
+
+  /* Sur mobile, logo et nav passent en block (colonne) */
+  .logo,
+  nav {
+    float: none;
+    display: block;
+    margin-bottom: var(--espace-sm);
+  }
+
+  nav a {
+    margin: 0 var(--espace-sm);
+  }
+
+  /* 1 carte par ligne sur mobile */
+  .carte-projet {
+    float: none;
+    width: 100%;
+    margin: 0 0 var(--espace-md);
+  }
+
+  #hero {
+    padding: var(--espace-xl) var(--espace-md);
+  }
+
+  #projets {
+    padding: var(--espace-xl) var(--espace-md);
+  }
+}
+</code></pre>
+<hr />
+<h2 id="7-le-futur-vibe-coding-et-vibe-design">7. Le futur : Vibe Coding et Vibe Design</h2>
+<h3 id="71-lemergence-du-vibe-coding">7.1 L'émergence du Vibe Coding</h3>
+<p>En février 2025, Andrej Karpathy (cofondateur d'OpenAI, ex-directeur IA de Tesla) publie un tweet qui fait le tour du monde tech. Il décrit sa nouvelle façon de coder :</p>
+<blockquote>
+<p><em>"You fully give in to the vibes, embrace exponential growth of coding skills, and don't spend time on what the computer can figure out."</em></p>
+</blockquote>
+<p>Le terme <strong>"vibe coding"</strong> est né. L'idée : au lieu d'écrire du code ligne par ligne, vous décrivez ce que vous voulez à une IA en langage naturel. L'IA génère le code. Vous testez, vous ajustez votre description, l'IA corrige. Vous n'avez pas besoin de comprendre chaque ligne - vous devez comprendre le <strong>résultat attendu</strong>.</p>
+<p>Pourquoi c'est important ? Parce que la compétence clé devient la <strong>capacité à formuler précisément ce qu'on veut</strong> - plutôt que la maîtrise de la syntaxe. Décrire un composant, ses états, ses comportements, ses contraintes, c'est exactement ce qu'un bon designer UX fait déjà dans ses specs Figma. Le vibe coding rapproche le designer du code sans exiger qu'il devienne développeur.</p>
+<hr />
+<h3 id="72-les-outils-de-vibe-coding-en-2026">7.2 Les outils de Vibe Coding en 2026</h3>
+<p>Le paysage évolue vite. Voici les outils marquants, classés par approche.</p>
+<h4 id="les-agents-autonomes-je-decris-lia-construit">Les agents autonomes - "je décris, l'IA construit"</h4>
+<p><strong>Claude Code</strong> (Anthropic) - <a href="https://www.anthropic.com/claude-code">anthropic.com/claude-code</a></p>
+<p>Claude Code est un agent de développement qui tourne dans le terminal. Il ne se contente pas de générer du code : il lit votre projet existant, comprend l'arborescence de fichiers, écrit dans plusieurs fichiers à la fois, exécute des commandes, et corrige ses propres erreurs.</p>
+<p>Concrètement, pour un designer :
+1. Vous ouvrez un dossier de projet vide dans le terminal
+2. Vous dites : "Crée-moi un portfolio one-page avec un header sticky, une section hero centrée, une grille de 3 projets avec cartes cliquables, et un footer avec mes réseaux sociaux. Utilise la police Inter et un bleu #0066CC comme couleur principale."
+3. Claude génère <code>index.html</code>, <code>style.css</code>, et organise les fichiers
+4. Vous ouvrez avec Live Server, vous voyez le résultat
+5. Vous itérez : "Agrandis le titre hero", "Ajoute une ombre sur les cartes au survol", "Rends le tout responsive"</p>
+<p>En 30 à 60 minutes, vous avez un prototype fonctionnel testable sur de vrais appareils.</p>
+<p><strong>Lovable</strong> - <a href="https://lovable.dev">lovable.dev</a> et <strong>Bolt</strong> - <a href="https://bolt.new">bolt.new</a></p>
+<p>Ces plateformes vont plus loin : vous décrivez une application complète (front + back-end), et l'IA génère une app déployée avec une URL réelle. En quelques minutes, vous avez un prototype partageable. Idéal pour valider un concept avec des utilisateurs avant d'investir en développement.</p>
+<h4 id="les-editeurs-augmentes-je-code-lia-massiste">Les éditeurs augmentés - "je code, l'IA m'assiste"</h4>
+<p><strong>Cursor</strong> - <a href="https://cursor.sh">cursor.sh</a></p>
+<p>Fork de VS Code avec une IA intégrée qui voit votre code en contexte. Vous pouvez lui poser des questions sur votre projet ("comment est structuré mon CSS ?"), lui demander de modifier du code ("rends ce bouton accessible avec focus visible"), ou la laisser compléter votre code en temps réel. L'avantage sur un chatbot : l'IA a le contexte complet de vos fichiers.</p>
+<p><strong>GitHub Copilot</strong> - <a href="https://github.com/features/copilot">github.com/features/copilot</a></p>
+<p>Extension pour VS Code qui suggère du code en temps réel pendant que vous tapez. Moins conversationnel que Cursor, mais redoutablement efficace pour accélérer l'écriture quand vous savez déjà ce que vous voulez.</p>
+<h4 id="les-generateurs-de-composants-je-decris-un-element-ui">Les générateurs de composants - "je décris un élément UI"</h4>
+<p><strong>V0</strong> (Vercel) - <a href="https://v0.dev">v0.dev</a></p>
+<p>Spécialisé dans la génération de composants d'interface. Vous décrivez un composant ("un formulaire d'inscription avec validation en temps réel et un bouton désactivé tant que les champs sont invalides"), V0 génère le code prêt à intégrer. Particulièrement intéressant pour les designers qui veulent voir à quoi ressemble un composant avec de vraies interactions, pas juste un mock statique.</p>
+<hr />
+<h3 id="73-le-vibe-design-lia-appliquee-au-design-dinterface">7.3 Le Vibe Design - l'IA appliquée au design d'interface</h3>
+<p>Le vibe design applique la même logique au processus de création visuelle : décrire une interface en langage naturel, et laisser l'IA produire un premier résultat que l'on affine ensuite.</p>
+<h4 id="google-stitch-le-tournant-de-2025">Google Stitch - le tournant de 2025</h4>
+<p><strong>Stitch</strong> (<a href="https://stitch.withgoogle.com">stitch.withgoogle.com</a>) est un outil expérimental de <strong>Google Labs</strong>, lancé lors de Google I/O 2025. C'est l'un des premiers outils de design nativement piloté par l'IA.</p>
+<p>Ce que Stitch fait :<br />
+- Vous décrivez une interface en langage naturel ("une page d'accueil pour une app de méditation avec un fond sombre, un bouton CTA vert, et une illustration d'ondes")<br />
+- Ou vous uploadez une image (wireframe, sketch papier, capture d'écran)<br />
+- Stitch génère un design complet, pixel-perfect, en quelques secondes<br />
+- Vous pouvez exporter le résultat vers <strong>Figma</strong> (avec les calques et composants structurés) ou en <strong>HTML/CSS</strong></p>
+<p>Deux modes de génération :<br />
+- <strong>Mode Standard</strong> (Gemini 2.5 Flash) : rapide, idéal pour explorer plusieurs pistes<br />
+- <strong>Mode Expérimental</strong> (Gemini 2.5 Pro) : plus détaillé, meilleur pour des prompts complexes ou des images en entrée</p>
+<blockquote>
+<p><strong>Attention à ne pas confondre</strong> : Stitch est un produit Google, pas un produit Figma. L'export vers Figma est une fonctionnalité d'interopérabilité - Stitch génère, Figma affine. Les deux outils sont complémentaires, pas concurrents.</p>
+</blockquote>
+<p><strong>Ce que ça change pour un UX designer</strong> : Stitch est particulièrement puissant dans la phase d'<strong>idéation</strong> (le 0-to-1). Là où il fallait 2 heures pour poser 3 concepts dans Figma, Stitch permet d'en explorer 10 en 20 minutes. Mais le travail de <strong>raffinement</strong> - cohérence design system, micro-interactions, accessibilité, edge cases - reste un travail humain, dans Figma.</p>
+<h4 id="figma-ai">Figma AI</h4>
+<p>Figma a intégré ses propres fonctionnalités IA directement dans l'éditeur : génération de premiers jets de design, remplissage de contenu réaliste, suggestions de variantes. Ces outils fonctionnent dans votre fichier existant et respectent vos composants et vos styles locaux - contrairement à Stitch qui part d'une feuille blanche.</p>
+<h4 id="gemini-canvas-prototyper-avec-du-vrai-code">Gemini Canvas - prototyper avec du vrai code</h4>
+<p><strong>Gemini Canvas</strong> (<a href="https://gemini.google.com">gemini.google.com</a>) est un espace de travail de Google où Gemini génère des pages web interactives (HTML/CSS/JS) à partir d'une description. Vous pouvez les éditer visuellement, les tester, et exporter le code. L'intérêt : vous obtenez un <strong>prototype fonctionnel</strong>, pas un mock statique.</p>
+<h4 id="framer-ai-du-design-au-site-en-un-prompt">Framer AI - du design au site en un prompt</h4>
+<p><strong>Framer</strong> (<a href="https://framer.com">framer.com</a>) a intégré une couche IA qui génère des sites web complets et publiables à partir de prompts. Contrairement aux outils de code pur, Framer produit des sites avec un éditeur visuel : vous pouvez ajuster chaque détail sans toucher au code.</p>
+<hr />
+<h3 id="74-concretement-quest-ce-que-ca-change-pour-vous">7.4 Concrètement, qu'est-ce que ça change pour vous ?</h3>
+<h4 id="votre-workflow-de-prototypage-evolue">Votre workflow de prototypage évolue</h4>
+<pre><code>AVANT (classique)
+Wireframe (papier) → Maquette (Figma) → Specs → Développeur → Prototype fonctionnel
+                                                    ↕
+                                              Semaines de travail
+
+MAINTENANT (avec Vibe Coding)
+Wireframe (papier) → Prompt à une IA → Prototype HTML/CSS fonctionnel
+                          ↓
+                    Itérations en langage naturel
+                          ↓
+                    Prototype testable en quelques heures
+</code></pre>
+<p>Un prototype HTML/CSS est testable avec de <strong>vrais utilisateurs</strong>, sur de <strong>vrais appareils</strong>, avec de <strong>vraies données</strong>. Les limites de Figma (interactions simulées, contenu factice, pas de scroll réel) disparaissent.</p>
+<h4 id="votre-facon-de-specifier-evolue">Votre façon de spécifier évolue</h4>
+<p>Plutôt que d'annoter chaque pixel dans Figma, vous pouvez fournir à votre équipe :<br />
+- Un <strong>prototype HTML</strong> de référence (généré par IA, affiné par vous)<br />
+- Vos <strong>variables CSS</strong> qui correspondent à vos tokens Figma<br />
+- Une <strong>spec en Markdown</strong> décrivant les comportements (états, transitions, responsive)</p>
+<p>Ces formats sont lisibles à la fois par les développeurs humains et par les IA de code.</p>
+<h4 id="les-limites-a-connaitre-et-pourquoi-votre-role-reste-essentiel">Les limites à connaître (et pourquoi votre rôle reste essentiel)</h4>
+<p>Le vibe coding produit vite. Mais "vite" ne veut pas dire "bien". Voici les pièges récurrents du code généré par IA :</p>
+<p><strong>Accessibilité</strong> : l'IA oublie souvent les <code>alt</code> descriptifs, les <code>:focus</code> visibles, les rôles ARIA, la navigation clavier. Un site visuellement joli mais inaccessible à 15% de la population, c'est un échec design.</p>
+<p><strong>Sémantique HTML</strong> : l'IA a tendance à utiliser des <code>&lt;div&gt;</code> partout au lieu de <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>. Le site a l'air correct visuellement, mais les lecteurs d'écran et les moteurs de recherche ne comprennent pas sa structure.</p>
+<p><strong>Cohérence système</strong> : l'IA ne connaît pas votre design system. Elle va proposer des couleurs, des espacements, des polices qui ne correspondent pas forcément à votre charte. C'est à vous de vérifier et d'ajuster.</p>
+<p><strong>Performance</strong> : images non compressées, CSS redondant, polices trop lourdes. L'IA optimise rarement pour la performance.</p>
+<blockquote>
+<p><strong>Le rôle du designer reste irremplaçable</strong> : l'IA exécute, le designer <strong>décide</strong>. Décide de ce qui est accessible. Décide de ce qui est cohérent. Décide de ce qui sert l'utilisateur. Le vibe coding vous donne les moyens de prototyper plus vite - il ne vous dispense pas de penser.</p>
+</blockquote>
+<hr />
+<h3 id="75-se-preparer-les-competences-qui-comptent-demain">7.5 Se préparer : les compétences qui comptent demain</h3>
+<p>Pour un UX designer en 2026+, les compétences les plus stratégiques ne sont plus "savoir coder" ou "ne pas coder", mais :</p>
+<p><strong>Savoir prompter efficacement</strong> : décrire un résultat attendu avec précision (composant, états, contraintes, responsive, accessibilité). C'est de la rédaction de specs - une compétence de designer.</p>
+<p><strong>Savoir auditer un résultat</strong> : vérifier que le code généré par l'IA est sémantique, accessible, performant, cohérent avec le design system. C'est du contrôle qualité - une compétence de designer.</p>
+<p><strong>Comprendre le code sans forcément l'écrire</strong> : lire du HTML/CSS pour identifier un problème, suggérer une correction, communiquer avec un développeur. C'est exactement ce que ce cours vous a appris.</p>
+<p><strong>Maîtriser le pont Figma → code</strong> : nommer ses composants et tokens de façon cohérente avec le code, exporter dans les bons formats, comprendre comment le design se traduit en implémentation.</p>
+<blockquote>
+<p><strong>En résumé</strong> : les outils changent vite, mais les fondamentaux restent. Comprendre HTML/CSS, la sémantique, l'accessibilité, le responsive - tout ce que vous avez vu dans ce cours - c'est ce qui vous permet d'utiliser ces outils intelligemment, au lieu de subir leurs limitations.</p>
+</blockquote>
+<hr />
+<h2 id="8-exercice-pratique-votre-cv-en-htmlcss">8. Exercice pratique - Votre CV en HTML/CSS</h2>
+<p>Le meilleur moyen de consolider les notions de ce cours : créer votre propre page web. Un CV en HTML/CSS, c'est l'exercice parfait - il touche à presque tout ce que vous avez appris : la structure sémantique, le Box Model, les chemins relatifs, le responsive, les variables CSS, BEM, et même l'accessibilité (texte alternatif, contraste, navigation clavier).</p>
+<p>Voici un guide pas-à-pas pour construire ce CV en HTML et CSS vanilla (sans framework, sans IA). L'objectif n'est pas de produire une oeuvre d'art - c'est de <strong>comprendre chaque ligne</strong> que vous écrivez.</p>
+<h3 id="81-le-resultat-attendu">8.1 Le résultat attendu</h3>
+<p>Une page web simple, lisible, responsive, qui présente votre profil et vos compétences. Elle servira aussi de preuve concrète que vous savez lire et écrire du HTML/CSS de base.</p>
+<h3 id="82-etape-1-preparer-le-projet">8.2 Étape 1 - Préparer le projet</h3>
+<pre><code>mon-cv/
+├── index.html
+├── css/
+│   └── style.css
+└── images/
+    └── photo-profil.jpg    ← optionnel
+</code></pre>
+<p>Dans VS Code : créez ce dossier, ouvrez-le (<code>Fichier → Ouvrir le dossier</code>), puis créez les fichiers.</p>
+<h3 id="83-etape-2-le-squelette-html">8.3 Étape 2 - Le squelette HTML</h3>
+<p>Dans <code>index.html</code>, tapez <code>!</code> puis <code>Tab</code> pour générer le squelette Emmet. Puis construisez :</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;CV - Prénom NOM&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;css/style.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header&gt;
+    &lt;h1&gt;Prénom NOM&lt;/h1&gt;
+    &lt;p class=&quot;titre-poste&quot;&gt;Étudiant·e M1 UX Design - EFREI Paris&lt;/p&gt;
+    &lt;nav&gt;
+      &lt;a href=&quot;mailto:votre@email.com&quot;&gt;Email&lt;/a&gt;
+      &lt;a href=&quot;https://linkedin.com/in/votre-profil&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;LinkedIn&lt;/a&gt;
+      &lt;a href=&quot;https://votre-portfolio.com&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Portfolio&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+
+    &lt;section id=&quot;profil&quot;&gt;
+      &lt;h2&gt;Profil&lt;/h2&gt;
+      &lt;p&gt;
+        Designer UX en formation à l'EFREI, passionné·e par [vos centres d'intérêt UX].
+        À la recherche d'un stage de [durée] à partir de [date].
+      &lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;formation&quot;&gt;
+      &lt;h2&gt;Formation&lt;/h2&gt;
+
+      &lt;article class=&quot;entree&quot;&gt;
+        &lt;div class=&quot;entree__periode&quot;&gt;2025 – 2026&lt;/div&gt;
+        &lt;div class=&quot;entree__contenu&quot;&gt;
+          &lt;h3&gt;M1 UX Design&lt;/h3&gt;
+          &lt;p&gt;EFREI Paris&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+
+      &lt;article class=&quot;entree&quot;&gt;
+        &lt;div class=&quot;entree__periode&quot;&gt;2022 – 2025&lt;/div&gt;
+        &lt;div class=&quot;entree__contenu&quot;&gt;
+          &lt;h3&gt;Licence [votre domaine]&lt;/h3&gt;
+          &lt;p&gt;[Votre université]&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;experience&quot;&gt;
+      &lt;h2&gt;Expérience&lt;/h2&gt;
+
+      &lt;article class=&quot;entree&quot;&gt;
+        &lt;div class=&quot;entree__periode&quot;&gt;Juin – Août 2025&lt;/div&gt;
+        &lt;div class=&quot;entree__contenu&quot;&gt;
+          &lt;h3&gt;Stage UX Designer&lt;/h3&gt;
+          &lt;p class=&quot;entree__lieu&quot;&gt;[Entreprise], Paris&lt;/p&gt;
+          &lt;p&gt;Redesign du parcours d'inscription. Réduction du taux d'abandon de 28%.&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+    &lt;/section&gt;
+
+    &lt;section id=&quot;competences&quot;&gt;
+      &lt;h2&gt;Compétences&lt;/h2&gt;
+      &lt;p&gt;
+        &lt;span class=&quot;tag&quot;&gt;Figma&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;Prototypage&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;User Research&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;HTML/CSS&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;Design System&lt;/span&gt;
+        &lt;span class=&quot;tag&quot;&gt;Accessibilité&lt;/span&gt;
+      &lt;/p&gt;
+    &lt;/section&gt;
+
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;© 2026 - Prénom NOM&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>Observez : pas de <code>&lt;div&gt;</code> inutile. Chaque section a un sens sémantique. Les noms de classes suivent BEM.</p>
+<h3 id="84-etape-3-le-css-de-base">8.4 Étape 3 - Le CSS de base</h3>
+<p>Dans <code>css/style.css</code> :</p>
+<pre><code class="language-css">/* === RESET et VARIABLES === */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --couleur-texte: #1A1A1A;
+  --couleur-texte-secondaire: #6B7280;
+  --couleur-primaire: #0066CC;
+  --couleur-fond: #FFFFFF;
+  --couleur-fond-section: #F8F9FA;
+  --couleur-bordure: #E5E7EB;
+  --police: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--police);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--couleur-texte);
+  background-color: var(--couleur-fond);
+}
+
+/* === HEADER === */
+
+header {
+  text-align: center;
+  padding: 48px 24px 32px;
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.titre-poste {
+  color: var(--couleur-texte-secondaire);
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+header nav a {
+  display: inline-block;
+  margin: 0 12px;
+  color: var(--couleur-primaire);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+/* === CONTENU PRINCIPAL === */
+
+main {
+  max-width: 700px;
+  margin: 0 auto;           /* centrage horizontal */
+  padding: 32px 24px;
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--couleur-primaire);
+  color: var(--couleur-texte);
+}
+
+/* === ENTRÉES (formation, expérience) === */
+
+.entree {
+  overflow: hidden;          /* contient les floats */
+  margin-bottom: 20px;
+}
+
+.entree__periode {
+  float: left;
+  width: 160px;
+  color: var(--couleur-texte-secondaire);
+  font-size: 0.9rem;
+}
+
+.entree__contenu {
+  margin-left: 180px;       /* 160px + 20px d'espace */
+}
+
+.entree__contenu h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.entree__lieu {
+  color: var(--couleur-texte-secondaire);
+  font-size: 0.9rem;
+}
+
+/* === TAGS DE COMPÉTENCES === */
+
+.tag {
+  display: inline-block;
+  background-color: var(--couleur-fond-section);
+  border: 1px solid var(--couleur-bordure);
+  padding: 4px 12px;
+  border-radius: 9999px;    /* forme pilule */
+  font-size: 0.85rem;
+  margin: 4px 4px;
+  color: var(--couleur-texte);
+}
+
+/* === FOOTER === */
+
+footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--couleur-texte-secondaire);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--couleur-bordure);
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 600px) {
+  .entree__periode {
+    float: none;
+    width: auto;
+    margin-bottom: 4px;
+  }
+  .entree__contenu {
+    margin-left: 0;
+  }
+}
+</code></pre>
+<h3 id="85-etape-4-tester-et-ajuster">8.5 Étape 4 - Tester et ajuster</h3>
+<ol>
+<li>Clic droit sur <code>index.html</code> → <strong>Open with Live Server</strong></li>
+<li>Vérifiez dans Chrome ET Safari</li>
+<li>Testez en mode responsive (DevTools → icône mobile → 375px)</li>
+<li>Ajustez les couleurs, les polices, les espacements à votre goût</li>
+</ol>
+<h3 id="86-pour-aller-plus-loin">8.6 Pour aller plus loin</h3>
+<p>Une fois votre CV de base fonctionnel, essayez :<br />
+- Ajouter une photo de profil (avec <code>border-radius: 50%</code> pour un cercle)<br />
+- Ajouter une section "Projets" avec des cartes et des images<br />
+- Ajouter un lien de téléchargement vers votre CV PDF : <code>&lt;a href="cv.pdf" download&gt;</code><br />
+- Héberger gratuitement votre CV sur <strong>GitHub Pages</strong> ou <strong>Netlify</strong></p>
+<blockquote>
+<p><strong>Cet exercice reprend toutes les notions du cours</strong> : structure HTML sémantique, chemins relatifs, nommage BEM, variables CSS, Box Model, floats, margin auto, inline-block, responsive, et même les alt texts si vous ajoutez des images.</p>
+</blockquote>
+<hr />
+<h2 id="9-auditer-un-site-web-loeil-du-designer">9. Auditer un site web - L'oeil du designer</h2>
+<p>Savoir "lire" un site web existant - comprendre comment il est construit, repérer ses forces et ses faiblesses - est une compétence précieuse pour un designer UX. Voici un protocole d'observation que vous pouvez appliquer à n'importe quel site, mobile ou desktop.</p>
+<h3 id="91-linspection-rapide-5-minutes-pour-comprendre-la-structure">9.1 L'inspection rapide - 5 minutes pour comprendre la structure</h3>
+<p>Ouvrez les DevTools (<code>F12</code> ou <code>⌘ + Option + I</code>), puis :</p>
+<p><strong>1. Regardez la structure HTML</strong> (onglet Elements)<br />
+- Le site utilise-t-il des balises sémantiques (<code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>) ou des <code>&lt;div&gt;</code> partout ?<br />
+- Y a-t-il un seul <code>&lt;h1&gt;</code> ? La hiérarchie des titres est-elle logique (<code>h1 → h2 → h3</code>) ?<br />
+- Les images ont-elles des attributs <code>alt</code> remplis correctement ?<br />
+- Les liens ont-ils du texte explicite (pas juste "cliquez ici") ?</p>
+<p><strong>2. Regardez le CSS</strong> (onglet Elements → panneau Styles à droite)<br />
+- Cliquez sur un élément : quelles classes CSS lui sont appliquées ?<br />
+- Repérez les variables CSS (si elles existent) dans <code>:root</code> - ça révèle si le site a un design system structuré<br />
+- Observez les <code>padding</code> et <code>margin</code> dans le Box Model interactif</p>
+<p><strong>3. Regardez le réseau</strong> (onglet Network, rechargez la page)<br />
+- Combien de requêtes ? Quel poids total ?<br />
+- Les images sont-elles en WebP/AVIF ou en vieux JPEG/PNG non optimisé ?<br />
+- Y a-t-il des erreurs 404 (ressources manquantes) ?</p>
+<h3 id="92-le-test-mobile-simuler-et-observer">9.2 Le test mobile - simuler et observer</h3>
+<p>Sans quitter votre ordinateur :
+1. Dans les DevTools, activez le mode responsive (icône tablette/mobile en haut)
+2. Testez à 375px (iPhone), 768px (iPad), 1440px (desktop)
+3. Observez :<br />
+   - Le menu principal se transforme-t-il en menu burger ?<br />
+   - Les images se redimensionnent-elles proprement ou débordent-elles ?<br />
+   - Le texte reste-t-il lisible sans zoom ?<br />
+   - Les boutons sont-ils assez grands pour un doigt (minimum 44x44px selon Apple) ?<br />
+   - Y a-t-il du scroll horizontal non voulu ?</p>
+<h3 id="93-la-checklist-accessibilite-rapide">9.3 La checklist accessibilité rapide</h3>
+<p>Pas besoin d'être expert WCAG pour repérer les problèmes courants :</p>
+<ul>
+<li><strong>Contraste</strong> : le texte est-il lisible sur son fond ? Testez avec l'outil de contraste intégré aux DevTools Chrome (cliquez sur la pastille de couleur d'un texte)</li>
+<li><strong>Navigation clavier</strong> : appuyez sur <code>Tab</code> plusieurs fois - est-ce que chaque élément interactif est atteignable ? Le focus est-il visible ?</li>
+<li><strong>Zoom</strong> : zoomez à 200% (<code>⌘/Ctrl + +</code>) - la page reste-t-elle utilisable ou tout se casse ?</li>
+<li><strong>Images</strong> : inspectez les <code>&lt;img&gt;</code> - les <code>alt</code> sont-ils remplis et descriptifs ?</li>
+<li><strong>Formulaires</strong> : les champs ont-ils des <code>&lt;label&gt;</code> associés ?</li>
+</ul>
+<h3 id="94-ce-que-ca-vous-apporte-en-tant-que-designer">9.4 Ce que ça vous apporte en tant que designer</h3>
+<p>Auditer régulièrement des sites vous donne :<br />
+- Un <strong>vocabulaire commun</strong> avec vos développeurs ("le padding de cette card est trop large", "le z-index du dropdown passe derrière le header")<br />
+- Un <strong>oeil critique</strong> sur les patterns UI ("ce site utilise des floats partout, c'est daté" ou "les variables CSS sont bien organisées, le design system est solide")<br />
+- Des <strong>références concrètes</strong> à montrer en réunion ("sur le site de Stripe, regardez comment ils gèrent le sticky header")</p>
+<blockquote>
+<p><strong>Tip UX</strong> : Un outil automatique existe pour aller encore plus loin : dans Chrome DevTools, ouvrez l'onglet <strong>Lighthouse</strong> (ou tapez "Lighthouse" dans la palette de commandes). Lancez un audit : Lighthouse analyse la page et génère un rapport avec des scores sur la performance, l'accessibilité, les bonnes pratiques et le SEO. Ce rapport est un excellent support de discussion en réunion d'équipe - et il donne des recommandations concrètes et priorisées. Référence : <a href="https://web.dev/measure/">web.dev/measure</a>.</p>
+<p><strong>Exercice recommandé</strong> : prenez 3 sites que vous utilisez souvent (votre banque, un e-commerce, un outil SaaS) et passez-les dans cette grille d'audit. Vous serez surpris de ce que vous remarquerez maintenant que vous savez où regarder.</p>
+</blockquote>
+<hr />
+<h2 id="10-faciliter-le-travail-de-vos-developpeurs">10. Faciliter le travail de vos développeurs</h2>
+<p>Un bon designer UX ne se contente pas de produire de belles maquettes - il ou elle livre des <strong>specs exploitables</strong> qui permettent au développeur de travailler vite et bien. Cette section compile les pratiques concrètes qui font la différence.</p>
+<h3 id="101-nommer-les-choses-de-facon-coherente">10.1 Nommer les choses de façon cohérente</h3>
+<p>Le pont le plus direct entre Figma et le code, ce sont les noms. Si vous nommez un composant <code>Card / Project / Highlighted</code> dans Figma, le développeur créera naturellement <code>.card-project--highlighted</code> en CSS (BEM). Si vous nommez le même composant <code>Frame 847</code>, il devra tout deviner.</p>
+<p><strong>Bonnes pratiques :</strong><br />
+- Nommez vos composants Figma en anglais, en kebab-case ou slash-case cohérent<br />
+- Alignez les noms de vos tokens Figma avec des noms de variables CSS (<code>color/primary</code> → <code>--couleur-primaire</code>)<br />
+- Documentez votre nomenclature dans une page dédiée de votre fichier Figma</p>
+<h3 id="102-specifier-tous-les-etats-dun-composant">10.2 Spécifier tous les états d'un composant</h3>
+<p>Un bouton n'a pas qu'un seul état. Un développeur a besoin de connaître le comportement pour :</p>
+<table>
+<thead>
+<tr>
+<th>État</th>
+<th>Ce qu'il faut spécifier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Default</strong></td>
+<td>Couleurs, taille, padding, border-radius</td>
+</tr>
+<tr>
+<td><strong>Hover</strong></td>
+<td>Ce qui change au survol (couleur, ombre, déplacement)</td>
+</tr>
+<tr>
+<td><strong>Active</strong></td>
+<td>Feedback visuel au clic (scale, couleur plus foncée)</td>
+</tr>
+<tr>
+<td><strong>Focus</strong></td>
+<td>Outline visible pour la navigation clavier - ne jamais l'oublier</td>
+</tr>
+<tr>
+<td><strong>Disabled</strong></td>
+<td>Apparence grisée, curseur <code>not-allowed</code></td>
+</tr>
+<tr>
+<td><strong>Loading</strong></td>
+<td>Spinner, texte qui change, état intermédiaire</td>
+</tr>
+<tr>
+<td><strong>Error</strong></td>
+<td>Bordure rouge, message d'erreur, icône d'alerte</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Livrer une maquette sans les états hover, focus et error, c'est comme livrer un plan d'architecte sans les cotes. Le développeur devra combler les blancs par lui-même - et le résultat ne correspondra pas forcément à ce que vous aviez en tête.</p>
+</blockquote>
+<h3 id="103-penser-responsive-des-la-maquette">10.3 Penser responsive dès la maquette</h3>
+<p>Ne livrez pas uniquement la version desktop en espérant que le développeur "adaptera". Fournissez au minimum :<br />
+- <strong>Mobile</strong> (375px) - la référence de base<br />
+- <strong>Desktop</strong> (1440px) - la version étendue</p>
+<p>Et documentez les règles de transition : "à partir de 768px, les cartes passent de 1 à 2 colonnes", "le menu se transforme en burger sous 768px", "le titre passe de 1.5rem à 2.5rem sur desktop".</p>
+<h3 id="104-exporter-proprement-les-assets">10.4 Exporter proprement les assets</h3>
+<table>
+<thead>
+<tr>
+<th>Type d'asset</th>
+<th>Format recommandé</th>
+<th>Résolutions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Icônes</td>
+<td>SVG</td>
+<td>Une seule version (vectoriel = scalable)</td>
+</tr>
+<tr>
+<td>Photos / illustrations</td>
+<td>WebP (ou JPEG en fallback)</td>
+<td>1x et 2x (Retina)</td>
+</tr>
+<tr>
+<td>Logos</td>
+<td>SVG</td>
+<td>Une seule version</td>
+</tr>
+<tr>
+<td>Illustrations complexes</td>
+<td>PNG ou WebP avec transparence</td>
+<td>1x et 2x</td>
+</tr>
+</tbody>
+</table>
+<p>Dans Figma : sélectionnez un élément → panneau <strong>Export</strong> (en bas à droite) → choisissez le format et la résolution.</p>
+<p>Nommez vos fichiers exportés en <strong>kebab-case</strong> : <code>icon-search.svg</code>, <code>hero-background.webp</code>, <code>logo-entreprise.svg</code>.</p>
+<h3 id="105-fournir-les-alt-texts-dans-vos-specs">10.5 Fournir les alt texts dans vos specs</h3>
+<p>Chaque image que vous placez dans votre maquette aura besoin d'un attribut <code>alt</code> dans le code. Ce texte alternatif est votre responsabilité de concepteur de contenu, pas celle du développeur. Ajoutez-le dans vos annotations Figma :</p>
+<ul>
+<li>Image porteuse de sens → alt descriptif ("L'équipe de designers en réunion de sprint")</li>
+<li>Image décorative → alt vide intentionnel (<code>alt=""</code>)</li>
+</ul>
+<h3 id="106-communiquer-en-utilisant-le-bon-vocabulaire">10.6 Communiquer en utilisant le bon vocabulaire</h3>
+<p>Quand vous échangez avec un développeur, utiliser les bons termes accélère tout :</p>
+<table>
+<thead>
+<tr>
+<th>Au lieu de dire…</th>
+<th>Dites plutôt…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"L'espace autour du bouton"</td>
+<td>"Le padding du bouton" (intérieur) ou "la margin du bouton" (extérieur)</td>
+</tr>
+<tr>
+<td>"Le bouton doit devenir bleu foncé quand on passe dessus"</td>
+<td>"Le hover du bouton passe en <code>#0052A3</code>"</td>
+</tr>
+<tr>
+<td>"Le texte est trop gros sur mobile"</td>
+<td>"Le <code>font-size</code> du <code>h1</code> doit passer de <code>2.5rem</code> à <code>1.5rem</code> sous <code>768px</code>"</td>
+</tr>
+<tr>
+<td>"La barre du haut doit rester en place"</td>
+<td>"Le header doit être <code>position: sticky; top: 0</code>"</td>
+</tr>
+<tr>
+<td>"Le badge est dans le coin de la carte"</td>
+<td>"Le badge est en <code>position: absolute; top: 12px; right: 12px</code> dans la carte"</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Ce vocabulaire, vous le maîtrisez maintenant. C'est la valeur ajoutée directe de ce cours : vous pouvez avoir des conversations techniques précises avec vos développeurs, sans être développeur vous-même.</p>
+<p><strong>Tip UX</strong> : La collaboration design-dev ne se joue pas seulement dans les specs - elle se joue aussi dans les rituels d'équipe. Proposez à votre développeur front-end de faire un <strong>"design review" bi-hebdomadaire</strong> : 15 minutes où vous regardez ensemble l'intégration en cours dans le navigateur, vous comparez avec la maquette Figma, et vous ajustez en temps réel. Ce rituel court détecte les écarts tôt et évite les cycles de QA douloureux en fin de sprint.</p>
+</blockquote>
+<hr />
+<h2 id="bibliographie-et-ressources">Bibliographie et Ressources</h2>
+<h3 id="documentation-de-reference">Documentation de référence</h3>
+<table>
+<thead>
+<tr>
+<th>Ressource</th>
+<th>Description</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MDN Web Docs</strong></td>
+<td>La référence absolue pour HTML, CSS et JavaScript. Maintenue par Mozilla, traduite en français.</td>
+<td><a href="https://developer.mozilla.org/fr/">developer.mozilla.org/fr</a></td>
+</tr>
+<tr>
+<td><strong>W3Schools</strong></td>
+<td>Tutoriels interactifs et référence rapide. Moins précis que MDN mais plus accessible pour débuter.</td>
+<td><a href="https://www.w3schools.com/">w3schools.com</a></td>
+</tr>
+<tr>
+<td><strong>Can I Use</strong></td>
+<td>Vérifier la compatibilité d'une propriété CSS ou d'une API JS dans chaque navigateur.</td>
+<td><a href="https://caniuse.com">caniuse.com</a></td>
+</tr>
+<tr>
+<td><strong>web.dev</strong></td>
+<td>Guides de bonnes pratiques par Google : performance, accessibilité, SEO.</td>
+<td><a href="https://web.dev">web.dev</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="apprendre-html-et-css">Apprendre HTML et CSS</h3>
+<table>
+<thead>
+<tr>
+<th>Ressource</th>
+<th>Type</th>
+<th>Niveau</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.theodinproject.com/">The Odin Project</a></td>
+<td>Parcours structuré et gratuit, projets pratiques</td>
+<td>Débutant → Intermédiaire</td>
+</tr>
+<tr>
+<td><a href="https://www.freecodecamp.org/">freeCodeCamp</a></td>
+<td>Exercices interactifs, certifications gratuites</td>
+<td>Débutant</td>
+</tr>
+<tr>
+<td><a href="https://css-tricks.com/">CSS-Tricks</a></td>
+<td>Articles pratiques et guides visuels</td>
+<td>Intermédiaire</td>
+</tr>
+<tr>
+<td><a href="https://flukeout.github.io/">CSS Diner</a></td>
+<td>Jeu interactif pour maîtriser les sélecteurs CSS</td>
+<td>Débutant</td>
+</tr>
+</tbody>
+</table>
+<h3 id="accessibilite">Accessibilité</h3>
+<table>
+<thead>
+<tr>
+<th>Ressource</th>
+<th>Description</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WCAG 2.2 (résumé)</strong></td>
+<td>Les règles internationales d'accessibilité web, version simplifiée</td>
+<td><a href="https://www.w3.org/WAI/standards-guidelines/wcag/">w3.org/WAI/standards-guidelines/wcag</a></td>
+</tr>
+<tr>
+<td><strong>a11y checklist</strong></td>
+<td>Checklist pratique pour vérifier l'accessibilité d'une page</td>
+<td><a href="https://www.a11yproject.com/checklist/">a11yproject.com/checklist</a></td>
+</tr>
+<tr>
+<td><strong>Contrast Checker</strong></td>
+<td>Vérifier le ratio de contraste entre deux couleurs</td>
+<td><a href="https://webaim.org/resources/contrastchecker/">webaim.org/resources/contrastchecker</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="assets-et-outils-gratuits">Assets et outils gratuits</h3>
+<table>
+<thead>
+<tr>
+<th>Ressource</th>
+<th>Usage</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Google Fonts</strong></td>
+<td>Polices libres et optimisées pour le web</td>
+<td><a href="https://fonts.google.com">fonts.google.com</a></td>
+</tr>
+<tr>
+<td><strong>Heroicons</strong></td>
+<td>Icônes SVG open source (par les créateurs de Tailwind)</td>
+<td><a href="https://heroicons.com">heroicons.com</a></td>
+</tr>
+<tr>
+<td><strong>Undraw</strong></td>
+<td>Illustrations SVG libres et personnalisables</td>
+<td><a href="https://undraw.co">undraw.co</a></td>
+</tr>
+<tr>
+<td><strong>Squoosh</strong></td>
+<td>Compresser et convertir des images (WebP, AVIF)</td>
+<td><a href="https://squoosh.app">squoosh.app</a></td>
+</tr>
+<tr>
+<td><strong>Realfavicongenerator</strong></td>
+<td>Générer un favicon compatible tous navigateurs</td>
+<td><a href="https://realfavicongenerator.net">realfavicongenerator.net</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="outils-vibe-coding-et-vibe-design">Outils Vibe Coding et Vibe Design</h3>
+<table>
+<thead>
+<tr>
+<th>Outil</th>
+<th>Type</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>Agent de développement autonome (Anthropic)</td>
+<td><a href="https://www.anthropic.com/claude-code">anthropic.com/claude-code</a></td>
+</tr>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Éditeur de code IA (fork VS Code)</td>
+<td><a href="https://cursor.sh">cursor.sh</a></td>
+</tr>
+<tr>
+<td><strong>V0</strong></td>
+<td>Générateur de composants UI (Vercel)</td>
+<td><a href="https://v0.dev">v0.dev</a></td>
+</tr>
+<tr>
+<td><strong>Lovable</strong></td>
+<td>App complète générée par IA</td>
+<td><a href="https://lovable.dev">lovable.dev</a></td>
+</tr>
+<tr>
+<td><strong>Bolt</strong></td>
+<td>App web déployée en minutes</td>
+<td><a href="https://bolt.new">bolt.new</a></td>
+</tr>
+<tr>
+<td><strong>Google Stitch</strong></td>
+<td>Design d'interface par IA (Google Labs)</td>
+<td><a href="https://stitch.withgoogle.com">stitch.withgoogle.com</a></td>
+</tr>
+<tr>
+<td><strong>Framer AI</strong></td>
+<td>Sites web générés par IA</td>
+<td><a href="https://framer.com">framer.com</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="recapitulatif-ce-que-vous-devez-retenir">Récapitulatif - Ce que vous devez retenir</h2>
+<h3 id="en-tant-que-designer-ux-apres-ce-cours-vous-savez">En tant que designer UX, après ce cours, vous savez</h3>
+<p><strong>Comprendre le contexte technique :</strong><br />
+- Comment fonctionne le Web (HTTP, Client/Serveur, DNS)<br />
+- Ce que font le Front-end, le Back-end et l'Infrastructure<br />
+- Pourquoi la sémantique HTML impacte le SEO et l'accessibilité<br />
+- Comment le CSS contrôle l'apparence et le responsive</p>
+<p><strong>Lire du code :</strong><br />
+- Identifier la structure d'un fichier HTML (<code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>)<br />
+- Comprendre un sélecteur CSS et ce qu'il cible (<code>.carte__titre:hover</code>)<br />
+- Repérer un code de réponse HTTP dans les DevTools (200, 404, 500)<br />
+- Naviguer dans l'arborescence d'un projet web</p>
+<p><strong>Communiquer avec précision :</strong><br />
+- Utiliser le bon vocabulaire : padding vs margin, block vs inline, sticky vs fixed<br />
+- Spécifier un composant avec tous ses états (default, hover, focus, disabled, error)<br />
+- Anticiper les contraintes techniques dès la maquette (responsive, performance, accessibilité)<br />
+- Auditer un site existant avec les DevTools</p>
+<p><strong>Pratiquer :</strong><br />
+- Créer une page HTML/CSS fonctionnelle (votre CV)<br />
+- Utiliser VS Code et Live Server<br />
+- Tester dans plusieurs navigateurs<br />
+- Exporter correctement vos assets Figma pour les développeurs<br />
+- Expérimenter avec les outils de vibe coding pour prototyper plus vite</p>
+<blockquote>
+<p><strong>La meilleure façon de devenir un partenaire indispensable pour vos développeurs, c'est de comprendre leur métier - pas de le remplacer.</strong> Ce cours vous a donné les bases pour ça. La suite, c'est de pratiquer, d'observer, et de rester curieux.</p>
+</blockquote>
+<hr />
+<p><em>Support de cours - EFREI M1 UX Design - Développement Web - 2026</em>
+<em><a href="https://www.linkedin.com/in/llegendart-expert-passionné/">Ludovic LEGENDART</a> et <a href="https://www.linkedin.com/in/fabio-rocco/">Fabio ROCCO</a> - Avec la participation de <a href="https://www.linkedin.com/in/bastien-simon-b32b85173/">Bastien SIMON</a> et <a href="https://www.linkedin.com/in/elise-montaut/">Élise MONTAUT</a></em></p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+
+// ── Tables responsives : envelopper chaque table dans un div scrollable ──
+document.querySelectorAll('.content table').forEach(table => {
+  const wrap = document.createElement('div');
+  wrap.className = 'table-wrap';
+  table.parentNode.insertBefore(wrap, table);
+  wrap.appendChild(table);
+});
+
+// ── Bouton copie : uniquement sur les vrais blocs de code (avec classe language-*) ──
+document.querySelectorAll('.content pre > code[class*="language-"]').forEach(code => {
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'Copier';
+  btn.setAttribute('aria-label', 'Copier le code');
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(code.innerText).then(() => {
+      btn.textContent = '✓ Copié';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+  code.parentElement.appendChild(btn);
+});
+
+// ── Thème ──
+const root = document.documentElement;
+const icon  = document.getElementById('themeIcon');
+const label = document.getElementById('themeLabel');
+function setTheme(t) {
+  root.setAttribute('data-theme', t);
+  icon.textContent  = t === 'dark' ? '☀' : '☾';
+  label.textContent = t === 'dark' ? 'Mode clair' : 'Mode sombre';
+  try { localStorage.setItem('efrei-theme', t); } catch(e){}
+}
+try {
+  const s = localStorage.getItem('efrei-theme');
+  if (s) setTheme(s);
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+} catch(e){}
+document.getElementById('themeToggle').addEventListener('click', () =>
+  setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark')
+);
+
+// ── Progression ──
+window.addEventListener('scroll', () => {
+  const s = document.documentElement.scrollTop;
+  const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById('progressFill').style.width = (s / h * 100) + '%';
+}, { passive: true });
+
+// ── TOC actif : surligne le lien sidebar correspondant à la section visible ──
+const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+const links = document.querySelectorAll('.sidebar a');
+const tocObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    links.forEach(l => l.classList.remove('active'));
+    const a = document.querySelector('.sidebar a[href="#' + e.target.id + '"]');
+    if (a) { a.classList.add('active'); a.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+  });
+}, { rootMargin: '-80px 0px -70% 0px' });
+headings.forEach(h => tocObs.observe(h));
+
+// ── Menu mobile ──
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+document.getElementById('menuBtn').addEventListener('click', () => {
+  sidebar.classList.toggle('open'); overlay.classList.toggle('on');
+});
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('on'); });
+links.forEach(a => a.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('on'); }));
+
+</script>
+
+<script>
+(function(){
+  const input   = document.getElementById('searchInput');
+  const countEl = document.getElementById('searchCount');
+  const content = document.querySelector('.content');
+  let marks = [], current = 0;
+
+  function clearMarks() {
+    marks.forEach(m => {
+      const p = m.parentNode;
+      p.replaceChild(document.createTextNode(m.textContent), m);
+      p.normalize();
+    });
+    marks = []; current = 0; countEl.textContent = '';
+  }
+
+  function search(query) {
+    clearMarks();
+    if (!query || query.length < 2) return;
+    const re = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => n.parentElement.closest('script,style,pre,code')
+        ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const text = node.textContent;
+      if (!re.test(text)) return;
+      re.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let last = 0, m;
+      while ((m = re.exec(text)) !== null) {
+        frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+        const mark = document.createElement('mark');
+        mark.textContent = m[0];
+        frag.appendChild(mark);
+        marks.push(mark);
+        last = m.index + m[0].length;
+      }
+      frag.appendChild(document.createTextNode(text.slice(last)));
+      node.parentNode.replaceChild(frag, node);
+    });
+    if (marks.length) {
+      marks[0].classList.add('current');
+      marks[0].scrollIntoView({ block: 'center', behavior: 'smooth' });
+      countEl.textContent = '1 / ' + marks.length;
+    } else {
+      countEl.textContent = '0';
+    }
+  }
+
+  input.addEventListener('input', () => search(input.value.trim()));
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { input.value = ''; clearMarks(); return; }
+    if (e.key !== 'Enter' || !marks.length) return;
+    marks[current].classList.remove('current');
+    current = e.shiftKey
+      ? (current - 1 + marks.length) % marks.length
+      : (current + 1) % marks.length;
+    marks[current].classList.add('current');
+    marks[current].scrollIntoView({ block: 'center', behavior: 'smooth' });
+    countEl.textContent = (current + 1) + ' / ' + marks.length;
+    e.preventDefault();
+  });
+})();
+</script>
+</body>
+</html>
