@@ -1,0 +1,129 @@
+/* ============================================================
+   DESIGN TOKENS
+   Toutes vos décisions de design vivent ici, et nulle part ailleurs.
+   Règle d'or : aucune couleur, taille ou espacement "en dur" plus bas
+   dans le fichier - uniquement des var(--...).
+   ============================================================ */
+:root {
+  /* Couleurs - TODO : remplacez par votre palette */
+  --couleur-fond:        #ffffff;
+  --couleur-surface:     #f5f6f8;   /* fond des cartes */
+  --couleur-texte:       #1a1d21;
+  --couleur-texte-doux:  #5c6470;
+  --couleur-primaire:    #0055cc;   /* boutons, liens, accents */
+  --couleur-primaire-hover: #0044a3;
+  --couleur-bordure:     #e2e6ea;
+
+  /* Typographie - TODO : 2 familles Google Fonts maximum */
+  --police-titres: Georgia, serif;
+  --police-texte:  system-ui, sans-serif;
+
+  /* Échelle d'espacement - gardez-la, elle suffit à 95 % des cas */
+  --espace-xs: 4px;
+  --espace-s:  8px;
+  --espace-m:  16px;
+  --espace-l:  32px;
+  --espace-xl: 64px;
+
+  /* Divers */
+  --rayon: 8px;
+  --largeur-contenu: 1100px;
+}
+
+/* Mode sombre : on ne redéfinit QUE les tokens de couleur.
+   Si votre page casse ici, c'est qu'une couleur est en dur quelque part. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --couleur-fond:        #101418;
+    --couleur-surface:     #1a2027;
+    --couleur-texte:       #e6e9ec;
+    --couleur-texte-doux:  #9aa4af;
+    --couleur-primaire:    #4d94ff;
+    --couleur-primaire-hover: #77adff;
+    --couleur-bordure:     #2a323b;
+  }
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--police-texte);
+  color: var(--couleur-texte);
+  background-color: var(--couleur-fond);
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  font-family: var(--police-titres);
+  line-height: 1.2;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Focus visible : ne le supprimez JAMAIS, personnalisez-le */
+:focus-visible {
+  outline: 3px solid var(--couleur-primaire);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   COMPOSANTS
+   TODO : à vous de jouer. Rappels :
+   - mobile-first : les styles de base sont pour 375 px,
+     les media queries (min-width) adaptent pour les grands écrans
+   - layout : flexbox pour les rangées (header...),
+     grid pour les grilles de cartes
+   - chaque composant documenté dans styleguide.html
+   ============================================================ */
+
+.btn {
+  display: inline-block;
+  padding: var(--espace-s) var(--espace-l);
+  border-radius: var(--rayon);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn--primaire {
+  background-color: var(--couleur-primaire);
+  color: var(--couleur-fond);
+}
+
+.btn--primaire:hover {
+  background-color: var(--couleur-primaire-hover);
+}
+
+/* TODO : état disabled du bouton (pour le styleguide) */
+
+/* TODO : .header en flexbox (logo à gauche, nav à droite) */
+
+/* TODO : .hero */
+
+/* TODO : .features__grille en grid
+   Astuce : grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+   donne une grille responsive sans aucune media query */
+
+/* TODO : .carte */
+
+/* TODO : .faq__item avec details/summary */
+
+/* TODO : .footer */
+
+/* ============================================================
+   MEDIA QUERIES - adaptations pour tablette et desktop
+   ============================================================ */
+@media (min-width: 768px) {
+  /* TODO */
+}

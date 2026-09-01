@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Styleguide - TODO : nom de votre produit</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Styles propres au styleguide (pas à copier dans la landing) */
+    .sg-section { padding: 32px; border-bottom: 1px solid var(--couleur-bordure); }
+    .sg-rangee { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+    .sg-pastille { width: 80px; height: 80px; border-radius: var(--rayon); border: 1px solid var(--couleur-bordure); }
+    .sg-etiquette { font-size: 0.8rem; color: var(--couleur-texte-doux); }
+  </style>
+</head>
+<body>
+
+  <header class="sg-section">
+    <h1>Design system - TODO : nom du produit</h1>
+    <p>Les tokens et composants de notre landing page. Binôme : TODO prénoms.</p>
+  </header>
+
+  <main>
+
+    <section class="sg-section">
+      <h2>Couleurs</h2>
+      <div class="sg-rangee">
+        <figure>
+          <div class="sg-pastille" style="background-color: var(--couleur-primaire)"></div>
+          <figcaption class="sg-etiquette">--couleur-primaire</figcaption>
+        </figure>
+        <!-- TODO : une pastille par token de couleur -->
+      </div>
+    </section>
+
+    <section class="sg-section">
+      <h2>Typographies</h2>
+      <!-- TODO : montrez vos deux familles, les niveaux de titres, le texte courant -->
+    </section>
+
+    <section class="sg-section">
+      <h2>Boutons</h2>
+      <div class="sg-rangee">
+        <a class="btn btn--primaire" href="#">Default</a>
+        <!-- TODO : montrez aussi les états hover (capture ou pseudo-classe forcée
+             dans les DevTools), focus (Tab), et disabled -->
+      </div>
+    </section>
+
+    <section class="sg-section">
+      <h2>Cartes</h2>
+      <!-- TODO : votre composant carte, seul, hors contexte -->
+    </section>
+
+  </main>
+
+</body>
+</html>

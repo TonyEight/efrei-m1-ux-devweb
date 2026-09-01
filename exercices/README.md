@@ -1,8 +1,8 @@
 # Exercices et ateliers
 
-Ce dossier contiendra les énoncés et fichiers de départ des ateliers du cours 2026-2027 :
+Les énoncés et fichiers de travail du cours 2026-2027 :
 
-- `landing-page/` : le projet fil rouge "Landing page et mini design system" (énoncé, contraintes, barème, fichiers de départ)
-- `audit/` : la grille d'audit utilisée en atelier (accessibilité et éco-conception) et pour le rapport individuel
+- `landing-page/` : le projet fil rouge "Landing page et mini design system" - énoncé complet, contraintes, barème, et fichiers de départ dans `landing-page/depart/`
+- `audit/` : la grille d'audit accessibilité et éco-conception, utilisée en atelier (séance 3) et pour le rapport individuel
 
-Voir `docs/plan-de-cours-2026-2027.md` pour l'articulation des ateliers avec les séances.
+Voir `docs/plan-de-cours-2026-2027.md` pour l'articulation avec les séances.
