@@ -6,6 +6,8 @@ Format : 4 séances de 3h30 (adaptable en 7 séances de 2h en coupant aux articu
 Fil rouge : projet "Landing page et mini design system", en binôme, sans back-end et sans JavaScript.
 Parti pris : le JavaScript est traité en littératie (comprendre, reconnaître, spécifier), jamais en écriture.
 
+Documents associés : `guide-animation.md` (notes d'animation séance par séance, pour l'intervenant), `guide-installation.md` (préparation du poste, envoyé aux étudiants avant la séance 1), `../exercices/landing-page/README.md` (énoncé du projet fil rouge).
+
 ---
 
 ## Le projet fil rouge en bref
@@ -26,16 +28,26 @@ Contraintes techniques imposées (le thème reste totalement libre) :
 
 ---
 
+## Avant la séance 1 - Préparer le poste de travail
+
+L'installation de l'environnement (Chrome, VS Code, extension Live Server) se fait à la maison, pas en séance. Le guide `guide-installation.md` est envoyé avec la convocation à J-7, avec un rappel à J-2. Il contient un test de bon fonctionnement en 8 étapes et un plan B sans installation (vscode.dev) pour les postes verrouillés.
+
+Aucune séance ne dépend d'un poste installé avant la séance 2 : l'atelier de la séance 1 se fait entièrement dans le navigateur.
+
 ## Séance 1 - Comprendre le web et lire le code (3h30)
 
 | Durée | Séquence | Contenu (chapitres du support) |
 |---|---|---|
-| 1h15 | Théorie | Internet vs web, HTTP, client/serveur, les 3 domaines, rôles de HTML/CSS/JS (chap. 1 à 3) |
-| 0h30 | Démo outillée | VS Code, DevTools : elements, styles, network, mode responsive (chap. 4) |
-| 1h30 | Atelier 1 | "Autopsie" d'un site réel en binôme : structure sémantique, box model, poids, responsive. Restitution éclair de 1 minute par binôme |
-| 0h15 | Clôture | Quiz formatif (non noté) + annonce du fil rouge |
+| 0h10 | Accueil | Présentation du cours et du dispositif d'évaluation ; sondage d'entrée en 3 questions (expérience du code, aisance avec les fichiers et dossiers, état de l'installation), qui sert à composer les binômes |
+| 1h05 | Théorie | Internet vs web, HTTP, client/serveur, les 3 domaines, rôles de HTML/CSS/JS (chap. 1 à 3). Les sections 1.4 et 1.5 sont survolées |
+| 0h25 | Démo outillée | DevTools : elements, styles, box model, network, mode responsive (chap. 4.2). VS Code est montré trois minutes, pas installé |
+| 1h15 | Atelier 1 | "Autopsie" d'un site réel en binôme, dans le navigateur uniquement : structure sémantique, box model, poids, responsive. Restitution éclair de 1 minute par binôme |
+| 0h10 | Clôture | Quiz formatif (non noté) + annonce du fil rouge |
+| 0h25 | Mise en route | Vérification des installations faites à la maison avec la checklist du guide, dépannage en circulant, entraide entre binômes. Objectif de sortie : au moins un poste fonctionnel par binôme |
 
-Travail pour la séance 2 : chaque binôme vient avec un concept de produit fictif et une maquette rapide (papier ou Figma) de sa landing page.
+Sortie attendue : chaque étudiant a inspecté un vrai site dans les DevTools et sait y lire une structure HTML, un box model et un poids de page ; chaque binôme dispose d'un poste prêt pour la séance 2.
+
+Travail pour la séance 2 : chaque binôme vient avec un concept de produit fictif et une maquette rapide (papier ou Figma) de sa landing page. Les postes non fonctionnels sont réparés en autonomie avec le guide, ou passent en plan B.
 
 ## Séance 2 - HTML sémantique et premiers styles (3h30)
 
@@ -45,6 +57,10 @@ Travail pour la séance 2 : chaque binôme vient avec un concept de produit fict
 | 0h20 | Lancement projet | Brief détaillé, contraintes, barème ; validation express des concepts par l'intervenant |
 | 1h55 | Atelier 2 | Squelette HTML sémantique complet de la landing page + définition des tokens en variables CSS (début du styleguide) |
 | 0h15 | Revue croisée | Chaque binôme audite la sémantique d'un autre binôme avec une mini checklist |
+
+Sortie attendue (le socle de la séance) : un `index.html` complet et sémantique, lisible sans CSS, les tokens de couleur et de typographie remplis dans `:root`, la page styleguide qui affiche au moins les couleurs. Un binôme qui n'y est pas en fin de séance est identifié et accompagné avant la séance 3.
+
+Travail pour la séance 3 : terminer le squelette HTML si besoin, écrire les contenus réels (titres, textes, questions de la FAQ), choisir et exporter les images en format moderne. Compter 2 heures par binôme.
 
 ## Séance 3 - Mise en page moderne et web responsable (3h30)
 
@@ -56,7 +72,9 @@ Travail pour la séance 2 : chaque binôme vient avec un concept de produit fict
 | 1h20 | Atelier 3 | Mise en page complète de la landing (flexbox/grid), responsive, accordéon FAQ details/summary ; mode sombre pour les plus avancés |
 | 0h20 | Audit croisé | Chaque binôme audite un autre binôme : navigation clavier, contrastes, alt, Lighthouse. Chacun repart avec sa liste de correctifs |
 
-Travail pour la séance 4 : appliquer les correctifs d'audit, finaliser le styleguide.
+Sortie attendue (le socle de la séance) : header en flexbox, grille de cartes en grid, FAQ en accordéon fonctionnel, aucun défilement horizontal à 375 px, mode sombre vérifié. Le styleguide montre le bouton dans ses états.
+
+Travail pour la séance 4 : appliquer les correctifs d'audit, finaliser le styleguide, préparer le pitch de 5 minutes. Compter 3 heures par binôme. C'est le principal temps de travail hors séance du module : il est annoncé dès la séance 2.
 
 ## Séance 4 - IA, finitions et évaluation (3h30)
 
@@ -92,6 +110,10 @@ Si l'effectif dépasse environ 16 binômes : soutenances ramenées à 3 minutes 
 | Soutenance (clarté du pitch, qualité de la démo) | 10 |
 
 Le rapport individuel garantit une note personnelle derrière le travail de binôme ; les quiz assurent le rappel espacé des notions.
+
+Le projet définit un socle explicite (ce qui garantit la moyenne) et des paliers au-delà, détaillés dans l'énoncé du projet. Les pénalités ne s'appliquent qu'aux contraintes non tentées ou volontairement contournées (JavaScript, framework CSS, float), jamais à une contrainte tentée et mal exécutée, qui est notée dans son critère.
+
+Charge de travail hors séance, annoncée aux étudiants dès la séance 1 : environ 1 heure avant la séance 2 (concept et maquette), 2 heures avant la séance 3, 3 heures avant la séance 4, puis 2 heures pour le rapport individuel. Soit 8 heures environ par étudiant sur le module.
 
 ### Alignement objectifs / évaluation
 
