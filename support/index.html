@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Support de cours Développement Web — EFREI M1 UX Design 2025/2026. HTML, CSS, JavaScript, outils et bonnes pratiques pour designers UX.">
-<title>Développement Web — EFREI M1 UX 2026</title>
+<meta name="description" content="Support de cours Développement Web - EFREI M1 UX Design 2025/2026. HTML, CSS, JavaScript, outils et bonnes pratiques pour designers UX.">
+<title>Développement Web - EFREI M1 UX 2026</title>
 <!-- Préconnexion aux CDN pour accélérer le chargement des polices et de highlight.js -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <style>
 /* ══════════════════════════════════
-   DESIGN TOKENS — EFREI
+   DESIGN TOKENS - EFREI
    ══════════════════════════════════ */
 :root {
   --efrei-navy:       #002B5C;
@@ -22,7 +22,7 @@
   --efrei-sky:        #e8f0fe;
   --efrei-gold:       #c5a45a;
   --sidebar-w:        320px;
-  --topbar-h:         64px; /* hauteur de la topbar — mise à jour via media query sur mobile */
+  --topbar-h:         64px; /* hauteur de la topbar - mise à jour via media query sur mobile */
 }
 
 [data-theme="light"] {
@@ -117,7 +117,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .btn-menu{display:none}
 
 /* ══════════════════════════════════
-   SIDEBAR  — fix ciblé sur les <li>
+   SIDEBAR  - fix ciblé sur les <li>
    ══════════════════════════════════ */
 .sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--bg-sidebar);border-right:1px solid var(--border);overflow-y:auto;padding:20px 0 40px;z-index:900;transition:transform .3s ease,background .3s}
 .sidebar-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);padding:0 24px 12px}
@@ -125,7 +125,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 /* Tous les <ul> dans la sidebar */
 .sidebar ul{list-style:none}
 
-/* Tous les <li> : pas de padding propre — géré par les <a> enfants */
+/* Tous les <li> : pas de padding propre - géré par les <a> enfants */
 .sidebar li{padding:0}
 
 /* ── Niveau 1 : titre du document (on le masque) ── */
@@ -188,7 +188,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .content strong{font-weight:600}
 
 /* ── Code ── */
-.content code{font-family:'JetBrains Mono','Fira Code',monospace;font-size:.88em}
+/* Ligatures désactivées : sans ça, JetBrains Mono affiche <!-- comme une flèche
+   et != comme un signe unique. Les étudiants recopient ce qu'ils voient. */
+.content code{font-family:'JetBrains Mono','Fira Code',monospace;font-size:.88em;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0}
 .content p code,.content li code,.content td code{background:var(--code-inline-bg);color:var(--code-inline-fg);padding:2px 6px;border-radius:4px;font-size:.84em;border:1px solid var(--code-inline-br)}
 /* Position relative sur pre pour ancrer le bouton de copie */
 .content pre{position:relative;background:var(--bg-code);border-radius:8px;padding:20px 24px;margin:14px 0 22px;overflow-x:auto;border:1px solid var(--border);box-shadow:var(--shadow)}
@@ -228,7 +230,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .content blockquote p:last-child{margin-bottom:0}
 
 /* ══════════════════════════════════
-   TEAM CARDS — intervenants
+   TEAM CARDS - intervenants
    ══════════════════════════════════ */
 .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0 32px}
 .team-section{/* groupe de cartes intervenants */}
@@ -257,7 +259,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   .sidebar.open{transform:translateX(0);box-shadow:var(--shadow)}
   .content{margin-left:0;padding:36px 24px 80px}
   .btn-menu{display:inline-flex}
-  /* Label thème masqué dès que la sidebar disparaît — icône seule suffit */
+  /* Label thème masqué dès que la sidebar disparaît - icône seule suffit */
   #themeLabel{display:none}
   /* Search légèrement réduite pour laisser de la place au .pdf et au menu */
   .search-wrap input{width:160px}
@@ -312,7 +314,7 @@ mark.current{background:#ff6b35;outline:2px solid #ff6b35}
     <div class="topbar-sep"></div>
     <div class="topbar-text">
       <span class="topbar-title">Développement Web</span>
-      <span class="topbar-sub">M1 UX Design — 2025/2026</span>
+      <span class="topbar-sub">M1 UX Design - 2025/2026</span>
     </div>
   </div>
   <div class="topbar-search">
@@ -664,12 +666,12 @@ mark.current{background:#ff6b35;outline:2px solid #ff6b35}
 <!-- IMAGE PLACEHOLDER : undraw.co - "undraw_team_work" ou "undraw_collaboration" -->
 
 <h3 id="21-vue-densemble">2.1 Vue d'ensemble</h3>
-<p>Au sommet se trouve <strong>L'UTILISATEUR</strong> — celui qui voit et interagit avec le produit final.</p>
-<p><strong>FRONT-END</strong> — <em>HTML · CSS · JavaScript · Frameworks</em><br />
+<p>Au sommet se trouve <strong>L'UTILISATEUR</strong> - celui qui voit et interagit avec le produit final.</p>
+<p><strong>FRONT-END</strong> - <em>HTML · CSS · JavaScript · Frameworks</em><br />
 Ce que l'utilisateur voit, touche et ressent. Le front-end reçoit les demandes de l'utilisateur et communique avec le back-end via des requêtes API.</p>
-<p><strong>BACK-END</strong> — <em>Python · PHP · Node.js · Java · Ruby…</em><br />
+<p><strong>BACK-END</strong> - <em>Python · PHP · Node.js · Java · Ruby…</em><br />
 Logique métier, données, authentification, calculs. Le back-end traite les requêtes du front-end et s'appuie sur l'infrastructure pour stocker et récupérer les données.</p>
-<p><strong>INFRASTRUCTURE</strong> — <em>Serveurs · Cloud · DevOps · BDD</em><br />
+<p><strong>INFRASTRUCTURE</strong> - <em>Serveurs · Cloud · DevOps · BDD</em><br />
 Les fondations qui font tourner tout ça.</p>
 <img src="couches-schema.png" width="100%" alt="Schéma des 3 domaines" loading="lazy" decoding="async">
 <blockquote class="warning"><p>⚠️ <strong>Attention aux confusions :</strong><br />
@@ -1303,7 +1305,7 @@ Si ça marche dans Chrome mais pas dans Safari :
 </tr>
 <tr>
 <td>Tablet</td>
-<td>768px – 1024px</td>
+<td>768px à 1024px</td>
 <td>Tablettes</td>
 </tr>
 <tr>
@@ -3063,7 +3065,7 @@ Wireframe (papier) → Prompt à une IA → Prototype HTML/CSS fonctionnel
       &lt;h2&gt;Formation&lt;/h2&gt;
 
       &lt;article class=&quot;entree&quot;&gt;
-        &lt;div class=&quot;entree__periode&quot;&gt;2025 – 2026&lt;/div&gt;
+        &lt;div class=&quot;entree__periode&quot;&gt;2025 - 2026&lt;/div&gt;
         &lt;div class=&quot;entree__contenu&quot;&gt;
           &lt;h3&gt;M1 UX Design&lt;/h3&gt;
           &lt;p&gt;EFREI Paris&lt;/p&gt;
@@ -3071,7 +3073,7 @@ Wireframe (papier) → Prompt à une IA → Prototype HTML/CSS fonctionnel
       &lt;/article&gt;
 
       &lt;article class=&quot;entree&quot;&gt;
-        &lt;div class=&quot;entree__periode&quot;&gt;2022 – 2025&lt;/div&gt;
+        &lt;div class=&quot;entree__periode&quot;&gt;2022 - 2025&lt;/div&gt;
         &lt;div class=&quot;entree__contenu&quot;&gt;
           &lt;h3&gt;Licence [votre domaine]&lt;/h3&gt;
           &lt;p&gt;[Votre université]&lt;/p&gt;
@@ -3083,7 +3085,7 @@ Wireframe (papier) → Prompt à une IA → Prototype HTML/CSS fonctionnel
       &lt;h2&gt;Expérience&lt;/h2&gt;
 
       &lt;article class=&quot;entree&quot;&gt;
-        &lt;div class=&quot;entree__periode&quot;&gt;Juin – Août 2025&lt;/div&gt;
+        &lt;div class=&quot;entree__periode&quot;&gt;Juin - Août 2025&lt;/div&gt;
         &lt;div class=&quot;entree__contenu&quot;&gt;
           &lt;h3&gt;Stage UX Designer&lt;/h3&gt;
           &lt;p class=&quot;entree__lieu&quot;&gt;[Entreprise], Paris&lt;/p&gt;
