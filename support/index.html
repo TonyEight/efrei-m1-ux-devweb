@@ -383,15 +383,18 @@ mark.current{background:#ff6b35;outline:2px solid #ff6b35}
 <li><a href="#57-les-images-en-htmlcss">5.7 Les images en HTML/CSS</a></li>
 </ul>
 </li>
-<li><a href="#6-css-style-et-mise-en-page">6. CSS - Style et Mise en page</a><ul>
+<li><a href="#6-css-style-et-mise-en-page">6. CSS - Style et mise en page</a><ul>
 <li><a href="#61-le-box-model-la-fondation-de-tout">6.1 Le Box Model : la fondation de tout</a></li>
 <li><a href="#62-display-block-inline-inline-block">6.2 Display - Block, Inline, Inline-Block</a></li>
-<li><a href="#63-alignement-placer-les-elements">6.3 Alignement - placer les éléments</a></li>
-<li><a href="#64-les-selecteurs-css">6.4 Les sélecteurs CSS</a></li>
-<li><a href="#65-variables-css-custom-properties">6.5 Variables CSS (Custom Properties)</a></li>
-<li><a href="#66-transitions-et-animations">6.6 Transitions et Animations</a></li>
-<li><a href="#67-bonnes-pratiques-structurer-son-code-css">6.7 Bonnes pratiques : structurer son code CSS</a></li>
-<li><a href="#68-exemple-complet-une-page-portfolio-css">6.8 Exemple complet : une page portfolio CSS</a></li>
+<li><a href="#63-flexbox-lauto-layout-du-web">6.3 Flexbox - l'auto layout du web</a></li>
+<li><a href="#64-grid-la-grille-native">6.4 Grid - la grille native</a></li>
+<li><a href="#65-positionner-sticky-absolute-et-z-index">6.5 Positionner : sticky, absolute et z-index</a></li>
+<li><a href="#66-les-selecteurs-css">6.6 Les sélecteurs CSS</a></li>
+<li><a href="#67-variables-css-et-design-tokens">6.7 Variables CSS et design tokens</a></li>
+<li><a href="#68-transitions-et-animations">6.8 Transitions et animations</a></li>
+<li><a href="#69-de-linteractivite-sans-javascript">6.9 De l'interactivité sans JavaScript</a></li>
+<li><a href="#610-bonnes-pratiques-structurer-son-code-css">6.10 Bonnes pratiques : structurer son code CSS</a></li>
+<li><a href="#611-exemple-complet-une-mini-landing-page">6.11 Exemple complet : une mini landing page</a></li>
 </ul>
 </li>
 <li><a href="#7-le-futur-vibe-coding-et-vibe-design">7. Le futur : Vibe Coding et Vibe Design</a><ul>
@@ -1785,7 +1788,7 @@ Première ligne Deuxième ligne Troisième ligne
 <p><strong>Tip UX</strong> : Faites le test suivant sur n'importe quel site : DevTools → onglet Network → rechargez la page → filtez par "Img". Regardez le poids total des images. Sur un site bien optimisé, chaque image fait moins de 200 Ko. Sur un site mal optimisé, une seule image peut peser 3 Mo - soit plus que le reste de la page. C'est un diagnostic que vous pouvez faire en 30 secondes et qui impressionnera vos développeurs en réunion.</p>
 </blockquote>
 <hr />
-<h2 id="6-css-style-et-mise-en-page">6. CSS - Style et Mise en page</h2>
+<h2 id="6-css-style-et-mise-en-page">6. CSS - Style et mise en page</h2>
 <h3 id="61-le-box-model-la-fondation-de-tout">6.1 Le Box Model : la fondation de tout</h3>
 <p><strong>Chaque élément HTML est une boîte</strong>. Et cette boîte est composée de 4 couches concentriques :</p>
 <img src="boxmodel-schema.png" width="100%" alt="Schéma du Box Model" loading="lazy" decoding="async">
@@ -1908,7 +1911,7 @@ Première ligne Deuxième ligne Troisième ligne
 }
 </code></pre>
 <blockquote>
-<p>✅ <strong>En pratique</strong> : si vous voulez placer des éléments côte à côte, le plus simple reste d'utiliser <code>float</code> (voir section 6.3). Le piège de l'espace fantôme ne se pose tout simplement pas avec les floats. Si toutefois vous utilisez <code>inline-block</code>, la technique des commentaires HTML (Solution 2 ci-dessus) est la plus propre.</p>
+<p>✅ <strong>En pratique</strong> : ces trois solutions sont des contournements, et vous les croiserez dans du code existant. Aujourd'hui, quand on veut placer des éléments côte à côte, on n'utilise plus <code>inline-block</code> du tout : on passe le parent en <code>display: flex</code> (section 6.3) et l'espace fantôme disparaît avec le problème. Gardez <code>inline-block</code> pour ce qu'il fait bien : donner des dimensions à un élément qui reste dans le flux du texte, comme un bouton ou un badge.</p>
 </blockquote>
 <p><strong>Tableau récapitulatif - quand utiliser quoi :</strong></p>
 <table>
@@ -1928,8 +1931,8 @@ Première ligne Deuxième ligne Troisième ligne
 <td><code>display: inline-block</code></td>
 </tr>
 <tr>
-<td>Éléments côte à côte sans espace fantôme</td>
-<td><code>float: left</code> + <code>clear: both</code> (voir section 6.3)</td>
+<td>Éléments côte à côte</td>
+<td><code>display: flex</code> sur le parent (voir section 6.3)</td>
 </tr>
 <tr>
 <td>Masquer/afficher conditionnellement</td>
@@ -1937,173 +1940,339 @@ Première ligne Deuxième ligne Troisième ligne
 </tr>
 </tbody>
 </table>
-<hr />
-<h3 id="63-alignement-placer-les-elements">6.3 Alignement - placer les éléments</h3>
-<p>L'alignement est souvent la première question qu'on se pose en CSS : "Comment je mets ça à droite ?", "Comment j'aligne ce texte et cette icône ?", "Pourquoi mon bloc ne se centre pas ?". Ce chapitre reprend les techniques vues en cours pour y répondre.</p>
-<h4 id="aligner-du-texte-text-align">Aligner du texte - <code>text-align</code></h4>
+<h4 id="aligner-sans-sortir-du-flux-text-align-et-margin-auto">Aligner sans sortir du flux : <code>text-align</code> et <code>margin: auto</code></h4>
+<p>Avant d'attaquer les vrais outils de mise en page, deux réponses simples règlent déjà beaucoup de situations. Elles restent parfaitement d'actualité et vous les écrirez encore tous les jours.</p>
 <p><code>text-align</code> agit sur le <strong>contenu inline</strong> à l'intérieur d'un bloc : texte, images, éléments <code>inline-block</code>.</p>
-<pre><code class="language-css">.titre-page {
-  text-align: center;   /* centre tout le contenu */
+<pre><code class="language-css">.titre-section {
+  text-align: center;   /* centre le contenu du bloc */
 }
 
 .prix {
-  text-align: right;    /* aligne à droite */
-}
-
-.paragraphe {
-  text-align: justify;  /* aligne les deux bords - comme dans un journal */
+  text-align: right;    /* aligne le contenu à droite */
 }
 </code></pre>
 <blockquote>
-<p><code>text-align</code> s'applique au <strong>contenu</strong> du bloc, pas au bloc lui-même. Pour centrer le bloc, voir <code>margin: auto</code> ci-dessous.</p>
+<p><code>text-align</code> s'applique au <strong>contenu</strong> du bloc, pas au bloc lui-même. Pour centrer le bloc, c'est <code>margin: auto</code> juste en dessous.</p>
 </blockquote>
-<h4 id="centrer-un-bloc-horizontalement-margin-auto">Centrer un bloc horizontalement - <code>margin: auto</code></h4>
-<p>Pour centrer un <strong>élément block</strong> avec une largeur définie :</p>
-<pre><code class="language-css">.conteneur-page {
-  max-width: 900px;   /* on donne une largeur maximale */
-  margin: 0 auto;     /* top: 0, bottom: 0, left: auto, right: auto */
-                      /* &quot;auto&quot; = l'espace disponible est partagé à gauche et à droite */
-}
-
-/* Même principe avec une largeur en pourcentage */
-article {
-  width: 70%;
-  margin: 0 auto;
+<p>Pour centrer un <strong>élément block</strong> qui a une largeur maximale, on laisse le navigateur partager l'espace restant à gauche et à droite :</p>
+<pre><code class="language-css">.conteneur {
+  max-width: 1100px;  /* la largeur au-delà de laquelle le bloc ne grandit plus */
+  margin: 0 auto;     /* 0 en haut et en bas, auto à gauche et à droite */
+                      /* auto = l'espace disponible est partagé équitablement */
 }
 </code></pre>
 <blockquote>
-<p><code>margin: 0 auto</code> ne fonctionne pas pour un centrage <strong>vertical</strong> - uniquement horizontal.</p>
+<p><code>margin: 0 auto</code> centre uniquement à l'<strong>horizontale</strong>, et uniquement si l'élément a une largeur limitée. Pour un centrage vertical, il faut flexbox (section 6.3).</p>
 </blockquote>
-<h4 id="mettre-des-elements-cote-a-cote-float">Mettre des éléments côte à côte - <code>float</code></h4>
-<p><code>float</code> permet de faire "flotter" un élément à gauche ou à droite, et les éléments suivants s'écoulent autour de lui.</p>
-<pre><code class="language-css">/* Image à gauche, texte qui s'enroule autour */
-.image-article {
-  float: left;
-  margin: 0 20px 16px 0;  /* espace entre l'image et le texte */
-  width: 280px;
+<p><strong>Là où ces deux outils s'arrêtent</strong> : ils savent placer <em>un</em> élément, ou le contenu <em>d'un</em> bloc. Dès qu'il faut organiser <strong>plusieurs éléments les uns par rapport aux autres</strong> (un logo et une navigation, une rangée de cartes, une grille de vignettes), ils ne suffisent plus. C'est exactement le travail de flexbox et de grid, les deux sections qui suivent, et c'est là que se joue 90 % de la mise en page d'une page moderne.</p>
+<hr />
+<h3 id="63-flexbox-lauto-layout-du-web">6.3 Flexbox - l'auto layout du web</h3>
+<p>Bonne nouvelle : vous savez déjà faire du flexbox. Chaque fois que vous appliquez un <strong>auto layout</strong> dans Figma, que vous choisissez une direction, un espacement, un alignement, que vous réglez un élément en <em>hug</em> ou en <em>fill</em>, vous décrivez exactement ce que flexbox fait en CSS. L'auto layout de Figma a été conçu d'après flexbox : les concepts sont les mêmes, seuls les mots changent.</p>
+<p>Voici le dictionnaire. Gardez-le sous les yeux, tout le reste de la section en découle.</p>
+<table>
+<thead>
+<tr>
+<th>Dans Figma</th>
+<th>En CSS</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Appliquer un auto layout à une frame</td><td><code>display: flex</code></td></tr>
+<tr><td>Direction horizontale ou verticale</td><td><code>flex-direction: row</code> / <code>column</code></td></tr>
+<tr><td>Espacement entre les éléments (item spacing)</td><td><code>gap</code></td></tr>
+<tr><td>Padding de la frame</td><td><code>padding</code></td></tr>
+<tr><td>Alignement le long de la direction choisie</td><td><code>justify-content</code></td></tr>
+<tr><td>Alignement sur l'autre axe</td><td><code>align-items</code></td></tr>
+<tr><td>Espacement automatique (space between)</td><td><code>justify-content: space-between</code></td></tr>
+<tr><td>Fill container</td><td><code>flex: 1</code></td></tr>
+<tr><td>Hug contents</td><td>le comportement par défaut, rien à écrire</td></tr>
+<tr><td>Wrap (passage à la ligne)</td><td><code>flex-wrap: wrap</code></td></tr>
+</tbody>
+</table>
+<h4 id="le-vocabulaire-conteneur-items-et-axes">Le vocabulaire : conteneur, items et axes</h4>
+<p>Flexbox fonctionne toujours à deux niveaux, et c'est la source de la plupart des incompréhensions au début :</p>
+<ul>
+<li>le <strong>conteneur flex</strong> : le parent, celui qui reçoit <code>display: flex</code>. C'est lui qui décide de la direction, de l'espacement et des alignements.</li>
+<li>les <strong>items flex</strong> : ses enfants directs, et eux seuls. Ils reçoivent les propriétés qui les concernent individuellement, comme <code>flex: 1</code>.</li>
+</ul>
+<p>Deux axes structurent tout le reste :</p>
+<ul>
+<li>l'<strong>axe principal</strong> : celui de la direction choisie. En <code>row</code> il est horizontal, en <code>column</code> il est vertical. C'est <code>justify-content</code> qui le gouverne.</li>
+<li>l'<strong>axe secondaire</strong> : celui qui est perpendiculaire. C'est <code>align-items</code> qui le gouverne.</li>
+</ul>
+<blockquote>
+<p><strong>Le moyen mnémotechnique</strong> : <code>justify</code> travaille dans le sens de la <strong>direction</strong>, <code>align</code> travaille en <strong>travers</strong>. Si vous passez le conteneur de <code>row</code> à <code>column</code>, les deux échangent leurs effets visuels. C'est déroutant une fois, puis ça devient un réflexe.</p>
+</blockquote>
+<h4 id="direction-et-espacement-flex-direction-et-gap">Direction et espacement : <code>flex-direction</code> et <code>gap</code></h4>
+<pre><code class="language-css">.rangee {
+  display: flex;              /* les enfants se placent en ligne */
+  flex-direction: row;        /* valeur par défaut, on peut l'omettre */
+  gap: 16px;                  /* espace entre chaque enfant */
 }
 
-/* Boutons côte à côte */
-.btn-annuler { float: left; }
-.btn-valider { float: right; }
-
-/* ⚠️ Règle obligatoire : toujours nettoyer les floats après */
-/* Sans ça, le parent &quot;s'effondre&quot; (hauteur = 0) */
-.clearfix::after {
-  content: &quot;&quot;;
-  display: block;
-  clear: both;
+.colonne {
+  display: flex;
+  flex-direction: column;     /* les enfants s'empilent verticalement */
+  gap: 24px;
 }
 </code></pre>
-<blockquote class="warning"><p>⚠️ <strong>Attention à ne pas confondre deux usages de <code>overflow: hidden</code></strong> : l'utiliser sur un parent pour <strong>contenir des floats</strong> (ci-dessus) est une technique courante et légitime. En revanche, l'utiliser avec une <strong>hauteur fixe</strong> pour "couper" du contenu visible est une mauvaise pratique - du contenu réel disparaît et l'utilisateur n'y a plus accès. Exemple à éviter : <code>.conteneur { height: 300px; overflow: hidden; }</code> sur une zone de texte ou de cartes dont le contenu dépasse.</p>
+<p><code>gap</code> mérite un mot. Avant son arrivée, pour espacer des éléments, on mettait une <code>margin-right</code> sur chacun, puis on écrivait une règle supplémentaire pour retirer la marge du dernier, sinon un espace de trop traînait au bout de la rangée. Vous verrez encore ce genre de code :</p>
+<pre><code class="language-css">/* L'ancienne façon de faire, que vous croiserez en audit */
+.item {
+  margin-right: 16px;
+}
+.item:last-child {
+  margin-right: 0;   /* rustine pour supprimer la marge en trop */
+}
+</code></pre>
+<p>Avec <code>gap</code>, une seule déclaration sur le parent, aucune rustine, et l'espacement reste correct même si des éléments sont ajoutés ou retirés. C'est exactement la logique de l'item spacing de Figma.</p>
+<h4 id="aligner-justify-content-et-align-items">Aligner : <code>justify-content</code> et <code>align-items</code></h4>
+<pre><code class="language-css">.barre {
+  display: flex;
+
+  /* Sur l'axe principal (ici horizontal, car direction row) */
+  justify-content: flex-start;    /* tout à gauche - valeur par défaut */
+  justify-content: center;        /* groupé au centre */
+  justify-content: flex-end;      /* tout à droite */
+  justify-content: space-between; /* premier collé à gauche, dernier à droite,
+                                     espace réparti entre les autres */
+  justify-content: space-around;  /* espace réparti autour de chaque élément */
+
+  /* Sur l'axe secondaire (ici vertical) */
+  align-items: stretch;      /* les enfants prennent toute la hauteur - défaut */
+  align-items: center;       /* centrés verticalement - le plus utilisé */
+  align-items: flex-start;   /* alignés en haut */
+  align-items: flex-end;     /* alignés en bas */
+  align-items: baseline;     /* alignés sur la ligne de base de leur texte */
+}
+</code></pre>
+<blockquote class="warning">
+<p>⚠️ <strong>Le piège de <code>align-items: stretch</code></strong> : c'est la valeur par défaut. Dans une rangée de cartes de contenus inégaux, elle donne à toutes les cartes la hauteur de la plus haute, ce qui est en général exactement ce que vous voulez. Mais si vous passez à <code>align-items: center</code>, chaque carte reprend sa hauteur naturelle et la rangée devient irrégulière. Beaucoup de "bugs" de cartes mal alignées sont ce réglage-là.</p>
 </blockquote>
-<p>Un pattern classique : <strong>logo à gauche, navigation à droite</strong> :</p>
-<pre><code class="language-html">&lt;header class=&quot;clearfix&quot;&gt;
-  &lt;div class=&quot;logo&quot;&gt;Mon Portfolio&lt;/div&gt;
-  &lt;nav class=&quot;navigation&quot;&gt;
-    &lt;a href=&quot;#&quot;&gt;Accueil&lt;/a&gt;
-    &lt;a href=&quot;#&quot;&gt;Projets&lt;/a&gt;
-    &lt;a href=&quot;#&quot;&gt;Contact&lt;/a&gt;
+<h4 id="hug-ou-fill-la-propriete-flex">Hug ou fill : la propriété <code>flex</code></h4>
+<p>C'est la propriété qui débloque le plus de situations, et la traduction directe du hug / fill de Figma. Elle se pose sur les <strong>items</strong>, pas sur le conteneur.</p>
+<pre><code class="language-css">/* Par défaut, un item fait la taille de son contenu : c'est le &quot;hug contents&quot; */
+
+.champ-recherche {
+  flex: 1;      /* &quot;fill container&quot; : occupe tout l'espace restant */
+}
+
+.bouton {
+  flex: 0 0 auto;   /* ne grandit pas, ne rétrécit pas : garde sa taille */
+}
+
+/* Répartir proportionnellement : la colonne principale prend deux fois
+   plus de place que la colonne secondaire */
+.principal  { flex: 2; }
+.secondaire { flex: 1; }
+</code></pre>
+<p>Un cas typique : une barre de recherche avec un champ qui s'étire et un bouton qui garde sa taille. En Figma, vous mettez le champ en <em>fill</em> et le bouton en <em>hug</em>. En CSS, c'est <code>flex: 1</code> sur le champ et rien sur le bouton.</p>
+<h4 id="passer-a-la-ligne-flex-wrap">Passer à la ligne : <code>flex-wrap</code></h4>
+<p>Par défaut, les items d'un conteneur flex restent sur une seule ligne, quitte à se comprimer jusqu'à devenir illisibles. <code>flex-wrap: wrap</code> les autorise à passer à la ligne quand la place manque.</p>
+<pre><code class="language-css">.liste-tags {
+  display: flex;
+  flex-wrap: wrap;   /* les tags passent à la ligne au lieu de déborder */
+  gap: 8px;          /* gap s'applique aussi entre les lignes */
+}
+</code></pre>
+<blockquote>
+<p><strong>C'est déjà du responsive</strong>, et gratuit : sans écrire la moindre media query, une rangée de tags ou de cartes se réorganise toute seule sur un écran étroit. Retenez-le pour votre projet, cela vous évitera beaucoup de breakpoints inutiles.</p>
+</blockquote>
+<h4 id="trois-patterns-a-connaitre-par-coeur">Trois patterns à connaître par coeur</h4>
+<p><strong>1. Le header : logo à gauche, navigation à droite.</strong> C'est le pattern le plus courant du web, et le meilleur exemple de ce que flexbox a changé. Il fallait autrefois des floats et une technique de nettoyage ; il tient aujourd'hui en cinq déclarations.</p>
+<pre><code class="language-html">&lt;header class=&quot;header&quot;&gt;
+  &lt;a class=&quot;header__logo&quot; href=&quot;/&quot;&gt;Mon produit&lt;/a&gt;
+  &lt;nav class=&quot;header__nav&quot; aria-label=&quot;Navigation principale&quot;&gt;
+    &lt;a href=&quot;#features&quot;&gt;Fonctionnalités&lt;/a&gt;
+    &lt;a href=&quot;#tarifs&quot;&gt;Tarifs&lt;/a&gt;
+    &lt;a href=&quot;#faq&quot;&gt;FAQ&lt;/a&gt;
   &lt;/nav&gt;
 &lt;/header&gt;
 </code></pre>
-<pre><code class="language-css">header {
+<pre><code class="language-css">.header {
+  display: flex;
+  justify-content: space-between;  /* logo d'un côté, nav de l'autre */
+  align-items: center;             /* tout est centré verticalement */
   padding: 16px 32px;
-  border-bottom: 1px solid #E0E0E0;
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 100;
 }
 
-/* Le parent contient les floats grâce à overflow: hidden */
-header { overflow: hidden; }
-
-.logo   { float: left; font-weight: 700; }
-.navigation { float: right; }
-
-.navigation a {
-  display: inline-block;
-  margin-left: 24px;
-  text-decoration: none;
-  color: #555;
+.header__nav {
+  display: flex;    /* la nav est elle-même un conteneur flex */
+  gap: 24px;        /* espace entre les liens */
 }
 </code></pre>
-<h4 id="aligner-verticalement-des-elements-inline-vertical-align">Aligner verticalement des éléments inline - <code>vertical-align</code></h4>
-<p><code>vertical-align</code> aligne des éléments <strong>inline ou inline-block</strong> les uns par rapport aux autres sur la même ligne de texte.</p>
-<pre><code class="language-css">/* Aligner une icône avec le texte à côté */
-.icone {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  vertical-align: middle;  /* milieu de l'icône = milieu du texte */
+<p>Notez qu'un conteneur flex peut contenir un autre conteneur flex. C'est la norme, pas l'exception : une page réelle en imbrique des dizaines, exactement comme vos auto layouts imbriqués dans Figma.</p>
+<p><strong>2. La rangée de cartes qui se réorganise.</strong></p>
+<pre><code class="language-css">.cartes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
 }
 
-/* Valeurs disponibles */
-/* vertical-align: top;       aligne en haut de la ligne */
-/* vertical-align: middle;    aligne au milieu ← la plus utile */
-/* vertical-align: bottom;    aligne en bas */
-/* vertical-align: baseline;  aligne sur la ligne de base du texte (défaut) */
+.carte {
+  flex: 1 1 280px;   /* grandit, rétrécit, mais jamais en dessous de 280px */
+}
+</code></pre>
+<p>Traduction de <code>flex: 1 1 280px</code> : "pars de 280 px, prends l'espace disponible s'il y en a, accepte de rétrécir si nécessaire". Résultat : trois cartes côte à côte sur un grand écran, deux sur une tablette, une seule sur un téléphone, sans une ligne de media query. La section 6.4 montrera la version grid de ce même besoin, plus régulière.</p>
+<p><strong>3. Le centrage parfait, horizontal et vertical.</strong> Pendant quinze ans, "centrer une div verticalement" a été la blague récurrente du développement web, avec des solutions à base de tableaux, de <code>line-height</code> ou de calculs de marges négatives. Aujourd'hui :</p>
+<pre><code class="language-css">.hero {
+  display: flex;
+  align-items: center;      /* centré verticalement */
+  justify-content: center;  /* centré horizontalement */
+  min-height: 60vh;         /* 60 % de la hauteur de l'écran */
+  text-align: center;       /* et le texte lui-même est centré */
+}
+</code></pre>
+<blockquote class="tip">
+<p>✅ <strong>Ce que vous, designer, devez en retenir</strong> : une maquette dont les auto layouts sont propres est une maquette dont la moitié du CSS est déjà écrite. Nommer vos frames, régler correctement vos hug et vos fill, poser des espacements réguliers plutôt qu'à l'oeil : ce ne sont pas des coquetteries de maquettiste, ce sont des instructions directement exploitables par la personne qui intègre. À l'inverse, une maquette faite d'éléments positionnés à la main oblige le développeur à deviner vos intentions, et c'est là que naissent les écarts entre la maquette et le site.</p>
+</blockquote>
+<blockquote>
+<p><strong>Référence</strong> : <a href="https://developer.mozilla.org/fr/docs/Learn/CSS/CSS_layout/Flexbox">MDN - Flexbox</a> pour la documentation complète, et <a href="https://flexboxfroggy.com/#fr">Flexbox Froggy</a>, un petit jeu qui fait assimiler <code>justify-content</code> et <code>align-items</code> en vingt minutes.</p>
+</blockquote>
+<hr />
+<h3 id="64-grid-la-grille-native">6.4 Grid - la grille native</h3>
+<p>Flexbox range des éléments <strong>le long d'une direction</strong> et laisse le contenu décider de la place qu'il prend. Grid fait l'inverse : il pose d'abord une <strong>trame en deux dimensions</strong>, lignes et colonnes, puis fait entrer le contenu dedans. C'est la différence entre aligner des objets sur une étagère et dessiner un gabarit de mise en page.</p>
+<p>La règle de décision tient en trois lignes :</p>
+<table>
+<thead>
+<tr>
+<th>La question à se poser</th>
+<th>La réponse</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Mes éléments se suivent sur une seule ligne ou une seule colonne ?</td><td>flexbox</td></tr>
+<tr><td>J'ai besoin que les colonnes soient alignées entre plusieurs rangées ?</td><td>grid</td></tr>
+<tr><td>C'est le contenu qui dicte les tailles, ou la grille ?</td><td>le contenu, flexbox. La grille, grid.</td></tr>
+</tbody>
+</table>
+<h4 id="poser-une-grille-grid-template-columns-et-lunite-fr">Poser une grille : <code>grid-template-columns</code> et l'unité <code>fr</code></h4>
+<pre><code class="language-css">.grille {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;   /* trois colonnes de largeur égale */
+  gap: 24px;                            /* même gap qu'en flexbox */
+}
+</code></pre>
+<p>L'unité <code>fr</code> (pour <em>fraction</em>) n'existe qu'en grid, et c'est ce qui rend l'outil si confortable. Elle ne dit pas "fais 300 pixels", elle dit "prends une part de l'espace disponible, une fois les gaps et les tailles fixes déduits". Trois colonnes en <code>1fr</code> se partagent l'espace en trois parts égales, quelle que soit la largeur de l'écran, sans le moindre calcul de pourcentage.</p>
+<p><code>repeat()</code> évite de se répéter, et on peut mélanger les unités :</p>
+<pre><code class="language-css">.grille {
+  grid-template-columns: repeat(3, 1fr);      /* équivalent à 1fr 1fr 1fr */
+}
+
+.page {
+  /* Un menu latéral de largeur fixe, un contenu qui prend le reste */
+  grid-template-columns: 260px 1fr;
+}
+
+.deux-tiers {
+  /* Le contenu prend deux parts, la colonne de droite une seule */
+  grid-template-columns: 2fr 1fr;
+}
+</code></pre>
+<h4 id="la-grille-de-cartes-responsive-sans-media-query">La grille de cartes responsive, sans une seule media query</h4>
+<p>C'est le point culminant de cette section, et la ligne de CSS la plus rentable de tout le cours. Vous l'utiliserez telle quelle dans votre projet, pour la section features :</p>
+<pre><code class="language-css">.features__grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+</code></pre>
+<p>Décortiquons, parce qu'il se passe beaucoup de choses en trois mots :</p>
+<ul>
+<li><code>minmax(280px, 1fr)</code> définit une colonne qui ne descend <strong>jamais en dessous de 280 px</strong> et qui, au-delà, prend une part égale de l'espace disponible.</li>
+<li><code>auto-fit</code> demande au navigateur de <strong>calculer lui-même combien de colonnes tiennent</strong> dans la largeur réelle, en respectant ce minimum.</li>
+<li><code>repeat()</code> applique le motif autant de fois que nécessaire.</li>
+</ul>
+<p>Résultat concret : sur un écran de 1440 px, quatre cartes par rangée. Sur une tablette, deux. Sur un téléphone à 375 px, une seule, en pleine largeur. Aucune media query, aucun breakpoint à maintenir, et la mise en page reste correcte à des largeurs que vous n'aviez pas prévues. C'est ce qu'on appelle une mise en page <strong>intrinsèque</strong> : elle réagit à la place disponible plutôt qu'à une liste de tailles d'écran décidées à l'avance.</p>
+<blockquote>
+<p><strong>Le seul réglage qui compte</strong> est la valeur minimale, ici 280 px. Elle correspond à la largeur en dessous de laquelle votre carte devient laide ou illisible. C'est une <strong>décision de design</strong>, pas une valeur technique : c'est à vous de la donner, et un développeur vous en sera reconnaissant. Attention si votre minimum dépasse la largeur d'un mobile, il provoquera un débordement horizontal. Testez toujours à 375 px.</p>
+</blockquote>
+<h4 id="les-zones-nommees-grid-template-areas">Les zones nommées : <code>grid-template-areas</code></h4>
+<p>Pour un gabarit de page complet, grid propose une syntaxe qui se lit comme un dessin. C'est probablement la seule partie du CSS qui ressemble vraiment à une maquette :</p>
+<pre><code class="language-css">.gabarit {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-areas:
+    &quot;entete  entete&quot;
+    &quot;menu    contenu&quot;
+    &quot;pied    pied&quot;;
+  gap: 24px;
+}
+
+.gabarit__entete  { grid-area: entete; }
+.gabarit__menu    { grid-area: menu; }
+.gabarit__contenu { grid-area: contenu; }
+.gabarit__pied    { grid-area: pied; }
+</code></pre>
+<p>Chaque chaîne de caractères est une rangée, chaque mot une cellule. Un nom répété sur deux cellules voisines fusionne la zone. Réorganiser la page en mobile revient alors à redessiner le schéma dans une media query, sans toucher au HTML :</p>
+<pre><code class="language-css">/* Sur mobile, tout s'empile dans une seule colonne */
+@media (max-width: 767px) {
+  .gabarit {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      &quot;entete&quot;
+      &quot;contenu&quot;
+      &quot;menu&quot;
+      &quot;pied&quot;;
+  }
+}
 </code></pre>
 <blockquote>
-<p><code>vertical-align</code> aligne les éléments <strong>entre eux</strong> sur une ligne. Il ne centre pas un élément dans son conteneur bloc. Pour ça, voir la technique <code>line-height</code> ci-dessous.</p>
+<p><strong>Un détail qui compte pour l'accessibilité</strong> : grid permet d'afficher les blocs dans un ordre différent de celui du HTML, comme ci-dessus où le menu passe après le contenu. L'ordre visuel change, mais l'ordre de lecture au clavier et par un lecteur d'écran reste celui du HTML. Un écart trop grand entre les deux désoriente les personnes qui naviguent au clavier. Si vous voulez qu'un bloc soit lu en dernier, mettez-le en dernier dans le HTML plutôt que de le déplacer en CSS.</p>
 </blockquote>
-<h4 id="centrer-verticalement-une-ligne-de-texte-line-height">Centrer verticalement une ligne de texte - <code>line-height</code></h4>
-<p>Pour centrer du texte verticalement dans un élément de hauteur fixe (bouton, barre de nav) :</p>
-<pre><code class="language-css">.btn {
-  display: inline-block;
-  height: 48px;
-  line-height: 48px;   /* line-height = height → texte centré verticalement */
-  padding: 0 24px;
-}
-
-.header-barre {
-  height: 64px;
-  line-height: 64px;
-}
-</code></pre>
+<h4 id="le-miroir-figma-les-layout-grids">Le miroir Figma : les layout grids</h4>
+<p>Le layout grid de Figma (colonnes, gouttière, marge) et grid CSS partagent le vocabulaire, mais pas le rôle, et la confusion est fréquente :</p>
+<table>
+<thead>
+<tr>
+<th>Figma</th>
+<th>CSS</th>
+<th>Différence de nature</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Count : 12 colonnes</td><td><code>grid-template-columns: repeat(12, 1fr)</code></td><td>identique dans l'esprit</td></tr>
+<tr><td>Gutter</td><td><code>gap</code></td><td>identique</td></tr>
+<tr><td>Margin</td><td><code>padding</code> du conteneur</td><td>identique</td></tr>
+<tr><td>La grille est un <strong>repère visuel</strong> : les éléments s'y calent à l'oeil</td><td>La grille <strong>contraint réellement</strong> les éléments</td><td>c'est là que ça diverge</td></tr>
+</tbody>
+</table>
+<p>Conséquence pratique en revue de maquette : si un bloc déborde légèrement de la grille dans Figma, personne ne s'en aperçoit. En CSS, il faudra une règle explicite pour le sortir de la trame. Quand vous livrez une maquette, dites clairement quels éléments sont volontairement hors grille, et lesquels ont juste glissé.</p>
+<h4 id="flexbox-ou-grid-le-tableau-de-decision">Flexbox ou grid ? Le tableau de décision</h4>
+<table>
+<thead>
+<tr>
+<th>Ce que vous voulez construire</th>
+<th>L'outil</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Un header, une barre d'outils, un groupe de boutons</td><td>flexbox</td></tr>
+<tr><td>Une liste de tags qui passe à la ligne</td><td>flexbox</td></tr>
+<tr><td>Un champ qui s'étire à côté d'un bouton fixe</td><td>flexbox</td></tr>
+<tr><td>Le contenu interne d'une carte (titre, texte, lien poussé en bas)</td><td>flexbox en colonne</td></tr>
+<tr><td>Une galerie ou une grille de cartes régulière</td><td>grid</td></tr>
+<tr><td>Un gabarit de page (entête, menu, contenu, pied)</td><td>grid</td></tr>
+<tr><td>Un tableau de bord avec des blocs de tailles différentes</td><td>grid</td></tr>
+<tr><td>Une mosaïque d'images alignée dans les deux sens</td><td>grid</td></tr>
+</tbody>
+</table>
+<blockquote class="tip">
+<p>✅ <strong>Ce n'est pas un choix exclusif</strong>. Une page réelle combine les deux en permanence : la section features est une grille grid, chaque carte à l'intérieur est un conteneur flex en colonne, et le header au-dessus est un conteneur flex en ligne. La bonne question n'est jamais "flexbox ou grid ?" pour toute la page, mais "flexbox ou grid ?" pour <strong>ce bloc précis</strong>.</p>
+</blockquote>
 <blockquote>
-<p>Cette technique ne fonctionne que pour <strong>une seule ligne de texte</strong>. Si le texte revient à la ligne, l'effet est cassé.</p>
+<p><strong>Référence</strong> : <a href="https://developer.mozilla.org/fr/docs/Learn/CSS/CSS_layout/Grids">MDN - Les grilles CSS</a>, et <a href="https://cssgridgarden.com/#fr">Grid Garden</a> sur le même principe de jeu que Flexbox Froggy.</p>
 </blockquote>
-<h4 id="occuper-lespace-restant-marges-et-calc">Occuper l'espace restant - marges et <code>calc()</code></h4>
-<p>Quand un élément à largeur fixe est à gauche (float), le reste de la largeur peut être utilisé par son voisin via une marge :</p>
-<pre><code class="language-css">/* Sidebar fixe de 240px + contenu qui prend le reste */
-.sidebar {
-  float: left;
-  width: 240px;
-}
-
-.contenu-principal {
-  margin-left: 260px;   /* 240px sidebar + 20px d'espace */
-  /* Le bloc s'étend naturellement sur le reste de la largeur */
-}
-
-/* Alternative avec calc() : calcule une largeur précise */
-.colonne-droite {
-  float: left;
-  width: calc(100% - 260px);  /* 100% du parent - largeur de la sidebar */
-}
-</code></pre>
-<h4 id="rendre-un-element-sticky-position-sticky">Rendre un élément sticky - <code>position: sticky</code></h4>
-<p>Un élément <code>sticky</code> suit le scroll normalement, puis "colle" au viewport dès qu'il atteint le seuil défini.</p>
-<pre><code class="language-css">/* Header qui reste en haut au scroll */
-header {
-  position: sticky;
-  top: 0;                           /* colle en haut */
-  background-color: white;
-  z-index: 100;                     /* au-dessus du contenu */
-  border-bottom: 1px solid #E0E0E0;
-}
-
-/* Sidebar qui colle pendant le scroll de la page */
-.sidebar {
-  position: sticky;
-  top: 24px;   /* laisse 24px d'espace avec le haut du viewport */
-}
-</code></pre>
-<blockquote>
-<p><strong>Pour que <code>sticky</code> fonctionne</strong> : le parent doit avoir une hauteur supérieure à l'élément sticky (il doit y avoir quelque chose à scroller), et <code>top</code> / <code>bottom</code> doit être défini.</p>
-</blockquote>
+<hr />
+<h3 id="65-positionner-sticky-absolute-et-z-index">6.5 Positionner : sticky, absolute et z-index</h3>
+<p>Flexbox et grid organisent les éléments <strong>dans le flux</strong> : chacun occupe sa place et pousse les suivants. Il reste une poignée de cas où il faut au contraire <strong>sortir du flux</strong> : un badge posé dans le coin d'une carte, un header qui reste visible pendant le défilement, un menu déroulant qui passe par-dessus le contenu. C'est le travail de <code>position</code>.</p>
+<p>Trois valeurs suffisent en pratique, et une quatrième est la valeur par défaut :</p>
+<ul>
+<li><code>static</code> : le comportement normal, l'élément suit le flux. C'est ce que vous avez sans rien écrire.</li>
+<li><code>relative</code> : l'élément reste dans le flux et garde sa place, mais devient un <strong>repère</strong> pour ses enfants positionnés.</li>
+<li><code>absolute</code> : l'élément sort du flux et se place par rapport à son ancêtre positionné le plus proche.</li>
+<li><code>sticky</code> : l'élément suit le flux, puis se fige quand il atteint un seuil au défilement.</li>
+</ul>
 <h4 id="position-absolute-positionner-un-element-dans-son-conteneur"><code>position: absolute</code> - positionner un élément dans son conteneur</h4>
 <p>Permet de placer un élément précisément dans son parent (badge, tooltip, icône de fermeture…) :</p>
 <pre><code class="language-css">/* Le parent doit être &quot;positionné&quot; pour servir de repère */
@@ -2125,6 +2294,27 @@ header {
 </code></pre>
 <blockquote class="warning"><p>⚠️ Si aucun ancêtre n'a <code>position: relative/absolute/fixed</code>, l'élément se place par rapport à la <code>&lt;body&gt;</code> entière - ce n'est presque jamais ce qu'on veut.</p>
 </blockquote>
+<h4 id="rendre-un-element-sticky-position-sticky">Rendre un élément sticky - <code>position: sticky</code></h4>
+<p>Un élément <code>sticky</code> suit le scroll normalement, puis "colle" au viewport dès qu'il atteint le seuil défini.</p>
+<pre><code class="language-css">/* Header qui reste en haut au scroll */
+header {
+  position: sticky;
+  top: 0;                           /* colle en haut */
+  background-color: white;
+  z-index: 100;                     /* au-dessus du contenu */
+  border-bottom: 1px solid #E0E0E0;
+}
+
+/* Sidebar qui colle pendant le scroll de la page */
+.sidebar {
+  position: sticky;
+  top: 24px;   /* laisse 24px d'espace avec le haut du viewport */
+}
+</code></pre>
+<blockquote>
+<p><strong>Pour que <code>sticky</code> fonctionne</strong> : <code>top</code> ou <code>bottom</code> doit être défini, et le parent doit être plus haut que l'élément (il faut bien quelque chose à faire défiler).</p>
+<p><strong>Le piège qui fait perdre une heure</strong> : si un ancêtre porte <code>overflow: hidden</code> ou <code>overflow: auto</code>, le sticky cesse silencieusement de fonctionner, sans erreur ni avertissement. C'est de très loin la cause numéro un des headers collants qui refusent de coller. Quand ça arrive, remontez les parents un à un dans les DevTools en cherchant un <code>overflow</code>.</p>
+</blockquote>
 <h4 id="z-index-qui-passe-devant"><code>z-index</code> - qui passe devant ?</h4>
 <p>Quand des éléments se superposent, <code>z-index</code> contrôle l'ordre. <strong>Il ne fonctionne qu'avec <code>position ≠ static</code>.</strong></p>
 <pre><code class="language-css">.carte {
@@ -2142,17 +2332,61 @@ header {
   z-index: 100;  /* au-dessus de tout le contenu */
 }
 </code></pre>
-<blockquote>
-<p><strong>Bonne pratique</strong> : définissez vos <code>z-index</code> dans des variables CSS pour éviter la "guerre des z-index" (où tout le monde met des valeurs de plus en plus grandes sans raison) :
-<code>css
-:root {
-  --z-contenu: 1;
+<p><strong>Bonne pratique</strong> : définissez vos <code>z-index</code> dans des variables CSS pour éviter la "guerre des z-index", cette escalade où chacun met une valeur plus grande que le voisin jusqu'à arriver à <code>z-index: 9999</code> sans que personne ne sache plus quoi passe devant quoi :</p>
+<pre><code class="language-css">:root {
+  --z-contenu:  1;
   --z-dropdown: 50;
-  --z-header: 100;
-  --z-modal: 1000;
-}</code></p>
+  --z-header:   100;
+  --z-modal:    1000;
+}
+
+.header {
+  position: sticky;
+  z-index: var(--z-header);
+}
+</code></pre>
+<blockquote>
+<p>Quatre paliers suffisent à la quasi-totalité des sites. C'est aussi une information que vous pouvez fournir dans vos specs : dire quel élément passe devant quel autre est une décision de design, pas un détail d'implémentation.</p>
+</blockquote>
+<h4 id="code-herite-ce-que-vous-croiserez-en-audit">Le code hérité que vous croiserez en audit</h4>
+<p>Les trois techniques ci-dessous ont servi à faire de la mise en page pendant quinze ans, faute de mieux. Elles ne sont plus enseignées comme des solutions de layout, mais vous les rencontrerez à coup sûr : dans les sites que vous auditerez, dans les thèmes WordPress, dans les emails HTML, et assez souvent dans le code que produisent les outils d'IA, entraînés sur des années de code ancien. Savoir les <strong>reconnaître et les traduire</strong> fait partie du métier ; les écrire, non.</p>
+<table>
+<thead>
+<tr>
+<th>Ce que vous verrez dans le code</th>
+<th>Ce que ça cherchait à faire</th>
+<th>Ce qu'on écrit aujourd'hui</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>float: left</code> ou <code>float: right</code>, avec un <code>.clearfix</code> ou un <code>overflow: hidden</code> sur le parent</td>
+<td>Placer des blocs côte à côte</td>
+<td><code>display: flex</code>, ou <code>display: grid</code> pour une grille</td>
+</tr>
+<tr>
+<td><code>display: inline-block</code> plus <code>vertical-align: middle</code></td>
+<td>Aligner une icône avec le texte qui la suit</td>
+<td><code>display: flex; align-items: center; gap: 8px</code></td>
+</tr>
+<tr>
+<td><code>height: 48px; line-height: 48px</code></td>
+<td>Centrer verticalement une ligne de texte dans un bouton ou une barre</td>
+<td><code>display: flex; align-items: center</code></td>
+</tr>
+</tbody>
+</table>
+<p>Quelques précisions pour ne pas jeter le bébé avec l'eau du bain :</p>
+<ul>
+<li><strong><code>float</code> n'est pas mort</strong>, il est simplement revenu à son usage d'origine, celui pour lequel il avait été inventé : faire couler un paragraphe autour d'une image, comme dans un magazine. Pour ça, il reste la bonne réponse.</li>
+<li><strong><code>line-height</code> non plus</strong> : c'est une propriété typographique essentielle, que vous réglez dans toutes vos maquettes. Ce qui est daté, c'est de s'en servir pour centrer, en collant sa valeur à celle de la hauteur.</li>
+<li><strong>Le symptôme qui ne trompe pas</strong> : une feuille de style truffée de <code>.clearfix</code>, de <code>margin-right</code> suivis de <code>:last-child { margin-right: 0 }</code>, et de largeurs en pourcentages à trois décimales (<code>width: 33.333%</code>). Vous regardez du CSS d'avant 2017.</li>
+</ul>
+<blockquote class="warning">
+<p>⚠️ <strong>À vérifier sur le code généré par une IA</strong> : demandez une rangée de cartes à un assistant, et il vous rendra parfois du <code>float</code> avec un clearfix, ou des <code>inline-block</code> avec la rustine <code>font-size: 0</code>. Ce n'est pas faux, ça marche, mais c'est daté et plus fragile. C'est typiquement ce que vous devrez repérer dans l'atelier de la séance 4 et dans votre rapport d'audit. Le réflexe : chercher <code>float</code> et <code>clearfix</code> dans le code rendu, et redemander une version en flexbox ou en grid.</p>
 </blockquote>
 <h4 id="recapitulatif-quelle-technique-pour-quel-besoin">Récapitulatif - quelle technique pour quel besoin ?</h4>
+<p>Ce tableau est le résumé opérationnel de tout le chapitre. Si vous ne deviez en retenir qu'une page, c'est celle-ci.</p>
 <table>
 <thead>
 <tr>
@@ -2161,53 +2395,50 @@ header {
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>Centrer du texte</td>
-<td><code>text-align: center</code></td>
-</tr>
-<tr>
-<td>Aligner du texte à droite</td>
-<td><code>text-align: right</code></td>
-</tr>
-<tr>
-<td>Centrer un bloc horizontalement</td>
-<td><code>margin: 0 auto</code> (avec <code>width</code> ou <code>max-width</code> défini)</td>
-</tr>
-<tr>
-<td>Deux éléments côte à côte (logo + nav)</td>
-<td><code>float: left</code> / <code>float: right</code> + nettoyer avec <code>overflow: hidden</code> ou <code>.clearfix</code></td>
-</tr>
-<tr>
-<td>Aligner une icône avec son texte</td>
-<td><code>display: inline-block</code> + <code>vertical-align: middle</code> sur l'icône</td>
-</tr>
-<tr>
-<td>Centrer une ligne de texte verticalement</td>
-<td><code>height: Xpx; line-height: Xpx</code></td>
-</tr>
-<tr>
-<td>Contenu qui occupe l'espace restant</td>
-<td><code>margin-left: Xpx</code> après un float, ou <code>width: calc(100% - Xpx)</code></td>
-</tr>
-<tr>
-<td>Header/sidebar sticky au scroll</td>
-<td><code>position: sticky; top: 0</code></td>
-</tr>
-<tr>
-<td>Badge dans le coin d'une carte</td>
-<td><code>position: absolute</code> sur le badge + <code>position: relative</code> sur la carte</td>
-</tr>
-<tr>
-<td>Superposer deux éléments</td>
-<td><code>position: relative/absolute</code> + <code>z-index</code></td>
-</tr>
+<tr><td>Logo à gauche, navigation à droite</td><td><code>display: flex; justify-content: space-between; align-items: center</code></td></tr>
+<tr><td>Une rangée d'éléments régulièrement espacés</td><td><code>display: flex; gap: 16px</code></td></tr>
+<tr><td>Aligner une icône avec son texte</td><td><code>display: flex; align-items: center; gap: 8px</code></td></tr>
+<tr><td>Centrer un élément horizontalement et verticalement</td><td><code>display: flex; align-items: center; justify-content: center</code></td></tr>
+<tr><td>Un contenu qui occupe tout l'espace restant</td><td><code>flex: 1</code> sur cet élément</td></tr>
+<tr><td>Des éléments qui passent à la ligne quand la place manque</td><td><code>display: flex; flex-wrap: wrap</code></td></tr>
+<tr><td>Une grille de cartes responsive</td><td><code>display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))</code></td></tr>
+<tr><td>Un gabarit de page complet</td><td><code>display: grid</code> avec <code>grid-template-areas</code></td></tr>
+<tr><td>Pousser un lien en bas d'une carte de hauteur variable</td><td>carte en <code>display: flex; flex-direction: column</code>, puis <code>margin-top: auto</code> sur le lien</td></tr>
+<tr><td>Centrer un bloc de largeur limitée dans la page</td><td><code>max-width</code> plus <code>margin: 0 auto</code></td></tr>
+<tr><td>Centrer du texte</td><td><code>text-align: center</code></td></tr>
+<tr><td>Un header qui reste visible au défilement</td><td><code>position: sticky; top: 0</code></td></tr>
+<tr><td>Un badge dans le coin d'une carte</td><td><code>position: absolute</code> sur le badge, <code>position: relative</code> sur la carte</td></tr>
+<tr><td>Faire passer un élément devant un autre</td><td><code>position</code> non statique plus <code>z-index</code></td></tr>
+<tr><td>Faire couler du texte autour d'une image</td><td><code>float: left</code> - son seul usage encore légitime</td></tr>
 </tbody>
 </table>
-<blockquote>
-<p><strong>Ce que vous, designer, devez retenir</strong> : La plupart des interfaces que vous dessinez dans Figma ont une traduction directe en CSS classique. Un header avec logo à gauche et nav à droite = floats. Un titre centré = <code>text-align: center</code>. Un badge sur une card = <code>position: absolute</code>. Comprendre ces correspondances vous permet de discuter avec vos développeurs en sachant précisément ce qui est simple ou complexe à implémenter.</p>
+<blockquote class="tip">
+<p>✅ <strong>Ce que vous, designer, devez en retenir</strong> : presque tout ce que vous dessinez a une traduction directe en CSS, et cette traduction est courte. Un header, c'est une ligne de flex. Une section features, c'est une ligne de grid. Un badge, c'est un <code>position: absolute</code>. Quand un développeur vous dit qu'une intention de design est "compliquée", vous avez maintenant de quoi demander pourquoi, et distinguer une vraie contrainte technique d'une habitude de travail. Inversement, vous savez reconnaître le moment où vous demandez quelque chose de réellement coûteux : un élément qui doit être à la fois dans le flux et hors du flux, ou un ordre visuel qui contredit l'ordre de lecture.</p>
 </blockquote>
 <hr />
-<h3 id="64-les-selecteurs-css">6.4 Les sélecteurs CSS</h3>
+<h3 id="66-les-selecteurs-css">6.6 Les sélecteurs CSS</h3>
+<p>Un sélecteur, c'est la partie qui répond à la question "à quoi ce style s'applique-t-il ?". C'est aussi ce que vous lisez en permanence dans les DevTools quand vous inspectez une page.</p>
+<h4 id="ouverture-le-selecteur-has">Ouverture : <code>:has()</code>, le sélecteur qui remonte</h4>
+<p>Pendant vingt ans, le CSS avait une limite structurelle : on pouvait styler un enfant selon son parent, jamais l'inverse. Impossible de dire "colore cette carte différemment si elle contient une image". Il fallait ajouter une classe à la main dans le HTML, ou passer par du JavaScript. C'était même surnommé le "sélecteur de parent manquant".</p>
+<p><code>:has()</code> a levé cette limite, et il est utilisable dans tous les navigateurs modernes depuis fin 2023 :</p>
+<pre><code class="language-css">/* Une carte qui contient une image reçoit un traitement différent */
+.carte:has(img) {
+  padding-top: 0;
+}
+
+/* Un champ dont la saisie est invalide colore tout son bloc parent */
+.champ:has(input:invalid) {
+  border-color: var(--couleur-erreur);
+}
+
+/* Un article qui ne contient aucun paragraphe : signal utile en audit */
+article:not(:has(p)) {
+  outline: 2px dashed red;
+}
+</code></pre>
+<blockquote class="tip">
+<p>✅ <strong>Pourquoi ça vous concerne</strong> : une bonne partie des variantes que vous dessinez ("la carte avec image", "le champ en erreur", "la section quand elle a un bouton") ne demandent plus ni classe supplémentaire, ni script. Quand vous spécifiez un composant, décrire la <strong>condition</strong> ("si la carte contient une image, alors...") suffit désormais souvent à l'intégrer. C'est le même mouvement que celui de la section 6.9 : le CSS moderne récupère du terrain sur ce qui exigeait du JavaScript.</p>
+</blockquote>
 <pre><code class="language-css">/* === SÉLECTEUR PAR BALISE === */
 /* Cible TOUS les éléments de ce type sur la page */
 p {
@@ -2307,7 +2538,7 @@ ul &gt; li {
 <p>En théorie, ça résout un conflit de spécificité en une seconde. En pratique, c'est presque toujours le symptôme d'un problème qu'on n'a pas voulu résoudre correctement. Une fois qu'un <code>!important</code> est en place, la seule façon de le surcharger est d'en mettre un autre - et le CSS devient vite ingérable.</p>
 <p><strong>Règle simple</strong> : si vous voyez du <code>!important</code> dans du code, c'est un signal d'alerte. Demandez-vous (ou demandez à votre développeur) quelle règle de spécificité crée le conflit - il y a presque toujours un meilleur moyen de le résoudre.</p>
 <hr />
-<h3 id="65-variables-css-custom-properties">6.5 Variables CSS (Custom Properties)</h3>
+<h3 id="67-variables-css-et-design-tokens">6.7 Variables CSS et design tokens</h3>
 <p>Les variables CSS permettent de <strong>centraliser les valeurs</strong> réutilisables. Changez une variable → tout le site se met à jour.</p>
 <pre><code class="language-css">/* On déclare les variables dans :root (s'applique à tout le document) */
 :root {
@@ -2374,8 +2605,90 @@ ul &gt; li {
 <p><strong>Le lien avec Figma</strong> : les <strong>Design Tokens</strong> dans Figma correspondent exactement aux variables CSS. <code>--couleur-primaire</code> dans le code = <code>color/primary</code> dans vos tokens Figma. Un designer qui nomme bien ses tokens aide le développeur à créer un système CSS cohérent - c'est le pont le plus direct entre design et code.</p>
 <p><strong>Tip UX</strong> : Quand vous commencez un nouveau projet, proposez à votre développeur un fichier de variables CSS qui correspond à vos tokens Figma. Vous pouvez le générer directement depuis Figma avec le plugin <strong>Design Tokens</strong> (par Lukas). C'est un geste simple qui fait gagner des heures à l'équipe et garantit la cohérence entre la maquette et le code.</p>
 </blockquote>
+<h4 id="tokens-primitifs-et-tokens-semantiques">Tokens primitifs et tokens sémantiques</h4>
+<p>Il y a deux façons de nommer une variable de couleur, et la différence entre les deux est ce qui sépare un design system tenable d'une liste de couleurs.</p>
+<pre><code class="language-css">:root {
+  /* Tokens PRIMITIFS : ils décrivent la couleur elle-même.
+     C'est votre palette brute, elle ne dit rien de l'usage. */
+  --bleu-500:  #0055cc;
+  --bleu-700:  #0044a3;
+  --gris-900:  #1a1d21;
+  --gris-500:  #5c6470;
+  --blanc:     #ffffff;
+
+  /* Tokens SÉMANTIQUES : ils décrivent le RÔLE dans l'interface.
+     C'est avec ceux-là, et seulement ceux-là, qu'on style les composants. */
+  --couleur-primaire:       var(--bleu-500);
+  --couleur-primaire-hover: var(--bleu-700);
+  --couleur-texte:          var(--gris-900);
+  --couleur-texte-doux:     var(--gris-500);
+  --couleur-fond:           var(--blanc);
+}
+
+/* On style toujours avec le rôle, jamais avec la couleur brute */
+.btn--primaire {
+  background-color: var(--couleur-primaire);   /* oui */
+  /* background-color: var(--bleu-500); */     /* non, même résultat aujourd'hui,
+                                                  mais impossible à faire évoluer */
+}
+</code></pre>
+<p>Pourquoi se donner cette peine ? Parce que le jour où la marque change de bleu, vous modifiez une ligne de palette. Parce que le jour où le bouton principal doit devenir vert, vous modifiez une ligne de rôle. Et surtout parce que le mode sombre, juste en dessous, devient une redéfinition de rôles au lieu d'une réécriture complète de la feuille de style.</p>
+<blockquote>
+<p><strong>C'est exactement la structure des variables Figma</strong> : une collection de primitives, une collection de tokens sémantiques qui pointent dessus, et des modes (clair, sombre) qui rebranchent les seconds. Si vos variables Figma sont organisées ainsi, votre feuille de style l'est aussi, et la conversation avec l'équipe de développement se fait dans le même vocabulaire.</p>
+</blockquote>
+<h4 id="le-mode-sombre-avec-prefers-color-scheme">Le mode sombre avec <code>prefers-color-scheme</code></h4>
+<p>C'est le cas d'usage roi des variables CSS, et c'est aussi une contrainte de votre projet fil rouge. Le principe : le système d'exploitation de l'utilisateur expose une préférence, claire ou sombre, et le navigateur la transmet à la page. On y répond avec une media query, dans laquelle <strong>on ne redéfinit que les tokens de couleur</strong>.</p>
+<pre><code class="language-css">:root {
+  --couleur-fond:        #ffffff;
+  --couleur-surface:     #f5f6f8;   /* fond des cartes */
+  --couleur-texte:       #1a1d21;
+  --couleur-texte-doux:  #5c6470;
+  --couleur-primaire:    #0055cc;
+  --couleur-bordure:     #e2e6ea;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --couleur-fond:        #101418;
+    --couleur-surface:     #1a2027;
+    --couleur-texte:       #e6e9ec;
+    --couleur-texte-doux:  #9aa4af;
+    --couleur-primaire:    #4d94ff;   /* éclairci : le bleu foncé
+                                         ne contraste plus sur fond sombre */
+    --couleur-bordure:     #2a323b;
+  }
+}
+
+/* Tout le reste de la feuille de style est déjà écrit et ne change pas */
+body {
+  background-color: var(--couleur-fond);
+  color: var(--couleur-texte);
+}
+
+.carte {
+  background-color: var(--couleur-surface);
+  border: 1px solid var(--couleur-bordure);
+}
+</code></pre>
+<p>Douze lignes, et la page entière bascule. Aucun composant n'a été touché. C'est la démonstration la plus parlante de ce que valent des tokens bien posés.</p>
+<blockquote class="tip">
+<p>✅ <strong>Le mode sombre est un détecteur de tokens</strong> : si votre page se casse quand vous ajoutez ce bloc, c'est qu'une couleur est écrite en dur quelque part dans votre CSS. Le mode sombre ne crée pas le problème, il le révèle. Faites le test tôt dans votre projet, pas la veille du rendu.</p>
+</blockquote>
+<blockquote class="warning">
+<p>⚠️ <strong>Un mode sombre n'est pas une inversion</strong>, et c'est là que le travail de designer commence :</p>
+<ul>
+<li><strong>Les contrastes se revérifient intégralement.</strong> Une couleur d'accent qui passait le ratio 4,5:1 sur fond blanc peut échouer sur fond sombre. C'est un audit complet à refaire, pas une formalité.</li>
+<li><strong>Évitez le blanc pur sur le noir pur.</strong> Le contraste maximal produit un halo qui fatigue l'oeil et gêne particulièrement les personnes astigmates. Un gris très clair sur un gris très foncé se lit mieux, comme dans l'exemple ci-dessus.</li>
+<li><strong>Les ombres ne fonctionnent plus.</strong> Sur fond sombre, une ombre portée ne se voit pas. On sépare les plans avec des surfaces légèrement plus claires, ou avec des bordures.</li>
+<li><strong>Les images doivent être revues.</strong> Un logo noir sur fond transparent disparaît, une illustration à fond blanc devient un rectangle éblouissant.</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><strong>Pour aller plus loin</strong> : la même mécanique existe pour d'autres préférences système, notamment <code>prefers-reduced-motion</code> pour les animations (section 6.8) et <code>prefers-contrast</code> pour le contraste renforcé. Toutes reposent sur le même principe : l'utilisateur a déjà exprimé un besoin dans les réglages de son appareil, la page n'a qu'à en tenir compte. Aucun bouton à ajouter dans l'interface, aucune préférence à faire saisir deux fois.</p>
+</blockquote>
 <hr />
-<h3 id="66-transitions-et-animations">6.6 Transitions et Animations</h3>
+<h3 id="68-transitions-et-animations">6.8 Transitions et animations</h3>
+<p>Une transition anime le passage entre deux états, par exemple un bouton au survol. Une animation, elle, se déroule toute seule dans le temps, indépendamment de toute interaction.</p>
 <pre><code class="language-css">/* TRANSITION : animer le changement entre deux états */
 .btn {
   background-color: var(--couleur-primaire);
@@ -2432,8 +2745,200 @@ ul &gt; li {
 <p><strong>Tip UX</strong> : Une bonne règle pour les transitions : <strong>200 à 300ms pour les micro-interactions</strong> (hover, focus), <strong>300 à 500ms pour les changements de layout</strong> (apparition d'un panneau, ouverture d'un menu), et <strong>jamais au-delà de 1 seconde</strong> sauf pour un chargement. Si une animation dure plus d'une seconde sans feedback, l'utilisateur pensera que l'interface est cassée. Testez toujours vos animations à vitesse réelle, pas au ralenti dans Figma.</p>
 <p><strong>Référence</strong> : <a href="https://developer.mozilla.org/fr/docs/Web/CSS/CSS_transitions/Using_CSS_transitions">MDN - Utilisation des transitions CSS</a> - guide complet avec des exemples interactifs.</p>
 </blockquote>
+<h4 id="animer-ce-qui-ne-coute-rien-transform-et-opacity">Animer ce qui ne coûte rien : <code>transform</code> et <code>opacity</code></h4>
+<p>Toutes les propriétés ne se valent pas quand on les anime. Deux d'entre elles sont traitées directement par la carte graphique et n'obligent pas le navigateur à recalculer la mise en page à chaque image : <code>transform</code> et <code>opacity</code>. Les autres, notamment <code>width</code>, <code>height</code>, <code>top</code>, <code>left</code> et <code>margin</code>, forcent ce recalcul soixante fois par seconde et produisent des animations qui saccadent, surtout sur un téléphone d'entrée de gamme.</p>
+<pre><code class="language-css">/* À éviter : le navigateur recalcule la mise en page à chaque image */
+.carte:hover {
+  top: -4px;          /* non */
+  width: 320px;       /* non */
+}
+
+/* À préférer : même effet visuel, sans recalcul */
+.carte:hover {
+  transform: translateY(-4px);   /* oui */
+  transform: scale(1.02);        /* oui */
+  opacity: 0.9;                  /* oui */
+}
+</code></pre>
+<blockquote>
+<p><strong>Ce que ça change dans vos specs</strong> : quand vous décrivez une micro-interaction, dire "la carte se soulève de 4 px" plutôt que "la carte monte de 4 px depuis le haut" oriente vers <code>transform</code>. Et quand une animation que vous avez dessinée saccade en intégration, c'est très souvent qu'elle anime une propriété de mise en page. C'est une question à poser, elle a presque toujours une solution.</p>
+</blockquote>
+<h4 id="prefers-reduced-motion-une-decision-de-design">Le mouvement réduit : une décision de design</h4>
+<p>Pour une partie des utilisateurs, le mouvement à l'écran n'est pas un agrément : c'est un déclencheur. Les personnes sujettes aux troubles vestibulaires, aux migraines ou au mal des transports peuvent ressentir un vertige réel, des nausées ou une désorientation devant une parallaxe, un carrousel qui défile ou un élément qui traverse l'écran. Ce n'est pas une préférence esthétique, c'est un symptôme physique.</p>
+<p>Ces personnes activent une option dans les réglages de leur système, "réduire les animations" sur iOS et macOS, "afficher les animations" sur Windows et Android. Le navigateur transmet cette préférence, et il suffit de l'écouter :</p>
+<pre><code class="language-css">@media (prefers-reduced-motion: reduce) {
+  /* On coupe ce qui déplace ou fait défiler */
+  .hero-titre {
+    animation: none;
+  }
+
+  .carte {
+    transition: background-color 0.2s ease;  /* on garde la couleur */
+  }
+
+  .carte:hover {
+    transform: none;    /* on retire le déplacement */
+  }
+
+  /* Le défilement instantané plutôt que fluide */
+  html {
+    scroll-behavior: auto;
+  }
+}
+</code></pre>
+<p>Le geste de design consiste à trier, pas à tout éteindre. Une interface totalement figée perd ses repères : l'utilisateur ne sait plus qu'un panneau s'est ouvert ni qu'un bouton a réagi. La règle pratique tient en une ligne : <strong>on supprime le déplacement, on garde le retour visuel</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Ce qu'on coupe ou remplace</th>
+<th>Ce qu'on garde</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Parallaxe et effets liés au défilement</td><td>Changements de couleur au survol et au focus</td></tr>
+<tr><td>Translations amples, éléments qui traversent l'écran</td><td>Fondus courts, sous 200 ms</td></tr>
+<tr><td>Apparitions en glissement au défilement</td><td>Apparition immédiate, sans mouvement</td></tr>
+<tr><td>Carrousels et défilements automatiques</td><td>Le même contenu, en défilement manuel</td></tr>
+<tr><td>Rotations, zooms, effets de rebond</td><td>Indicateurs de chargement discrets</td></tr>
+</tbody>
+</table>
+<blockquote class="tip">
+<p>✅ <strong>Ce qu'on attend de vous en tant que designer</strong> : livrer vos animations en deux versions, la nominale et la réduite. Concrètement, une ligne dans la spec du composant suffit : "au survol, la carte se soulève de 4 px en 200 ms ; en mouvement réduit, seule la bordure change de couleur". Sans cette précision, le développeur choisira à votre place, ou plus probablement ne fera rien. Cela figure au RGAA, et vous le retrouverez au chapitre 7.</p>
+</blockquote>
+<blockquote>
+<p><strong>Astuce de test</strong> : vous n'avez pas besoin de changer les réglages de votre machine pour vérifier le résultat. Dans les DevTools Chrome, ouvrez le menu de commandes avec <code>Ctrl + Maj + P</code> sur Windows, <code>⌘ + Maj + P</code> sur macOS, tapez "reduced motion" et activez l'émulation. La même liste permet aussi de simuler le mode sombre et différentes formes de daltonisme.</p>
+</blockquote>
 <hr />
-<h3 id="67-bonnes-pratiques-structurer-son-code-css">6.7 Bonnes pratiques : structurer son code CSS</h3>
+<h3 id="69-de-linteractivite-sans-javascript">6.9 De l'interactivité sans JavaScript</h3>
+<p>Votre projet fil rouge interdit le JavaScript. Ce n'est pas une brimade pédagogique, c'est un constat technique : <strong>le CSS et le HTML modernes couvrent aujourd'hui une grande partie de ce qui exigeait un script il y a cinq ans</strong>. Accordéons, onglets, galeries défilantes, en-têtes collants, révélations au survol : tout cela se fait sans une ligne de code exécuté.</p>
+<p>Et ce n'est pas seulement plus léger. Ce qui est natif est <strong>accessible par défaut</strong>, fonctionne au clavier sans qu'on y pense, reste utilisable si un script échoue à se charger, et ne coûte rien en performance. Un accordéon écrit en JavaScript demande une gestion du focus, des attributs ARIA, une gestion des touches clavier, et se trompe une fois sur deux. Le même accordéon en HTML natif fait tout cela correctement, gratuitement.</p>
+<h4 id="laccordeon-details-et-summary">L'accordéon : <code>details</code> et <code>summary</code></h4>
+<p>La balise <code>&lt;details&gt;</code> crée un bloc repliable, et <code>&lt;summary&gt;</code> en est l'en-tête cliquable. C'est tout le HTML nécessaire :</p>
+<pre><code class="language-html">&lt;details class=&quot;faq__item&quot;&gt;
+  &lt;summary class=&quot;faq__question&quot;&gt;Combien de temps dure l'essai gratuit ?&lt;/summary&gt;
+  &lt;p class=&quot;faq__reponse&quot;&gt;Trente jours, sans carte bancaire.&lt;/p&gt;
+&lt;/details&gt;
+</code></pre>
+<p>Ce que vous obtenez sans rien écrire de plus : l'ouverture et la fermeture au clic, l'ouverture au clavier avec <code>Entrée</code> ou <code>Espace</code>, l'annonce correcte de l'état ouvert ou fermé par les lecteurs d'écran, la présence dans l'ordre de tabulation, et le contenu trouvable par la recherche du navigateur même quand le bloc est fermé. Le seul attribut à connaître est <code>open</code>, qui affiche le bloc déplié au chargement.</p>
+<p>Côté CSS, on l'habille, et l'attribut <code>open</code> sert de sélecteur d'état :</p>
+<pre><code class="language-css">.faq__item {
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.faq__question {
+  cursor: pointer;
+  padding: var(--espace-m) 0;
+  font-weight: 600;
+
+  /* On remplace le triangle par défaut par un chevron maison */
+  list-style: none;          /* Firefox et Chrome */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Safari a besoin de ce sélecteur en plus pour masquer le triangle */
+.faq__question::-webkit-details-marker {
+  display: none;
+}
+
+.faq__question::after {
+  content: &quot;+&quot;;
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+/* Quand le bloc est ouvert, le &quot;+&quot; pivote et devient une croix */
+.faq__item[open] .faq__question::after {
+  transform: rotate(45deg);
+}
+</code></pre>
+<blockquote class="warning">
+<p>⚠️ <strong>Si vous masquez le marqueur, mettez-en un autre.</strong> Le triangle par défaut est laid, tout le monde le retire. Mais sans aucun indicateur visuel, plus rien ne signale que le bloc est dépliable, et l'utilisateur ne cliquera pas. Le chevron ou le plus ci-dessus n'est pas une décoration, c'est l'affordance du composant.</p>
+</blockquote>
+<h4 id="reagir-au-focus-dun-enfant-focus-within">Réagir au focus d'un enfant : <code>:focus-within</code></h4>
+<p>Ce sélecteur s'applique à un élément dès que le focus se trouve <strong>quelque part à l'intérieur</strong> de lui. Il sert à mettre en valeur un bloc entier pendant que l'utilisateur y travaille :</p>
+<pre><code class="language-css">/* Le bloc du formulaire s'éclaire pendant la saisie */
+.champ:focus-within {
+  border-color: var(--couleur-primaire);
+  background-color: var(--couleur-surface);
+}
+</code></pre>
+<p>C'est particulièrement utile pour la navigation au clavier : la personne voit d'un coup d'oeil dans quelle zone de la page elle se trouve, et pas seulement sur quel champ.</p>
+<h4 id="la-galerie-defilante-scroll-snap">La galerie défilante : <code>scroll-snap</code></h4>
+<p><code>scroll-snap</code> fait que le défilement s'arrête proprement sur chaque élément, au lieu de s'immobiliser n'importe où. C'est le comportement des carrousels d'applications mobiles, en trois déclarations :</p>
+<pre><code class="language-css">.galerie {
+  display: flex;
+  gap: var(--espace-m);
+  overflow-x: auto;                 /* défilement horizontal */
+  scroll-snap-type: x mandatory;    /* on s'aligne sur un élément à chaque arrêt */
+  padding-bottom: var(--espace-s);  /* place pour la barre de défilement */
+}
+
+.galerie__item {
+  flex: 0 0 280px;         /* largeur fixe, pas de compression */
+  scroll-snap-align: start; /* le bord gauche sert de point d'ancrage */
+}
+</code></pre>
+<blockquote>
+<p><strong>Ce que vous n'aurez pas sans JavaScript</strong> : les flèches précédent et suivant, ni les petites pastilles de position sous la galerie. Le défilement se fait au doigt sur mobile, à la molette ou avec les flèches du clavier sur ordinateur. Pour une galerie d'images ou une rangée de témoignages, c'est amplement suffisant, et c'est souvent plus agréable qu'un carrousel automatique. Pensez simplement à ce que le premier élément suivant soit partiellement visible : c'est ce qui indique qu'il y a autre chose à droite.</p>
+</blockquote>
+<h4 id="afficher-un-panneau-selon-lancre-target">Afficher un panneau selon l'ancre : <code>:target</code></h4>
+<p>Quand l'URL se termine par <code>#tarifs</code>, l'élément qui porte <code>id="tarifs"</code> devient la cible de la page, et le sélecteur <code>:target</code> s'y applique. On peut ainsi construire des onglets sans script :</p>
+<pre><code class="language-css">.panneau {
+  display: none;
+}
+
+.panneau:target {
+  display: block;   /* seul le panneau visé par l'URL s'affiche */
+}
+</code></pre>
+<blockquote>
+<p>À manier avec précaution : le changement d'ancre ajoute une entrée dans l'historique du navigateur, donc le bouton retour se met à parcourir vos onglets. Et il faut prévoir un état initial, sinon la page s'affiche vide tant que rien n'est sélectionné. C'est une technique à connaître pour la lire, rarement la meilleure réponse à écrire.</p>
+</blockquote>
+<h4 id="ce-quon-ne-fait-pas-le-detournement-de-case-a-cocher">Ce qu'on ne fait pas : le détournement de case à cocher</h4>
+<p>Vous croiserez immanquablement cette technique dans les tutoriels, sous le nom de <em>checkbox hack</em> : on cache une case à cocher, on lui associe un <code>&lt;label&gt;</code> déguisé en bouton hamburger, et on affiche le menu quand la case est cochée.</p>
+<pre><code class="language-html">&lt;!-- À NE PAS reproduire --&gt;
+&lt;input type=&quot;checkbox&quot; id=&quot;menu-toggle&quot; class=&quot;cache&quot;&gt;
+&lt;label for=&quot;menu-toggle&quot; class=&quot;hamburger&quot;&gt;Menu&lt;/label&gt;
+&lt;nav class=&quot;menu-mobile&quot;&gt;...&lt;/nav&gt;
+</code></pre>
+<p>Visuellement, ça marche. Pour tout le reste, non :</p>
+<ul>
+<li>un lecteur d'écran annonce "case à cocher, non cochée" là où l'utilisateur attend un bouton d'ouverture de menu ;</li>
+<li>rien n'indique que le menu est ouvert ou fermé, parce qu'aucun état n'est exposé ;</li>
+<li>la touche <code>Échap</code> ne referme rien, et le focus ne suit pas ce qui vient de s'ouvrir ;</li>
+<li>le HTML ment sur ce qu'il contient, ce qui est précisément l'inverse de ce qu'enseigne le chapitre 5.</li>
+</ul>
+<blockquote class="warning">
+<p>⚠️ <strong>Le principe à retenir, et il dépasse largement ce cours</strong> : une contrainte technique ne justifie jamais de casser l'accessibilité. Si un composant ne peut pas être fait proprement sans JavaScript, la bonne réponse est d'en choisir un plus simple, pas de simuler le premier avec des éléments détournés. Pour une navigation mobile, une liste de liens toujours visible, ou une ancre vers un menu en bas de page, est parfaitement acceptable dans le cadre de votre projet.</p>
+</blockquote>
+<h4 id="je-crois-avoir-besoin-de-javascript">"Je crois que j'ai besoin de JavaScript"</h4>
+<table>
+<thead>
+<tr>
+<th>Le besoin</th>
+<th>La réponse sans JavaScript</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Accordéon, FAQ</td><td><code>&lt;details&gt;</code> et <code>&lt;summary&gt;</code></td><td>meilleur que la version scriptée</td></tr>
+<tr><td>En-tête qui reste visible</td><td><code>position: sticky</code></td><td>équivalent</td></tr>
+<tr><td>Menu déroulant au survol</td><td><code>:hover</code> et <code>:focus-within</code></td><td>correct sur ordinateur, à éviter sur mobile</td></tr>
+<tr><td>Galerie défilante</td><td><code>scroll-snap</code></td><td>bon, sans les flèches</td></tr>
+<tr><td>Retour en haut de page</td><td>un lien vers <code>#haut</code></td><td>équivalent</td></tr>
+<tr><td>Défilement fluide vers une ancre</td><td><code>scroll-behavior: smooth</code></td><td>équivalent</td></tr>
+<tr><td>Onglets</td><td><code>:target</code></td><td>possible, avec des réserves</td></tr>
+<tr><td>Compteur de caractères, validation en direct</td><td>-</td><td>JavaScript nécessaire</td></tr>
+</tbody>
+</table>
+<p>Restent les cas où le JavaScript est réellement indispensable, et il est important de savoir les nommer : envoyer ou recevoir des données d'un serveur sans recharger la page, valider un formulaire avec des règles métier, mémoriser un état entre plusieurs pages, gérer du glisser-déposer, faire fonctionner une carte interactive ou un éditeur de texte. Dès qu'il faut <strong>calculer, mémoriser ou communiquer</strong>, on sort du domaine du CSS. La section 3.4 vous a donné le vocabulaire pour le repérer et le spécifier ; ce chapitre vous montre à quel point ce périmètre s'est réduit.</p>
+<blockquote class="tip">
+<p>✅ <strong>Ce que vous, designer, devez en retenir</strong> : avant de demander un composant qui exige un script, vérifiez qu'il n'existe pas en natif. Ce réflexe fait gagner du temps de développement, allège la page, et donne un résultat plus accessible que ce que l'équipe aurait écrit à la main. C'est aussi un argument concret en réunion : "l'accordéon natif est accessible par défaut et pèse zéro kilo-octet" pèse plus lourd que "faisons simple".</p>
+</blockquote>
+<hr />
+<h3 id="610-bonnes-pratiques-structurer-son-code-css">6.10 Bonnes pratiques : structurer son code CSS</h3>
 <p>Écrire du CSS qui fonctionne est une chose. Écrire du CSS <strong>organisé, lisible et cohérent</strong> en est une autre. Cette section présente les pratiques qui rendent un code maintenable dans la durée - et qui facilitent la collaboration entre designers et développeurs.</p>
 <h4 id="la-convention-de-nommage-bem">La convention de nommage BEM</h4>
 <p><strong>BEM</strong> (Block - Element - Modifier) est la convention de nommage la plus répandue dans les équipes professionnelles. Elle résout un problème fondamental : en CSS, tous les noms de classes sont globaux - sans convention, le code devient vite ingérable.</p>
@@ -2682,242 +3187,435 @@ footer { /* ... */ }
 </tbody>
 </table>
 <hr />
-<h3 id="68-exemple-complet-une-page-portfolio-css">6.8 Exemple complet : une page portfolio CSS</h3>
-<p>Voici le CSS complet pour styliser la page HTML de la section 5.1 :</p>
-<pre><code class="language-css">/* ===================================
-   RESET et BASE
-   =================================== */
+<h3 id="611-exemple-complet-une-mini-landing-page">6.11 Exemple complet : une mini landing page annotée</h3>
+<p>Tout ce chapitre tient dans une page. En voici une, volontairement réduite à quatre blocs, pour un service fictif de ressourcerie de quartier. Elle n'est pas complète : il n'y a ni section de témoignages, ni pied de page développé, ni styleguide. C'est délibéré, ces parties sont le travail de votre projet. Ce que vous avez ici, c'est le <strong>squelette de référence</strong> et les quatre mécanismes de mise en page que vous réutiliserez : un header en flexbox, un hero centré, une grille de cartes en grid, et une FAQ en accordéon natif.</p>
+<p>Le vocabulaire des variables est exactement celui des fichiers de départ du projet, dans <code>exercices/landing-page/depart/</code>. Vous pouvez donc lire les deux en parallèle.</p>
+<h4 id="le-html-de-lexemple">Le HTML</h4>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;meta name=&quot;description&quot; content=&quot;La Remise, ressourcerie de quartier : déposez, empruntez, réparez.&quot;&gt;
+  &lt;title&gt;La Remise - ressourcerie de quartier&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
 
-/* Supprime les marges par défaut des navigateurs */
-* {
+  &lt;!-- HEADER : conteneur flex, logo d'un côté, navigation de l'autre --&gt;
+  &lt;header class=&quot;header&quot;&gt;
+    &lt;a class=&quot;header__logo&quot; href=&quot;#hero&quot;&gt;La Remise&lt;/a&gt;
+    &lt;nav class=&quot;header__nav&quot; aria-label=&quot;Navigation principale&quot;&gt;
+      &lt;a href=&quot;#services&quot;&gt;Nos services&lt;/a&gt;
+      &lt;a href=&quot;#faq&quot;&gt;Questions&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+
+    &lt;!-- HERO : centrage parfait en flexbox, un seul h1 dans toute la page --&gt;
+    &lt;section class=&quot;hero&quot; id=&quot;hero&quot;&gt;
+      &lt;h1 class=&quot;hero__titre&quot;&gt;Ce qui ne vous sert plus servira à quelqu'un&lt;/h1&gt;
+      &lt;p class=&quot;hero__soustitre&quot;&gt;
+        Déposez vos objets, empruntez ceux des autres, réparez les vôtres.
+        À deux rues de chez vous, et gratuitement.
+      &lt;/p&gt;
+      &lt;a class=&quot;btn btn--primaire&quot; href=&quot;#services&quot;&gt;Découvrir les services&lt;/a&gt;
+    &lt;/section&gt;
+
+    &lt;!-- SERVICES : grille de cartes, responsive sans media query --&gt;
+    &lt;section class=&quot;services&quot; id=&quot;services&quot;&gt;
+      &lt;h2&gt;Trois façons de participer&lt;/h2&gt;
+      &lt;div class=&quot;services__grille&quot;&gt;
+
+        &lt;article class=&quot;carte&quot;&gt;
+          &lt;h3 class=&quot;carte__titre&quot;&gt;Déposer&lt;/h3&gt;
+          &lt;p class=&quot;carte__texte&quot;&gt;
+            Meubles, vaisselle, livres, vélos : tout ce qui fonctionne encore
+            trouve preneur.
+          &lt;/p&gt;
+          &lt;a class=&quot;carte__lien&quot; href=&quot;#faq&quot;&gt;Voir les horaires&lt;/a&gt;
+        &lt;/article&gt;
+
+        &lt;article class=&quot;carte&quot;&gt;
+          &lt;h3 class=&quot;carte__titre&quot;&gt;Emprunter&lt;/h3&gt;
+          &lt;p class=&quot;carte__texte&quot;&gt;
+            Une perceuse pour un après-midi, une tente pour un week-end.
+            Adhésion libre.
+          &lt;/p&gt;
+          &lt;a class=&quot;carte__lien&quot; href=&quot;#faq&quot;&gt;Voir le catalogue&lt;/a&gt;
+        &lt;/article&gt;
+
+        &lt;article class=&quot;carte&quot;&gt;
+          &lt;h3 class=&quot;carte__titre&quot;&gt;Réparer&lt;/h3&gt;
+          &lt;p class=&quot;carte__texte&quot;&gt;
+            Un atelier ouvert chaque samedi, avec les outils et les bénévoles
+            pour vous aider.
+          &lt;/p&gt;
+          &lt;a class=&quot;carte__lien&quot; href=&quot;#faq&quot;&gt;Voir les ateliers&lt;/a&gt;
+        &lt;/article&gt;
+
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;!-- FAQ : accordéon natif, zéro JavaScript --&gt;
+    &lt;section class=&quot;faq&quot; id=&quot;faq&quot;&gt;
+      &lt;h2&gt;Questions fréquentes&lt;/h2&gt;
+
+      &lt;details class=&quot;faq__item&quot;&gt;
+        &lt;summary class=&quot;faq__question&quot;&gt;Faut-il adhérer pour déposer un objet ?&lt;/summary&gt;
+        &lt;p class=&quot;faq__reponse&quot;&gt;
+          Non. Le dépôt est ouvert à tout le monde, sans inscription.
+          L'adhésion, à prix libre, ne concerne que l'emprunt.
+        &lt;/p&gt;
+      &lt;/details&gt;
+
+      &lt;details class=&quot;faq__item&quot;&gt;
+        &lt;summary class=&quot;faq__question&quot;&gt;Que devient ce qui n'est pas repris ?&lt;/summary&gt;
+        &lt;p class=&quot;faq__reponse&quot;&gt;
+          Les objets sont démontés en atelier et leurs pièces réemployées.
+          Rien ne part en déchetterie avant d'avoir été proposé trois mois.
+        &lt;/p&gt;
+      &lt;/details&gt;
+
+      &lt;details class=&quot;faq__item&quot;&gt;
+        &lt;summary class=&quot;faq__question&quot;&gt;Puis-je devenir bénévole ?&lt;/summary&gt;
+        &lt;p class=&quot;faq__reponse&quot;&gt;
+          Oui, sans compétence particulière et sans engagement de durée.
+          Passez un samedi après-midi, on vous montrera.
+        &lt;/p&gt;
+      &lt;/details&gt;
+
+    &lt;/section&gt;
+
+  &lt;/main&gt;
+
+  &lt;footer class=&quot;footer&quot;&gt;
+    &lt;p&gt;La Remise - 12 rue des Ateliers - ouvert du mercredi au samedi&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>Trois remarques sur ce HTML, qui sont autant de points du barème de votre projet : un seul <code>&lt;h1&gt;</code>, celui du hero ; une hiérarchie de titres sans saut, <code>h1</code> puis <code>h2</code> puis <code>h3</code> ; et des balises qui décrivent le contenu, <code>header</code>, <code>main</code>, <code>section</code>, <code>article</code>, <code>footer</code>, plutôt qu'une succession de <code>div</code>.</p>
+<h4 id="le-css-de-lexemple">Le CSS, section par section</h4>
+<pre><code class="language-css">/* ============================================================
+   1. DESIGN TOKENS  (section 6.7)
+   Toutes les décisions de design vivent ici, et nulle part ailleurs.
+   ============================================================ */
+:root {
+  --couleur-fond:           #ffffff;
+  --couleur-surface:        #f5f6f8;
+  --couleur-texte:          #1a1d21;
+  --couleur-texte-doux:     #5c6470;
+  --couleur-primaire:       #0055cc;
+  --couleur-primaire-hover: #0044a3;
+  --couleur-bordure:        #e2e6ea;
+
+  --police-titres: Georgia, serif;
+  --police-texte:  system-ui, sans-serif;
+
+  --espace-xs:  4px;
+  --espace-s:   8px;
+  --espace-m:  16px;
+  --espace-l:  32px;
+  --espace-xl: 64px;
+
+  --rayon: 8px;
+  --largeur-contenu: 1100px;
+}
+
+/* Mode sombre : on ne redéfinit QUE les couleurs (section 6.7).
+   Si la page casse ici, c'est qu'une couleur est écrite en dur plus bas. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --couleur-fond:           #101418;
+    --couleur-surface:        #1a2027;
+    --couleur-texte:          #e6e9ec;
+    --couleur-texte-doux:     #9aa4af;
+    --couleur-primaire:       #4d94ff;
+    --couleur-primaire-hover: #77adff;
+    --couleur-bordure:        #2a323b;
+  }
+}
+
+/* ============================================================
+   2. BASE  (sections 6.1 et 6.2)
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;   /* la largeur inclut padding et bordure */
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
-  font-family: var(--police-principale);
-  font-size: var(--taille-base);
+  font-family: var(--police-texte);
   color: var(--couleur-texte);
   background-color: var(--couleur-fond);
   line-height: 1.6;
 }
 
-/* Empêche les images de déborder de leur conteneur */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+h1, h2, h3 {
+  font-family: var(--police-titres);
+  line-height: 1.2;
 }
 
-/* ===================================
-   HEADER et NAVIGATION
-   =================================== */
+img {
+  max-width: 100%;   /* une image ne déborde jamais de son conteneur */
+  height: auto;
+}
 
-header {
-  overflow: hidden;                      /* contient les floats internes */
-  padding: var(--espace-md) var(--espace-xl);
+/* Focus visible : on ne le supprime jamais, on le personnalise.
+   C'est la seule chose qui guide la navigation au clavier. */
+:focus-visible {
+  outline: 3px solid var(--couleur-primaire);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   3. HEADER  (section 6.3 : flexbox, et 6.5 : sticky)
+   ============================================================ */
+.header {
+  display: flex;
+  justify-content: space-between;  /* logo à gauche, nav à droite */
+  align-items: center;             /* alignés verticalement */
+  gap: var(--espace-m);
+  padding: var(--espace-m) var(--espace-l);
   border-bottom: 1px solid var(--couleur-bordure);
-  /* Reste en haut lors du scroll */
-  position: sticky;
+
+  position: sticky;                /* reste visible au défilement */
   top: 0;
   background-color: var(--couleur-fond);
   z-index: 100;
-  line-height: 48px;                     /* hauteur de la barre = 48px */
 }
 
-/* Logo à gauche */
-.logo {
-  float: left;
+.header__logo {
+  font-family: var(--police-titres);
+  font-size: 1.25rem;
   font-weight: 700;
-  font-size: var(--taille-lg);
-}
-
-/* Navigation à droite */
-nav {
-  float: right;
-}
-
-nav a {
-  display: inline-block;
-  margin-left: var(--espace-lg);
+  color: var(--couleur-texte);
   text-decoration: none;
-  color: var(--couleur-texte-secondaire);
-  font-weight: 500;
-  transition: color 0.2s ease;
 }
 
-nav a:hover {
+.header__nav {
+  display: flex;          /* la nav est elle-même un conteneur flex */
+  gap: var(--espace-l);
+}
+
+.header__nav a {
+  color: var(--couleur-texte-doux);
+  text-decoration: none;
+  padding: var(--espace-s) 0;   /* agrandit la zone cliquable */
+}
+
+.header__nav a:hover {
   color: var(--couleur-primaire);
 }
 
-/* ===================================
-   SECTION HERO
-   =================================== */
-
-#hero {
+/* ============================================================
+   4. HERO  (section 6.3 : le centrage parfait)
+   ============================================================ */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;        /* centré horizontalement */
+  justify-content: center;    /* centré verticalement */
+  gap: var(--espace-m);
   text-align: center;
-  padding: var(--espace-2xl) var(--espace-xl);
+
   min-height: 60vh;
+  padding: var(--espace-xl) var(--espace-m);
+  background-color: var(--couleur-surface);
 }
 
-#hero h1 {
-  font-size: 2.5rem;
-  line-height: 1.2;
-  max-width: 700px;
-  margin: 0 auto var(--espace-lg);   /* centré + espace sous le titre */
+.hero__titre {
+  font-size: 2rem;
+  max-width: 20ch;   /* on limite en nombre de caractères : plus lisible */
 }
 
-#hero p {
-  font-size: var(--taille-lg);
-  color: var(--couleur-texte-secondaire);
-  max-width: 500px;
-  margin: 0 auto var(--espace-xl);   /* centré + espace avant le bouton */
+.hero__soustitre {
+  color: var(--couleur-texte-doux);
+  max-width: 55ch;   /* au-delà de 75 caractères, l'oeil perd la ligne */
 }
 
-/* Bouton principal */
-.btn-principal {
+.btn {
   display: inline-block;
+  padding: var(--espace-s) var(--espace-l);
+  border-radius: var(--rayon);
+  text-decoration: none;
+  font-weight: 600;
+  min-height: 44px;     /* cible tactile : jamais moins de 44 px */
+  transition: background-color 0.2s ease;
+}
+
+.btn--primaire {
   background-color: var(--couleur-primaire);
-  color: white;
-  padding: var(--espace-sm) var(--espace-xl);
-  border-radius: var(--rayon-md);
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  color: #ffffff;
 }
 
-.btn-principal:hover {
+.btn--primaire:hover {
   background-color: var(--couleur-primaire-hover);
-  transform: translateY(-2px);
 }
 
-/* ===================================
-   SECTION PROJETS
-   =================================== */
-
-#projets {
-  padding: var(--espace-2xl) var(--espace-xl);
-  max-width: 1200px;
-  margin: 0 auto;
-  overflow: hidden;           /* contient les floats des cartes */
+/* ============================================================
+   5. SERVICES  (section 6.4 : la grille responsive)
+   ============================================================ */
+.services {
+  max-width: var(--largeur-contenu);
+  margin: 0 auto;                    /* le bloc est centré dans la page */
+  padding: var(--espace-xl) var(--espace-m);
 }
 
-#projets h2 {
-  font-size: var(--taille-xl);
-  margin-bottom: var(--espace-xl);
+.services h2 {
+  margin-bottom: var(--espace-l);
+  text-align: center;
 }
 
-/* Carte projet */
-.carte-projet {
-  float: left;
-  width: 31%;              /* 3 par ligne sur desktop */
-  margin: 0 1% var(--espace-xl);
-  background: var(--couleur-fond);
+.services__grille {
+  display: grid;
+  /* Une seule ligne, et le responsive est réglé :
+     autant de colonnes que la place le permet, jamais moins de 280px */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--espace-l);
+}
+
+/* La carte est elle-même un conteneur flex en colonne, pour pouvoir
+   pousser son lien tout en bas quels que soient les textes (section 6.3) */
+.carte {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espace-s);
+
+  padding: var(--espace-l);
+  background-color: var(--couleur-surface);
   border: 1px solid var(--couleur-bordure);
-  border-radius: var(--rayon-lg);
-  overflow: hidden;        /* coupe l'image aux angles arrondis */
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  border-radius: var(--rayon);
 }
 
-.carte-projet:hover {
-  box-shadow: var(--ombre-md);
-  transform: translateY(-4px);
+.carte__texte {
+  color: var(--couleur-texte-doux);
 }
 
-.carte-projet img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;       /* l'image couvre tout sans déformer */
-}
-
-.carte-projet h3 {
-  padding: var(--espace-md) var(--espace-md) var(--espace-sm);
-  font-size: 1rem;
+.carte__lien {
+  margin-top: auto;   /* la marge automatique absorbe l'espace restant
+                         et colle le lien en bas de la carte */
+  color: var(--couleur-primaire);
   font-weight: 600;
 }
 
-.carte-projet p {
-  padding: 0 var(--espace-md);
-  color: var(--couleur-texte-secondaire);
-  font-size: var(--taille-sm);
+/* ============================================================
+   6. FAQ  (section 6.9 : l'accordéon natif)
+   ============================================================ */
+.faq {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: var(--espace-xl) var(--espace-m);
 }
 
-.carte-projet a {
-  display: block;
-  padding: var(--espace-md);
+.faq h2 {
+  margin-bottom: var(--espace-l);
+}
+
+.faq__item {
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.faq__question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espace-m);
+
+  padding: var(--espace-m) 0;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;   /* masque le triangle par défaut */
+}
+
+.faq__question::-webkit-details-marker {
+  display: none;      /* même chose pour Safari */
+}
+
+/* On remplace le triangle par un indicateur maison : sans lui,
+   plus rien ne dit que le bloc est dépliable */
+.faq__question::after {
+  content: &quot;+&quot;;
+  font-size: 1.5rem;
   color: var(--couleur-primaire);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: var(--taille-sm);
+  transition: transform 0.2s ease;
 }
 
-/* ===================================
-   FOOTER
-   =================================== */
+.faq__item[open] .faq__question::after {
+  transform: rotate(45deg);   /* le + devient une croix */
+}
 
-footer {
-  background-color: var(--couleur-fond-secondaire);
+.faq__reponse {
+  padding-bottom: var(--espace-m);
+  color: var(--couleur-texte-doux);
+}
+
+/* ============================================================
+   7. FOOTER
+   ============================================================ */
+.footer {
+  padding: var(--espace-l) var(--espace-m);
   border-top: 1px solid var(--couleur-bordure);
-  padding: var(--espace-xl);
   text-align: center;
-  color: var(--couleur-texte-secondaire);
-  font-size: var(--taille-sm);
+  color: var(--couleur-texte-doux);
+  font-size: 0.9rem;
 }
 
-footer a {
-  color: var(--couleur-primaire);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-/* ===================================
-   RESPONSIVE
-   =================================== */
-
-/* Tablette : 2 cartes par ligne */
-@media (max-width: 1024px) {
-  .carte-projet {
-    width: 48%;
+/* ============================================================
+   8. ADAPTATIONS GRANDS ÉCRANS  (section 5.3)
+   Mobile-first : tout ce qui précède vaut pour 375 px.
+   On n'ajoute ici que ce qui change au-delà. Une seule media query
+   suffit, parce que la grille et les flex font déjà le travail.
+   ============================================================ */
+@media (min-width: 768px) {
+  .hero__titre {
+    font-size: 3rem;
   }
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-  header {
-    text-align: center;
-    line-height: normal;
-    padding: var(--espace-md);
-  }
-
-  /* Sur mobile, logo et nav passent en block (colonne) */
-  .logo,
-  nav {
-    float: none;
-    display: block;
-    margin-bottom: var(--espace-sm);
-  }
-
-  nav a {
-    margin: 0 var(--espace-sm);
-  }
-
-  /* 1 carte par ligne sur mobile */
-  .carte-projet {
-    float: none;
-    width: 100%;
-    margin: 0 0 var(--espace-md);
-  }
-
-  #hero {
-    padding: var(--espace-xl) var(--espace-md);
-  }
-
-  #projets {
-    padding: var(--espace-xl) var(--espace-md);
+/* Mouvement réduit : on coupe les déplacements, on garde les couleurs
+   (section 6.8) */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }
 </code></pre>
+<h4 id="ce-que-cet-exemple-respecte-deja">Ce que cet exemple respecte déjà, et ce qui reste à faire</h4>
+<p>Confrontons-le aux dix contraintes de votre projet fil rouge, c'est le meilleur moyen de voir où vous en êtes.</p>
+<table>
+<thead>
+<tr>
+<th>Contrainte du projet</th>
+<th>Dans cet exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>HTML sémantique, un seul <code>h1</code></td><td>traité</td></tr>
+<tr><td>Mise en page en flexbox et grid, aucun float</td><td>traité</td></tr>
+<tr><td>Responsive mobile-first</td><td>traité, avec une seule media query</td></tr>
+<tr><td>Design tokens en variables CSS</td><td>traité</td></tr>
+<tr><td>Accordéon en <code>details</code> et <code>summary</code></td><td>traité</td></tr>
+<tr><td>Mode sombre avec <code>prefers-color-scheme</code></td><td>traité</td></tr>
+<tr><td>Focus visible, cibles tactiles de 44 px</td><td>traité</td></tr>
+<tr><td>Zéro JavaScript</td><td>traité</td></tr>
+<tr><td>Nommage BEM</td><td>traité</td></tr>
+<tr><td>Images en formats modernes, <code>loading="lazy"</code></td><td><strong>à faire</strong> : cet exemple n'a aucune image</td></tr>
+<tr><td>Section de preuve sociale</td><td><strong>à faire</strong></td></tr>
+<tr><td>Pied de page complet, avec liens</td><td><strong>à faire</strong></td></tr>
+<tr><td>Page styleguide avec les états des composants</td><td><strong>à faire</strong> : ici, seul l'état <code>:hover</code> du bouton est défini</td></tr>
+</tbody>
+</table>
+<blockquote class="tip">
+<p>✅ <strong>Le conseil de méthode</strong> : écrivez tout votre HTML avant d'écrire la moindre ligne de CSS, et regardez la page sans style. Si elle se lit correctement de haut en bas dans cet état, votre structure est bonne et le style sera facile à poser. Si elle est incompréhensible, aucun CSS ne la sauvera vraiment, et vous le paierez au moment du responsive et de l'audit d'accessibilité. Commencez moche, c'est la façon la plus rapide de finir bien.</p>
+</blockquote>
 <hr />
 <h2 id="7-le-futur-vibe-coding-et-vibe-design">7. Le futur : Vibe Coding et Vibe Design</h2>
 <h3 id="71-lemergence-du-vibe-coding">7.1 L'émergence du Vibe Coding</h3>
