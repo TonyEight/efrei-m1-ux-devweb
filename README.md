@@ -9,8 +9,9 @@ Objectif du cours : comprendre le fonctionnement du web, savoir lire et interpr�
 | Dossier | Contenu |
 |---|---|
 | `support/` | Le support de cours (HTML consultable en ligne, PDF téléchargeable, schémas) |
-| `docs/` | Le plan de cours, le plan du support et le dispositif d'évaluation |
+| `docs/` | Le plan de cours et le dispositif d'évaluation, le plan du support, le guide d'installation du poste de travail, le glossaire et les questions de révision |
 | `exercices/` | Les énoncés et fichiers de départ des ateliers, dont le projet fil rouge |
+| `TODO.md` | Les chantiers en cours de la version en préparation |
 
 ## Consulter le support
 
@@ -27,6 +28,8 @@ Chaque année universitaire est figée par une version dédiée :
 | 2026-2027 | en préparation sur `main` |
 
 La branche `main` porte toujours la version en cours de préparation ou d'utilisation.
+
+Les notes d'animation de l'intervenant (déroulé détaillé des séances, corrigés, grilles de correction) sont conservées hors de ce dépôt.
 
 ## Intervenants
 
