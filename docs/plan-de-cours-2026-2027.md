@@ -6,7 +6,7 @@ Format : 4 séances de 3h30 (adaptable en 7 séances de 2h en coupant aux articu
 Fil rouge : projet "Landing page et mini design system", en binôme, sans back-end et sans JavaScript.
 Parti pris : le JavaScript est traité en littératie (comprendre, reconnaître, spécifier), jamais en écriture.
 
-Documents associés : `guide-animation.md` (notes d'animation séance par séance, pour l'intervenant), `guide-installation.md` (préparation du poste, envoyé aux étudiants avant la séance 1), `../exercices/landing-page/README.md` (énoncé du projet fil rouge).
+Documents associés : `guide-installation.md` (préparation du poste, envoyé aux étudiants avant la séance 1), `glossaire.md` et `quiz-revision.md` (matériel de révision), `../exercices/landing-page/README.md` (énoncé du projet fil rouge). Les notes d'animation de l'intervenant sont conservées hors de ce dépôt.
 
 ---
 

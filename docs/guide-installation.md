@@ -117,6 +117,26 @@ Cochez mentalement, ou notez ce qui manque pour la séance 1 :
 
 **Rien ne marche et je n'ai plus de temps.** Passez au plan B et venez en séance 1 avec votre ordinateur : nous réglerons le reste ensemble.
 
+## Les pièges qui font perdre dix minutes en séance
+
+À garder sous la main pendant les ateliers : neuf fois sur dix, le problème est dans ce tableau.
+
+| Piège | Symptôme | Remède |
+|---|---|---|
+| Fichier `index.html.txt` (extensions masquées sous Windows) | Live Server ne propose pas d'ouvrir ; la page ne s'affiche pas | Afficher les extensions dans l'Explorateur, renommer |
+| `<meta charset="UTF-8">` absent | Accents remplacés par des caractères bizarres | Le remettre dans le `<head>` |
+| Majuscules, espaces ou accents dans les noms de fichiers | L'image marche sur le poste, pas ailleurs (les serveurs distinguent la casse, Windows non) | Renommer en kebab-case, sans accent |
+| Mauvais dossier ouvert dans VS Code | Live Server affiche une liste de fichiers, ou une autre page | File, Open Folder, le dossier qui contient `index.html` |
+| Cache du navigateur | Une modification du CSS ne s'affiche pas | Ctrl + Shift + R (Cmd + Shift + R), ou cocher "Disable cache" dans Network |
+| Page ouverte en `file://` par double-clic | Certaines choses ne marchent pas, l'URL commence par `file://` | Fermer, rouvrir avec Live Server |
+| Mode sombre du système activé sans le savoir | "Mes couleurs ne sont pas celles que j'ai mises" | Vérifier le mode du système ; émuler dans les DevTools |
+| Guillemets typographiques copiés depuis Word ou Notion | `class=“carte”` ne fonctionne pas | Retaper les guillemets droits dans VS Code |
+| Prettier qui réorganise le code à la sauvegarde | "Mon code a bougé tout seul" | C'est normal et sans danger ; lire le code reformaté |
+| Google Fonts bloqué par le réseau de l'école | La police de secours s'affiche | Vérifier Network ; la pile de polices de secours est prévue pour ça |
+| Port 5500 déjà utilisé | Live Server ouvre 5501, ou rien | Fermer l'autre instance de VS Code, ou accepter le port proposé |
+| Extension Live Server installée mais pas activée | Pas de "Open with Live Server" au clic droit | Recharger la fenêtre VS Code (Ctrl + Shift + P, "Reload Window") |
+| Accolade ou point-virgule manquant en CSS | Tout ce qui suit dans le fichier est ignoré | Prettier révèle l'indentation cassée ; la Console peut aussi aider |
+
 ## Plan B - travailler sans rien installer
 
 Si votre poste refuse toute installation (ordinateur d'entreprise ou de l'école verrouillé, panne, etc.), vous pouvez suivre le cours et rendre votre projet avec un simple navigateur :

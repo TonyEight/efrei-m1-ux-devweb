@@ -92,6 +92,19 @@ Le socle est vérifié en fin de séance 2 (HTML et tokens) et en fin de séance
 | Design tokens et styleguide | 10 | Variables CSS cohérentes, états des composants documentés, mode sombre fonctionnel |
 | Soutenance | 10 | Clarté du pitch, qualité de la démo, réponse aux questions |
 
+### Comment chaque critère est noté
+
+Trois niveaux par critère. Le niveau "socle" correspond au socle décrit plus haut : un binôme qui l'atteint partout obtient environ 60 points (12 + 15 + 12 + 9 + 6 + 6).
+
+| Critère (points) | Insuffisant | Socle | Maîtrise |
+|---|---|---|---|
+| Sémantique HTML (20) | Soupe de div, plusieurs h1 ou aucun, titres dans le désordre : 0 à 8 | Six sections avec les bonnes balises, un h1, hiérarchie correcte, quelques div superflues : 9 à 15 | Balises justes partout, figure et blockquote pour le témoignage, nav secondaire, page parfaite sans CSS : 16 à 20 |
+| Mise en page et responsive (25) | Débordement à 375, ou float, ou grille absente : 0 à 10 | Header flex, grille grid, rien ne déborde, une media query fonctionnelle, quelques maladresses en grand écran : 11 à 19 | Fluide à toutes les largeurs, `auto-fit` compris et adapté, hero et sections soignés aux deux tailles, sticky maîtrisé : 20 à 25 |
+| Accessibilité (20) | Focus supprimé, alt manquants, contraste insuffisant sur le texte courant : 0 à 8 | Focus visible, alt présents, contrastes du texte courant corrects, ordre clavier logique : 9 à 15 | Cibles 44 px, zoom 200 % impeccable, contrastes vérifiés dans les deux modes, alt rédigés avec soin : 16 à 20 |
+| Éco-conception et performance (15) | Images en PNG ou JPEG de plusieurs Mo, page lourde : 0 à 6 | WebP ou SVG, page sous 1 Mo, deux polices maximum : 7 à 11 | Images dimensionnées à l'usage, `loading="lazy"` sous la ligne de flottaison, choix de sobriété visibles et assumés dans le pitch : 12 à 15 |
+| Design tokens et styleguide (10) | Couleurs en dur, mode sombre cassé, styleguide absent ou vide : 0 à 4 | Tokens complets dans `:root`, mode sombre du départ fonctionnel, styleguide avec couleurs, typos, bouton default et hover : 5 à 7 | Quatre états documentés, mode sombre adapté à la palette, carte et espacements dans le styleguide : 8 à 10 |
+| Soutenance (10) | Pas de démo ou démo qui casse sans reprise, incapacité à expliquer une ligne : 0 à 4 | Pitch clair, démo aux deux tailles et en sombre, réponse correcte à la question de code : 5 à 7 | Pitch qui relie les choix aux utilisateurs, enseignement de l'audit formulé, vocabulaire juste, réponses précises : 8 à 10 |
+
 Pénalités : -5 points par contrainte technique contournée, c'est-à-dire non tentée ou remplacée par ce qui est interdit : JavaScript présent, float pour la mise en page, framework CSS, gabarit tout fait. Une contrainte tentée mais imparfaite (un contraste un peu faible, une media query maladroite) n'est pas pénalisée : elle est simplement notée dans son critère. Un site magnifique qui viole les contraintes perdra face à un site simple qui les respecte toutes.
 
 ## Conseils d'équipe
@@ -102,10 +115,22 @@ Pénalités : -5 points par contrainte technique contournée, c'est-à-dire non 
 - Volez comme des artistes : inspirez-vous des landing pages que vous admirez (Stripe, Linear, Figma), auditez-les dans les DevTools, comprenez leurs choix.
 - Répartissez-vous le travail par sections, pas par langage : chacun fait le HTML et le CSS de ses sections, vous partagez les tokens.
 
+## Questions fréquentes
+
+- **"On doit tout apprendre par coeur ?"** Non. Vous devez savoir lire, reconnaître et chercher. Le support et MDN sont ouverts pendant les ateliers et le seront toute votre carrière. Les quiz portent sur ce qui a été fait en séance.
+- **"Pourquoi pas Webflow, Framer ou WordPress ?"** Ce sont d'excellents outils de production. Ils ne vous apprennent pas à lire le code qu'ils génèrent. Dans quatre semaines, vous saurez juger ce qu'ils produisent.
+- **"Pourquoi zéro JavaScript alors qu'il y en a partout ?"** Parce que c'est un autre cours, et parce que le CSS moderne fait déjà beaucoup. Vous apprenez ici à reconnaître ce qui nécessite du JavaScript, pour le spécifier à un développeur, pas à l'écrire.
+- **"Est-ce qu'on peut utiliser le Dev Mode de Figma ?"** Oui pour lire les valeurs (espacements, couleurs, tailles). Non pour copier le CSS généré tel quel : il produit souvent des positions absolues et des largeurs fixes, exactement ce qu'on vous demande d'éviter.
+- **"Est-ce qu'on peut demander de l'aide à une IA entre les séances ?"** Pour comprendre un message d'erreur, une propriété, une notion : oui, et c'est une bonne pratique. Pour écrire les livrables des séances 2 et 3 : non, c'est la règle de ce projet, et vous devrez expliquer chaque ligne en soutenance.
+- **"Ça compte pour notre portfolio ?"** Oui, si vous le voulez : une landing propre et accessible avec son styleguide est un bon projet de portfolio. Le palier 3 mentionne le déploiement sur GitHub Pages, gratuit.
+- **"Il faut un Mac ?"** Non. Tout ce qui est utilisé fonctionne sur Mac, Windows et Linux. Les raccourcis diffèrent (Cmd et Ctrl), le guide d'installation les donne.
+- **"Qu'est-ce que je fais si je suis largué ?"** Vous le dites, dès que ça arrive, à votre binôme puis à l'intervenant. Le module est construit avec un socle atteignable par tout le monde et un kit de recettes. Personne n'est laissé sur le bord de la route s'il le dit.
+
 ## Ressources
 
 - Fichiers de départ dans `depart/` (squelette commenté, tokens pré-câblés, styleguide vide)
 - Kit de patterns dans `kit-patterns.md` : les recettes CSS du projet (header, hero, grille, carte, accordéon, bouton, footer), à adapter à vos tokens
 - Grille d'audit dans `../audit/grille-audit.md`
+- Glossaire dans `../../docs/glossaire.md` et questions de révision dans `../../docs/quiz-revision.md`
 - Le support de cours, chapitres 5 à 8
 - MDN pour toute question de syntaxe : https://developer.mozilla.org/fr/
